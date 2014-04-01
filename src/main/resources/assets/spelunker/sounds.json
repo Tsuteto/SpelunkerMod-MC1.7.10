@@ -1,0 +1,20 @@
+{
+    "1up": {"category": "master","sounds": ["spelunker:1up"]},
+    "2xscore_bgm": {"category": "master","sounds": ["spelunker:2xscore_bgm"]},
+    "2xscore": {"category": "master","sounds": ["spelunker:2xscore"]},
+    "coin": {"category": "master","sounds": ["spelunker:coin"]},
+    "death": {"category": "master","sounds": ["spelunker:death"]},
+    "diamond": {"category": "master","sounds": ["spelunker:diamond"]},
+    "dollar": {"category": "master","sounds": ["spelunker:dollar"]},
+    "dynamite": {"category": "master","sounds": ["spelunker:dynamite"]},
+    "energy": {"category": "master","sounds": ["spelunker:energy"]},
+    "energyalert": {"category": "master","sounds": ["spelunker:energyalert"]},
+    "flare": {"category": "master","sounds": ["spelunker:flare"]},
+    "gameover": {"category": "master","sounds": ["spelunker:gameover"]},
+    "gunshot": {"category": "master","sounds": ["spelunker:gunshot"]},
+    "invincible_bgm": {"category": "master","sounds": ["spelunker:invincible_bgm"]},
+    "item": {"category": "master","sounds": ["spelunker:item"]},
+    "jump": {"category": "master","sounds": ["spelunker:jump"]},
+    "main_bgm": {"category": "master","sounds": ["spelunker:main_bgm"]},
+    "speedpotion_bgm": {"category": "master","sounds": ["spelunker:speedpotion_bgm"]}
+}

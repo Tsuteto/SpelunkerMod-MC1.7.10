@@ -1,0 +1,164 @@
+selectWorld.gameMode.survival=Spelunker
+selectWorld.gameMode.survival.line1=The great Spelunker gives you his unique skills!
+selectWorld.gameMode.survival.line2=Let's go out fun and severe spelunking
+
+selectWorld.gameMode.scoreTrial=Score Trial
+selectWorld.gameMode.scoreTrial.line1=Limited lives, no energy-up at leveling up!
+selectWorld.gameMode.scoreTrial.line2=Competing in score until a game over
+
+selectWorld.gameMode.hardcore.line1=One life only, the hardest difficulty rarely
+selectWorld.gameMode.hardcore.line2=brings energy. Try taking up this challenge?
+
+Spelunker.failedToKillWorld=Failed to delete the world. Maybe a mod confliction?
+Spelunker.wrongPotionId1=[SpelunkerMod] §c*WARNING*§r Different potion IDs with server.
+Spelunker.wrongPotionId2=Please change them in the setting file as follows, or the game will CRASH.
+Spelunker.wrongPotionId3=I:choked=%s   I:sunstroke=%s
+
+Spelunker.spehisc=%1$s's high score: %2$d
+
+entity.egg.name=Egg
+
+potion.bonusScore=Bonus Score
+potion.bonusScore.postfix=Potion of Bonus Score
+potion.choked=Choked
+potion.heatstroke=Heat Stroke
+
+item.spelunker:goldenStatueF.desc.hc1=Cursed item; you can never drop it
+item.spelunker:goldenStatueF.desc.hc2=once you have. If you hold it and pray
+item.spelunker:goldenStatueF.desc.hc3=by holding down a right click, you can 
+item.spelunker:goldenStatueF.desc.hc4=expel those you crafted.
+item.spelunker:goldenStatueF.desc.hc5=§o"The more you have, the greater
+item.spelunker:goldenStatueF.desc.hc6=§oadventure you have!"
+item.spelunker:goldenStatueF.desc=Just a decoration
+
+item.spelunker:woodenGun.name=Air Blaster
+item.spelunker:steelGun.name=Machine Blaster
+item.spelunker:spelunkerGun.name=Spelunker's Blaster
+item.spelunker:energy.name=Energy
+item.spelunker:speedPotion.name=Red Potion
+item.spelunker:dollarBag.name=Sack of Money
+item.spelunker:1up.name=1-UP
+item.spelunker:coin.name=Coin
+item.spelunker:miracle.name=Miracle
+item.spelunker:2xScore.name=2x Score
+item.spelunker:invincible.name=Invincible
+item.spelunker:dynamite.name=Dynamite
+item.spelunker:helmet.name=Spelunker's Helmet
+item.spelunker:flash.name=Flash
+item.spelunker:flashDrop.name=Flash
+item.spelunker:goldenSpelunker.name=Golden Spelunker Statue (Fake)
+
+entity.gunBullet.name=Blaster Bullet
+entity.batDroppings.name=Bat Droppings
+entity.flashBullet.name=Luminary
+entity.flash.name=Flash
+
+#
+# moody death cause
+#
+deathScreen.title=You failed!
+
+# Original death cause
+spe.moo.death.attack.drained=%1$s ran out of energy and reluctantly got home
+spe.moo.death.attack.droppings=%1$s got dirty from bat droppings and got home
+spe.moo.death.attack.fallingItem=%1$s hit the corner of %2$s on head and got home
+spe.moo.death.attack.headHitting=%1$s injured its head by hitting on the ceiling and got home
+spe.moo.death.attack.neckTwisting=%1$s felt pain by twisting its neck and got home
+spe.moo.death.attack.darkness=%1$s felt an unspeakable fear of darkness and got home
+spe.moo.death.attack.blockHitting=%1$s broke its bone by digging a hard block and got home
+spe.moo.death.attack.falldown=%1$s fell down, grazed its knees and got home
+spe.moo.death.attack.choked=%1$s has choked by food and got home
+spe.moo.death.attack.bed=%1$s couldn't sleep on the hard bed and got home
+spe.moo.death.attack.overload=%1$s couldn't bear the overload and got home
+spe.moo.death.attack.sideEffect=%1$s became sick by side effects of the potion and got home
+spe.moo.death.attack.sunstroke=%1$s was thirsty from the heat and got home
+spe.moo.death.attack.itemDestroy=%1$s hurt with a piece of the broken item in its hand and got home
+spe.moo.death.attack.petKilled=%1$s was heartbroken from a death of its %2$s and got home
+spe.moo.death.attack.grass=%1$s got a thorn of grass under its fingernails and got home
+spe.moo.death.attack.soulSand=%1$s got a curse of soul sand and got home to unspell
+spe.moo.death.attack.enderGaze=%1$s felt fear of catching Enderman's eye and got home
+spe.moo.death.attack.cursedWords=%1$s hurt with the barbed tongue in its heart and got home
+spe.moo.death.attack.water=%1$s wetted its shoes and got home
+spe.moo.death.attack.door=%1$s caught a finger in the door and got home
+spe.moo.death.attack.thunderclap=%1$s was frightened of a thunderclap and got home
+spe.moo.death.attack.villager=%1$s was scared by alien-like line of sight and got home
+spe.moo.death.attack.sleepy=%1$s was very sleepy and got home
+spe.moo.death.attack.worthyItemDropped=%1$s was unbelievable to discard golden statues and got home
+spe.moo.death.attack.glass=%1$s's shoelaces broke by broken glass and it got home
+spe.moo.death.attack.mycelium=%1$s infected with mycelium and got home
+spe.moo.death.attack.web=%1$s got dirty from a cobweb and got home
+
+# Vanilla death cause
+spe.moo.death.attack.inFire=%1$s got home because gadgets went wrong by fire
+spe.moo.death.attack.inFire.player=%1$s got home because gadgets went wrong by fire in passing by %2$s
+spe.moo.death.attack.onFire=%1$s got burnt and got home
+spe.moo.death.attack.onFire.player=%1$s got burnt in passing by %2$s and got home
+spe.moo.death.attack.lava=%1$s lost food stuff by lava and got home
+spe.moo.death.attack.lava.player=%1$s lost food stuff by lava and got home
+spe.moo.death.attack.inWall=%1$s was stifling in wall and got home
+spe.moo.death.attack.drown=%1$s caught water in its eye and got home
+spe.moo.death.attack.drown.player=%1$s caught water in its eye in passing by %2$s and got home
+spe.moo.death.attack.starve=%1$s got home to have some bread
+spe.moo.death.attack.cactus=%1$s got a thorn in its finger and got home
+spe.moo.death.attack.cactus.player=%1$s got a thorn in its finger in passing by %2$s and got home
+spe.moo.death.attack.generic=%1$s got home for a call of nature
+spe.moo.death.attack.explosion=%1$s felt too smoky to advance and got home
+spe.moo.death.attack.explosion.player=%1$s felt too smoky from %2$s to advance and got home
+spe.moo.death.attack.magic=%1$s got a stomachache and got home
+spe.moo.death.attack.wither=%1$s withered its spelunkability and got home
+spe.moo.death.attack.anvil=%1$s hit an anvil on its toe and got home
+spe.moo.death.attack.fallingBlock=%1$s hit the corner of a block on its head and got home
+spe.moo.death.attack.mob=%1$s was bitten by %2$s and got home
+spe.moo.death.attack.player=%1$s was struck by %2$s and got home
+spe.moo.death.attack.player.item=%1$s was struck by %2$s's %3$s and got home
+spe.moo.death.attack.arrow=%1$s's sack got a hole by %2$s and got home
+spe.moo.death.attack.arrow.item=%1$s's sack got a hole by %2$s's %3$s and got home
+spe.moo.death.attack.fireball=%1$s burnt its clothes by %2$s and got home
+spe.moo.death.attack.fireball.item=%1$s burnt its clothes by %2$s's %3$s and got home
+spe.moo.death.attack.thrown=%1$s was pummeled by %2$s and got home
+spe.moo.death.attack.thrown.item=%1$s was pummeled by %2$s's %3$s and got home
+spe.moo.death.attack.indirectMagic=%1$s felt dizzy from psychic power and got home
+spe.moo.death.attack.indirectMagic.item=%1$s felt dizzy from psychic power and got home
+spe.moo.death.attack.fall=%1$s twisted its ankle and got home
+spe.moo.death.attack.outOfWorld=!? %1$s sensed a great danger and got home
+spe.moo.death.fell.accident.ladder=%1$s fell off a ladder, twisted its ankle and got home
+spe.moo.death.fell.accident.vines=%1$s fell off some vines, twisted its ankle and got home
+spe.moo.death.fell.accident.water=%1$s fell out of water, twisted its ankle and got home
+spe.moo.death.fell.accident.generic=%1$s fell from a high place, twisted its ankle and got home
+spe.moo.death.fell.killer=%1$s was doomed to fall and twist its ankle, and got home
+spe.moo.death.fell.assist=%1$s was doomed to fall and twist its ankle by %2$s, and got home
+spe.moo.death.fell.assist.item=%1$s was doomed to fall and twist its ankle by %2$s using %3$s, and got home
+spe.moo.death.fell.finish=%1$s was fell, was finished by %2$s, felt terrible, and got home
+spe.moo.death.fell.finish.item=%1$s was fell, finished by %2$s using %3$s, felt terrible, and got home
+
+#
+# normal death cause
+#
+spe.nor.death.attack.drained=%s ran out of energy
+spe.nor.death.attack.droppings=%1$s hit bat droppings
+spe.nor.death.attack.fallingItem=%1$s hit a falling %2$s on its head and fell down
+spe.nor.death.attack.headHitting=%1$s broke its neck in hitting on the ceiling
+spe.nor.death.attack.neckTwisting=%1$s was wasted twisting its neck in hitting on the ceiling
+spe.nor.death.attack.darkness=%1$s lost its mind in an unspeakable fear of darkness
+spe.nor.death.attack.blockHitting=%1$s broke its bone by digging a hard block
+spe.nor.death.attack.falldown=%1$s was wasted by felling down
+spe.nor.death.attack.choked=%1$s choked with food to death
+spe.nor.death.attack.bed=%1$s couldn't sleep on the hard bed
+spe.nor.death.attack.overload=%1$s has flattened out under the overload
+spe.nor.death.attack.sideEffect=%1$s died of side effects of the potion
+spe.nor.death.attack.sunstroke=%1$s died of sunstroke
+spe.nor.death.attack.itemDestroy=%1$s was wasted from a shock of the item broken
+spe.nor.death.attack.petKilled=%1$s died of heartbreak from a death of its %2$s
+spe.nor.death.attack.grass=%1$s got a thorn of grass under its fingernails
+spe.nor.death.attack.soulSand=%1$s got a curse of soul sand
+spe.nor.death.attack.enderGaze=%1$s fell down by fear of catching Enderman's eye
+spe.nor.death.attack.cursedWords=%1$s hurt with its barbed tongue
+spe.nor.death.attack.water=%1$s wetted its shoes to death
+spe.nor.death.attack.door=%1$s caught a finger in the door
+spe.nor.death.attack.thunderclap=%1$s was frightened of a thunderclap to death
+spe.nor.death.attack.villager=%1$s was fainted by alien-like line of sight
+spe.nor.death.attack.sleepy=%1$s was so sleepy that it collapsed
+spe.nor.death.attack.worthyItemDropped=%1$s was slain by a curse of golden Spelunker statues
+spe.nor.death.attack.glass=%1$s hurt with broken glass
+spe.nor.death.attack.mycelium=%1$s infected with mycelium
+spe.nor.death.attack.web=%1$s got stuck in a cobweb
