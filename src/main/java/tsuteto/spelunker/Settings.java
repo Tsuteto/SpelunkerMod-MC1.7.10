@@ -39,6 +39,7 @@ public class Settings
     public int goldenSpelunkers = 0;
     public boolean goldenSpelunkerRecipe;
 
+    public boolean updateCheck = true;
 
     public void load(Configuration cfg, Side side)
     {
@@ -86,7 +87,5 @@ public class Settings
 
         goldenSpelunkerRecipe = cfg.get("game", "enableGoldenSpelunkerRecipe", side.isClient(),
                 "If true, Golden Spelunker (Fake)'s recipe is enabled").getBoolean(side.isClient());
-
-        cfg.save();
     }
 }

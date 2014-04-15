@@ -1,25 +1,20 @@
 package tsuteto.spelunker;
 
 import api.player.server.ServerPlayerAPI;
-import com.google.common.collect.ObjectArrays;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.potion.Potion;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.WeightedRandomChestContent;
-import net.minecraft.world.WorldType;
-import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.storage.SaveHandler;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.MinecraftForge;
@@ -44,10 +39,9 @@ import tsuteto.spelunker.potion.PotionBonusScore;
 import tsuteto.spelunker.potion.SpelunkerPotion;
 import tsuteto.spelunker.sidedproxy.ISidedProxy;
 import tsuteto.spelunker.util.ModLog;
+import tsuteto.spelunker.util.UpdateNotification;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -56,14 +50,17 @@ import java.util.Map;
  * @author Tsuteto
  *
  */
-@Mod(modid = SpelunkerMod.modId, useMetadata = true, version = "2.2.3-MC1.7.2")
+@Mod(modid = SpelunkerMod.modId, useMetadata = true, version = "2.2.4-MC1.7.2", acceptedMinecraftVersions = "[1.7.2,1.8)")
 public class SpelunkerMod
 {
     public static final String modId = "SpelunkerMod2";
     public static final String resourceDomain = "spelunker:";
 
-    @Instance(modId)
+    @Mod.Instance(modId)
     private static SpelunkerMod instance;
+
+    @Mod.Metadata(modId)
+    private static ModMetadata metadata;
 
     @SidedProxy(clientSide = "tsuteto.spelunker.sidedproxy.ClientProxy", serverSide = "tsuteto.spelunker.sidedproxy.ServerProxy")
     public static ISidedProxy sidedProxy;
@@ -87,10 +84,11 @@ public class SpelunkerMod
 
     private Configuration cfg;
     private Settings settings = new Settings();
+    public UpdateNotification update = null;
+
     private ScreenRendererGameover renderScreen = new ScreenRendererGameover();
     private SpelunkerSaveHandler saveHandler = null;
     private SpelunkerSaveHandlerMulti saveHandlerMulti = null;
-
     private SpelunkerMultiWorldInfo multiWorldInfo = null;
 
     @Mod.EventHandler
@@ -102,7 +100,10 @@ public class SpelunkerMod
         this.cfg = new Configuration(event.getSuggestedConfigurationFile());
         this.cfg.load();
 
-        settings.load(cfg, event.getSide());
+        settings.load(this.cfg, event.getSide());
+        UpdateNotification.initialize(this.cfg, metadata);
+
+        this.cfg.save();
 
         // Install sound files
         sidedProxy.installSoundFiles();
@@ -114,6 +115,9 @@ public class SpelunkerMod
                 new WeightedRandomChestContent[]{new WeightedRandomChestContent(SpelunkerItem.itemGoldenStatue, 0, 1, 1, 100)}, 100, 100);
 
         //sidedProxy.registerWavFiles();
+
+        // Update check!
+        UpdateNotification.instance().checkUpdate();
     }
 
     @Mod.EventHandler
@@ -211,6 +215,9 @@ public class SpelunkerMod
         {
 //            EntityRegistry.addSpawn(EntityBat.class, 10, 32, 32, EnumCreatureType.ambient, (BiomeGenBase[])BiomeGenBase.explorationBiomesList.toArray(new BiomeGenBase[0]));
         }
+
+        // Notify if update is available
+        UpdateNotification.instance().onServerStarting(event);
 
         ModLog.debug("loaded savehandler for multi: " + saveHandler.getWorldDirectory());
 

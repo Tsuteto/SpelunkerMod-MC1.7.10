@@ -356,7 +356,7 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
     @Override
     public boolean isUsingEnergy()
     {
-        return isDigging || isUsingEnergy;
+        return (isHardcore() && isDigging) || isUsingEnergy;
     }
 
     public void setUsingEnergy(boolean isUsingEnergy)

@@ -16,6 +16,10 @@ Spelunker.wrongPotionId3=I:choked=%s   I:sunstroke=%s
 
 Spelunker.spehisc=%1$s's high score: %2$d
 
+Spelunker.update.server=スペランカーMOD %1$sに更新しました! ダウンロード: %2$s
+Spelunker.update.client=§eスペランカーMOD§r §a%1$s§rに更新しました! %2$s
+Spelunker.update.link=§nこちらからダウンロード§r
+
 entity.egg.name=卵
 
 potion.bonusScore=得点ボーナス

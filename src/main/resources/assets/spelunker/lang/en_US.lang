@@ -16,6 +16,10 @@ Spelunker.wrongPotionId3=I:choked=%s   I:sunstroke=%s
 
 Spelunker.spehisc=%1$s's high score: %2$d
 
+Spelunker.update.server=SpelunkerMod updated to %1$s, available at %2$s
+Spelunker.update.client=§SpelunkerMod§r updated to §a%1$s§r! %2$s
+Spelunker.update.link=§nDownload here§r
+
 entity.egg.name=Egg
 
 potion.bonusScore=Bonus Score

@@ -66,7 +66,7 @@ import java.util.Random;
  */
 public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPlayer
 {
-    public static Field fldIsDestroyingBlock = ReflectionHelper.findField(ItemInWorldManager.class, "field_73088_d", "isDestroyingBlock");
+    public static final Field fldIsDestroyingBlock = ReflectionHelper.findField(ItemInWorldManager.class, "field_73088_d", "isDestroyingBlock");
 
     public static final Method mtdGetHurtSound = ReflectionHelper.findMethod(EntityPlayer.class, null, new String[]{"func_70621_aR", "getHurtSound"});
     public static final Method mtdGetSoundVolume = ReflectionHelper.findMethod(EntityLivingBase.class, null, new String[]{"func_70599_aP", "getSoundVolume"});
@@ -377,7 +377,7 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
     {
         if (spelunkerExtra.attackTargetEntityWithCurrentItem(var1))
         {
-            player.attackTargetEntityWithCurrentItem(var1);
+            playerAPI.superAttackTargetEntityWithCurrentItem(var1);
         }
     }
 
