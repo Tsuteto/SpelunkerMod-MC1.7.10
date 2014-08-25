@@ -417,7 +417,7 @@ public class SpelunkerHardcoreMP extends SpelunkerNormalMP
     private boolean isEntityLookingAtPlayer(EntityLivingBase entity)
     {
         Vec3 vec3 = Utils.getHeadLook(entity).normalize();
-        Vec3 vec31 = player.worldObj.getWorldVec3Pool().getVecFromPool(player.posX - entity.posX, player.boundingBox.minY + (player.height / 2.0F) - (entity.posY + entity.getEyeHeight()), player.posZ - entity.posZ);
+        Vec3 vec31 = Vec3.createVectorHelper(player.posX - entity.posX, player.boundingBox.minY + (player.height / 2.0F) - (entity.posY + entity.getEyeHeight()), player.posZ - entity.posZ);
         double d0 = vec31.lengthVector();
         vec31 = vec31.normalize();
         double d1 = vec3.dotProduct(vec31);
@@ -684,7 +684,7 @@ public class SpelunkerHardcoreMP extends SpelunkerNormalMP
     private boolean canBlockBeSeen(int x, int y, int z)
     {
         return player.worldObj.rayTraceBlocks(
-                player.worldObj.getWorldVec3Pool().getVecFromPool(player.posX, player.posY + player.getEyeHeight(), player.posZ),
+                Vec3.createVectorHelper(player.posX, player.posY + player.getEyeHeight(), player.posZ),
                 Vec3.createVectorHelper(x + 0.5D, y + 0.5D, z + 0.5D)) == null;
     }
 }

@@ -20,7 +20,7 @@ public abstract class CommandSpelunkerBase extends CommandBase
 {
     protected EntityPlayer getOnlinePlayerRequired(String par1Str)
     {
-        EntityPlayerMP var2 = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(par1Str);
+        EntityPlayerMP var2 = MinecraftServer.getServer().getConfigurationManager().func_152612_a(par1Str); //getPlayerForUsername
 
         if (var2 == null)
         {
@@ -34,12 +34,12 @@ public abstract class CommandSpelunkerBase extends CommandBase
 
     protected EntityPlayer getOnlinePlayer(String par1Str)
     {
-        return MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(par1Str);
+        return MinecraftServer.getServer().getConfigurationManager().func_152612_a(par1Str);
     }
 
     protected SpelunkerWorldInfo getWorldInfo(String par1Str)
     {
-        EntityPlayerMP var2 = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(par1Str);
+        EntityPlayerMP var2 = MinecraftServer.getServer().getConfigurationManager().func_152612_a(par1Str);
 
         if (var2 == null)
         {

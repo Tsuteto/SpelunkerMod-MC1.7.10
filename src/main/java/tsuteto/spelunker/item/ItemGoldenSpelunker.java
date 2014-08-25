@@ -72,10 +72,10 @@ public class ItemGoldenSpelunker extends Item
 
         for (int j = 0; j < 8; ++j)
         {
-            Vec3 vec3 = par2World.getWorldVec3Pool().getVecFromPool((this.itemRand.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
+            Vec3 vec3 = Vec3.createVectorHelper((this.itemRand.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
             vec3.rotateAroundX(-par3EntityPlayer.rotationPitch * (float)Math.PI / 180.0F);
             vec3.rotateAroundY(-par3EntityPlayer.rotationYaw * (float)Math.PI / 180.0F);
-            Vec3 vec31 = par2World.getWorldVec3Pool().getVecFromPool((this.itemRand.nextFloat() - 0.5D) * 0.3D, (-this.itemRand.nextFloat()) * 0.6D - 0.3D, 0.6D);
+            Vec3 vec31 = Vec3.createVectorHelper((this.itemRand.nextFloat() - 0.5D) * 0.3D, (-this.itemRand.nextFloat()) * 0.6D - 0.3D, 0.6D);
             vec31.rotateAroundX(-par3EntityPlayer.rotationPitch * (float)Math.PI / 180.0F);
             vec31.rotateAroundY(-par3EntityPlayer.rotationYaw * (float)Math.PI / 180.0F);
             vec31 = vec31.addVector(par3EntityPlayer.posX, par3EntityPlayer.posY + par3EntityPlayer.getEyeHeight(), par3EntityPlayer.posZ);

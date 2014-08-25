@@ -13,6 +13,8 @@ import tsuteto.spelunker.constants.SpelunkerGameMode;
  */
 public class Settings
 {
+    public static boolean debug = Boolean.parseBoolean(System.getProperty("spelunkerMod.debug"));
+
     public boolean hardcore = false;
     public boolean fullHP = false;
     public boolean forceDeath = false;

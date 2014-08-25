@@ -50,7 +50,7 @@ public class Utils
 
     public static AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, Block block, int par2, int par3, int par4)
     {
-        return AxisAlignedBB.getAABBPool().getAABB(
+        return AxisAlignedBB.getBoundingBox(
                 par2 + block.getBlockBoundsMinX(),
                 par3 + block.getBlockBoundsMinY(),
                 par4 + block.getBlockBoundsMinZ(),

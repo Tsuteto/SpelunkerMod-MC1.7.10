@@ -50,7 +50,7 @@ import java.util.Map;
  * @author Tsuteto
  *
  */
-@Mod(modid = SpelunkerMod.modId, useMetadata = true, version = "2.2.4-MC1.7.2", acceptedMinecraftVersions = "[1.7.2,1.8)")
+@Mod(modid = SpelunkerMod.modId, useMetadata = true, version = "2.2.4-MC1.7.10", acceptedMinecraftVersions = "[1.7.2,1.8)")
 public class SpelunkerMod
 {
     public static final String modId = "SpelunkerMod2";
@@ -64,8 +64,6 @@ public class SpelunkerMod
 
     @SidedProxy(clientSide = "tsuteto.spelunker.sidedproxy.ClientProxy", serverSide = "tsuteto.spelunker.sidedproxy.ServerProxy")
     public static ISidedProxy sidedProxy;
-
-    public static boolean debug = true;
 
     public static final int energyCostDig = 5;
     public static final int energyCostJump = 5;
@@ -95,7 +93,7 @@ public class SpelunkerMod
     public void preInit(FMLPreInitializationEvent event)
     {
         ModLog.mod = this.getClass().getSimpleName();
-        ModLog.isDebug = debug;
+        ModLog.isDebug = Settings.debug;
 
         this.cfg = new Configuration(event.getSuggestedConfigurationFile());
         this.cfg.load();

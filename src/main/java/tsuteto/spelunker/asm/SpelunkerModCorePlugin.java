@@ -8,7 +8,7 @@ import cpw.mods.fml.relauncher.FMLRelaunchLog;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
 @IFMLLoadingPlugin.TransformerExclusions("tsuteto.spelunker.asm")
-@IFMLLoadingPlugin.MCVersion("1.7.2")
+@IFMLLoadingPlugin.MCVersion("1.7.10")
 public class SpelunkerModCorePlugin implements IFMLLoadingPlugin
 {
     static File location;

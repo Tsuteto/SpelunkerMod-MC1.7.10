@@ -31,9 +31,11 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.BanEntry;
 import net.minecraft.server.management.ItemInWorldManager;
+import net.minecraft.server.management.UserListBansEntry;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
@@ -723,9 +725,8 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
 
     public void banByGameover()
     {
-        BanEntry banentry = new BanEntry(player.getCommandSenderName());
-        banentry.setBanReason("Out of lives of spelunker");
-        MinecraftServer.getServer().getConfigurationManager().getBannedPlayers().put(banentry);
+        BanEntry banentry = new UserListBansEntry(player.getGameProfile(), null, SpelunkerMod.modId, null, "Out of lives of spelunker");
+        MinecraftServer.getServer().getConfigurationManager().func_152608_h().func_152687_a(banentry);
         player.playerNetServerHandler.kickPlayerFromServer("You failed too much. Game over, man, it\'s game over!");
     }
 
@@ -734,7 +735,7 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
         WorldInfo worldinfo = player.worldObj.getWorldInfo();
         try
         {
-            ObfuscationReflectionHelper.setPrivateValue(WorldInfo.class, worldinfo, new Boolean(true), 20);
+            ObfuscationReflectionHelper.setPrivateValue(WorldInfo.class, worldinfo, true, 20);
         }
         catch (Exception e2)
         {

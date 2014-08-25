@@ -1,6 +1,7 @@
 package tsuteto.spelunker.asm;
 
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
+import cpw.mods.fml.relauncher.FMLCorePlugin;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassReader;
@@ -8,6 +9,7 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
+import tsuteto.spelunker.Settings;
 import tsuteto.spelunker.asm.entry.*;
 
 import java.io.File;
@@ -95,16 +97,16 @@ public class TransformerMain implements IClassTransformer, Opcodes
         MethodNode mnode = null;
         for (MethodNode curMnode : (List<MethodNode>) cnode.methods)
         {
-            System.out.printf("Class: %s, Method: %s, Desc: %s%n", cnode.name, curMnode.name, curMnode.desc);
+            if (Settings.debug) System.out.printf("Class: %s, Method: %s, Desc: %s%n", cnode.name, curMnode.name, curMnode.desc);
             String srgClass = FMLDeobfuscatingRemapper.INSTANCE.map(actualClassName);
             String srgMethod = FMLDeobfuscatingRemapper.INSTANCE.mapMethodName(actualClassName, curMnode.name, curMnode.desc);
             String srgDesc = FMLDeobfuscatingRemapper.INSTANCE.mapMethodDesc(curMnode.desc);
-            System.out.printf("[SRG] Class: %s, Method: %s, Desc: %s%n", srgClass, srgMethod, srgDesc);
+            if (Settings.debug) System.out.printf("[SRG] Class: %s, Method: %s, Desc: %s%n", srgClass, srgMethod, srgDesc);
 
             if ((targetMethodNameDeobf.equals(srgMethod) || targetMethodNameObf.equals(srgMethod))
                     && targetMethoddesc.equals(srgDesc))
             {
-                System.out.println("-> * Detected! *");
+                if (Settings.debug) System.out.println("-> * Detected! *");
                 mnode = curMnode;
                 break;
             }
@@ -114,11 +116,11 @@ public class TransformerMain implements IClassTransformer, Opcodes
         {
             entry.transform(mnode, cnode);
 
-            System.out.println("-> Transformer applying to " + cnode.name);
+            if (Settings.debug) System.out.println("-> Transformer applying to " + cnode.name);
             ClassWriter cw = new ClassWriter(0);
             cnode.accept(cw);
             bytes = cw.toByteArray();
-            dumpClassFile(bytes, actualClassName);
+            if (Settings.debug) dumpClassFile(bytes, actualClassName);
         }
 
         return bytes;
@@ -126,7 +128,7 @@ public class TransformerMain implements IClassTransformer, Opcodes
 
     private static void dumpClassFile(byte[] bytes, String className)
     {
-        File file = new File("/Volumes/bigbox/Docs/Minecraft/1.7.2/SpelunkerMod/classdump", className + ".class");
+        File file = new File(System.getProperty("spelunkerMod.dumpClsDir"), className + ".class");
 
         FileOutputStream fos = null;
         try

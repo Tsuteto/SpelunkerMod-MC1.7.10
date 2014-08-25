@@ -30,7 +30,7 @@ public class ScreenRendererGameover
         // GAME OVER
         if (mc.currentScreen instanceof GuiGameOver)
         {
-            ScaledResolution scaledresolution = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
+            ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
             int guiW = scaledresolution.getScaledWidth();
             int guiH = scaledresolution.getScaledHeight();
             FontRenderer fontrenderer = mc.fontRenderer;
