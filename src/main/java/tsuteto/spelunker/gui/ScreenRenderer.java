@@ -22,7 +22,7 @@ import tsuteto.spelunker.player.SpelunkerPlayerSP;
  */
 public class ScreenRenderer
 {
-    private static final ResourceLocation texture = new ResourceLocation("spelunker", "icons.png");
+    private static final ResourceLocation texture = new ResourceLocation("spelunker", "textures/icons.png");
 
     private int airPointerPos = -1;
 

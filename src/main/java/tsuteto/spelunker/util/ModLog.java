@@ -34,11 +34,11 @@ public class ModLog
         FMLLog.log(mod, Level.WARN, t, format, data);
     }
 
-    public static void debug(String format, Object... data)
+    public static void debug(Object format, Object... data)
     {
         if (isDebug)
         {
-            System.out.println(String.format("[" + mod + "]" + format, data));
+            FMLLog.log(mod, Level.INFO, String.format("(DEBUG) " + format, data));
         }
     }
 }

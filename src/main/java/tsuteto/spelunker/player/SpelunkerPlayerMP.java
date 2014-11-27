@@ -466,12 +466,37 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
             {
                 exp = (Integer)mtdGetExperiencePoints.invoke(entityliving, player);
             }
-            catch (Exception e) {}
+            catch (Exception ignored) {}
         }
 
-        if (entityliving instanceof EntityGhast)
+        if (entityliving instanceof EntityDragon)
         {
-            this.addSpelunkerScore(700);
+            if (player.dimension == 1 && !worldInfo.isDragonDefeated())
+            {
+                // Give 500000 pts. to each spelunker
+                Iterator itr = MinecraftServer.getServer().getConfigurationManager().playerEntityList.iterator();
+
+                while (itr.hasNext())
+                {
+                    EntityPlayerMP player = (EntityPlayerMP) itr.next();
+                    SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(player);
+                    if (spelunker != null)
+                    {
+                        SpelunkerWorldInfo winfo = spelunker.worldInfo;
+                        if (!winfo.isDragonDefeated())
+                        {
+                            spelunker.addSpelunkerScore(500000);
+                            winfo.setDragonDefeated();
+                            spelunker.saveSpelunker();
+                        }
+                    }
+                }
+                new SpelunkerPacketDispatcher(SpelunkerPacketType.ALL_CLEARED).sendPacketAll();
+            }
+            else
+            {
+                this.addSpelunkerScore(10000);
+            }
         }
         else if (entityliving instanceof IMob)
         {
@@ -503,6 +528,10 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
                     this.addSpelunkerScore(1000);
                 }
             }
+            else if (entityliving instanceof EntityGhast)
+            {
+                this.addSpelunkerScore(700);
+            }
             else if (entityliving instanceof EntityWitch)
             {
                 this.addSpelunkerScore(5000);
@@ -517,7 +546,7 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
                 // Blaze: plus 500 pts. at exp bonus
             }
 
-            this.addSpelunkerScore(Math.min(100, Math.max(0, exp - 5) * 100));
+            this.addSpelunkerScore(Math.min(1000, Math.max(0, exp - 5) * 100));
         }
         else if (entityliving instanceof EntityBat)
         {
@@ -526,35 +555,6 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
         else if (entityliving instanceof EntityIronGolem)
         {
             this.addSpelunkerScore(5000);
-        }
-        else if (entityliving instanceof EntityDragon)
-        {
-            if (player.dimension == 1 && !worldInfo.isDragonDefeated())
-            {
-                // Give 500000 pts. to each spelunker
-                Iterator itr = MinecraftServer.getServer().getConfigurationManager().playerEntityList.iterator();
-
-                while (itr.hasNext())
-                {
-                    EntityPlayerMP player = (EntityPlayerMP) itr.next();
-                    SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(player);
-                    if (spelunker != null)
-                    {
-                        SpelunkerWorldInfo winfo = spelunker.worldInfo;
-                        if (!winfo.isDragonDefeated())
-                        {
-                            spelunker.addSpelunkerScore(500000);
-                            winfo.setDragonDefeated();
-                            spelunker.saveSpelunker();
-                        }
-                    }
-                }
-                new SpelunkerPacketDispatcher(SpelunkerPacketType.ALL_CLEARED).sendPacketAll();
-            }
-            else
-            {
-                this.addSpelunkerScore(10000);
-            }
         }
         else if (entityliving instanceof EntityAnimal)
         {

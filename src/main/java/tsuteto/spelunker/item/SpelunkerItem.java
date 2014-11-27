@@ -4,6 +4,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityList;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -13,6 +14,7 @@ import net.minecraft.world.World;
 import tsuteto.spelunker.Settings;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.constants.SpelunkerDifficulty;
+import tsuteto.spelunker.entity.EntitySteamHole;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
 
 import java.util.ArrayList;
@@ -35,6 +37,9 @@ public abstract class SpelunkerItem extends Item
     public static Item itemHelmet;
     public static Item itemFlash;
     public static Item itemGoldenStatue;
+
+    public static Item itemLevelBuilder;
+    public static Item itemEntityPlacer;
 
     public static ArrayList<SpelunkerItem> dropItemRegistry = new ArrayList<SpelunkerItem>();
 
@@ -78,6 +83,11 @@ public abstract class SpelunkerItem extends Item
                 .register()
                 .setMaxStackSize(1)
                 .setCreativeTab(CreativeTabs.tabMisc);
+
+        itemLevelBuilder = $("levelBuilder", new ItemLevelBuilder()).register()
+                .setCreativeTab(SpelunkerMod.tabLevelComponents);
+        itemEntityPlacer = $("entityPlacer", new ItemEntityPlacer()).register()
+                .setCreativeTab(SpelunkerMod.tabLevelComponents);
 
         // Register dispense behavior
         BlockDispenser.dispenseBehaviorRegistry.putObject(itemFlash, new BehaviorDispenseFlash());

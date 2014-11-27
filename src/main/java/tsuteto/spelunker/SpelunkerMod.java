@@ -9,9 +9,10 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.registry.EntityRegistry;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
 import net.minecraft.potion.Potion;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.WeightedRandomChestContent;
@@ -19,6 +20,7 @@ import net.minecraft.world.storage.SaveHandler;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import tsuteto.spelunker.block.SpelunkerBlocks;
 import tsuteto.spelunker.blockaspect.BlockAspectHC;
 import tsuteto.spelunker.command.CommandSpedeath;
 import tsuteto.spelunker.command.CommandSpehisc;
@@ -31,8 +33,7 @@ import tsuteto.spelunker.entity.*;
 import tsuteto.spelunker.eventhandler.*;
 import tsuteto.spelunker.gui.ScreenRendererGameover;
 import tsuteto.spelunker.item.SpelunkerItem;
-import tsuteto.spelunker.packet.PacketPipeline;
-import tsuteto.spelunker.packet.SpelunkerPacketHandler;
+import tsuteto.spelunker.packet.*;
 import tsuteto.spelunker.player.ISpelunkerPlayer;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
 import tsuteto.spelunker.potion.PotionBonusScore;
@@ -50,7 +51,7 @@ import java.util.Map;
  * @author Tsuteto
  *
  */
-@Mod(modid = SpelunkerMod.modId, useMetadata = true, version = "2.2.4-MC1.7.10", acceptedMinecraftVersions = "[1.7.2,1.8)")
+@Mod(modid = SpelunkerMod.modId, useMetadata = true, version = "2.2.5-MC1.7.10", acceptedMinecraftVersions = "[1.7.2,1.8)")
 public class SpelunkerMod
 {
     public static final String modId = "SpelunkerMod2";
@@ -78,7 +79,11 @@ public class SpelunkerMod
     public static Map<String, EntityPlayerMP> deadPlayerStorage = new HashMap<String, EntityPlayerMP>();
 
     public static ChestGenHooks hardcoreBonusChest;
-    public static PacketPipeline packetPipeline = new PacketPipeline();
+    public static CreativeTabs tabLevelComponents = new CreativeTabs("spelunker.levelComponents")
+    {
+        @Override
+        public Item getTabIconItem() { return SpelunkerItem.itemHelmet; }
+    };
 
     private Configuration cfg;
     private Settings settings = new Settings();
@@ -95,6 +100,8 @@ public class SpelunkerMod
         ModLog.mod = this.getClass().getSimpleName();
         ModLog.isDebug = Settings.debug;
 
+        ModInfo.load(metadata);
+
         this.cfg = new Configuration(event.getSuggestedConfigurationFile());
         this.cfg.load();
 
@@ -106,11 +113,14 @@ public class SpelunkerMod
         // Install sound files
         sidedProxy.installSoundFiles();
 
-        // Load items
         SpelunkerItem.load();
+        SpelunkerBlocks.load();
 
         hardcoreBonusChest = new ChestGenHooks(ChestGenHooks.BONUS_CHEST,
                 new WeightedRandomChestContent[]{new WeightedRandomChestContent(SpelunkerItem.itemGoldenStatue, 0, 1, 1, 100)}, 100, 100);
+
+        // Register entities
+        SpelunkerEntity.register(this, this.settings);
 
         //sidedProxy.registerWavFiles();
 
@@ -133,33 +143,16 @@ public class SpelunkerMod
 
         BlockAspectHC.init();
 
-        // Register entity
-        EntityRegistry.registerGlobalEntityID(EntityGunBullet.class, "gunBullet",
-                settings.entityGunBulletId == -1 ? EntityRegistry.findGlobalUniqueEntityId() : settings.entityGunBulletId);
-        EntityRegistry.registerModEntity(EntityGunBullet.class, "gunBullet", 1, this, 64, 20, false);
-
-        EntityRegistry.registerGlobalEntityID(EntityBatDroppings.class, "batDroppings",
-                settings.entityBatDroppingsId == -1 ? EntityRegistry.findGlobalUniqueEntityId() : settings.entityBatDroppingsId);
-        EntityRegistry.registerModEntity(EntityBatDroppings.class, "batDroppings", 2, this, 64, 10, true);
-
-        EntityRegistry.registerGlobalEntityID(EntityFlashBullet.class, "flashBullet",
-                settings.entityFlashBulletId == -1 ? EntityRegistry.findGlobalUniqueEntityId() : settings.entityFlashBulletId);
-        EntityRegistry.registerModEntity(EntityFlashBullet.class, "flashBullet", 3, this, 64, 5, true);
-
-        EntityRegistry.registerGlobalEntityID(EntityFlash.class, "flash",
-                settings.entityFlashId == -1 ? EntityRegistry.findGlobalUniqueEntityId() : settings.entityFlashId);
-        EntityRegistry.registerModEntity(EntityFlash.class, "flash", 4, this, 64, 5, true);
-
-        EntityRegistry.registerGlobalEntityID(EntitySpelunkerItem.class, "speItem",
-                settings.spelunkerItemId == -1 ? EntityRegistry.findGlobalUniqueEntityId() : settings.spelunkerItemId);
-        EntityRegistry.registerModEntity(EntitySpelunkerItem.class, "speItem", 5, this, 64, 5, true);
-
         // Register sided components
         sidedProxy.registerComponent(this);
 
         // Initialize network handler
-        packetPipeline.initalise();
-        packetPipeline.registerPacket(SpelunkerPacketHandler.class);
+        PacketManager.init(SpelunkerMod.modId)
+                .registerPacket(SpelunkerClientPacketHandler.class)
+                .registerPacket(SpelunkerServerPacketHandler.class)
+                .registerPacket(PacketElevatorControlCl.class)
+                .registerPacket(PacketElevatorControlSv.class)
+                .registerPacket(PacketElevatorState.class);
 
         // Check BGM sound file
         sidedProxy.checkBgmSoundFile();
@@ -177,8 +170,6 @@ public class SpelunkerMod
         // Replace absorption effect
         new PotionBonusScore(Potion.field_76444_x.id, false, 16284963).setPotionName("potion.bonusScore");
         new PotionBonusScore(Potion.field_76434_w.id, false, 2445989).setPotionName("potion.bonusScore");
-
-        packetPipeline.postInitialise();
     }
 
     @Mod.EventHandler

@@ -1,9 +1,10 @@
 package tsuteto.spelunker.packet;
 
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import org.apache.logging.log4j.Level;
-import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.constants.SpelunkerPacketType;
 import tsuteto.spelunker.util.ModLog;
 
@@ -19,8 +20,9 @@ import java.io.IOException;
  */
 public class SpelunkerPacketDispatcher
 {
-    private PacketPipeline pipeline = SpelunkerMod.packetPipeline;
-    private SpelunkerPacketHandler packet = new SpelunkerPacketHandler();
+    protected final SimpleNetworkWrapper networkHandler = PacketManager.getNetworkHandler();
+
+    protected final SpelunkerCommonPacketHandler packet;
     private boolean packed = false;
 
     private ByteArrayOutputStream bytesStream;
@@ -28,10 +30,19 @@ public class SpelunkerPacketDispatcher
 
 	public SpelunkerPacketDispatcher(SpelunkerPacketType type)
 	{
+        if (type.messageTo == Side.CLIENT)
+        {
+            packet = new SpelunkerClientPacketHandler();
+        }
+        else
+        {
+            packet = new SpelunkerServerPacketHandler();
+        }
         bytesStream = new ByteArrayOutputStream();
         dataStream = new DataOutputStream(bytesStream);
 
         this.addByte((byte)(type.ordinal() & 0xff));
+        ModLog.debug("Packet: " + type.name());
 	}
 
 	public SpelunkerPacketDispatcher addInt(int val)
@@ -133,7 +144,7 @@ public class SpelunkerPacketDispatcher
         this.packed = true;
     }
 
-    public SpelunkerPacketHandler getPacket()
+    public SpelunkerCommonPacketHandler getPacket()
     {
         if (!this.packed) this.pack();
         return this.packet;
@@ -144,20 +155,22 @@ public class SpelunkerPacketDispatcher
         if (!this.packed) this.pack();
         if (((EntityPlayerMP)player).playerNetServerHandler != null)
         {
-            pipeline.sendTo(packet, (EntityPlayerMP)player);
+            networkHandler.sendTo(packet, (EntityPlayerMP)player);
+            ModLog.debug("-> Sent to client");
         }
     }
 
     public void sendPacketAll()
     {
         if (!this.packed) this.pack();
-        pipeline.sendToAll(packet);
+        networkHandler.sendToAll(packet);
     }
 
     public void sendPacketToServer()
     {
         if (!this.packed) this.pack();
-        pipeline.sendToServer(packet);
+        networkHandler.sendToServer(packet);
+        ModLog.debug("-> Sent to server");
     }
 
     private void close()

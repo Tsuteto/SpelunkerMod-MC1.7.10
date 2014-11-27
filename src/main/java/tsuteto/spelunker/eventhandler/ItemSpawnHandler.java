@@ -22,7 +22,6 @@ import tsuteto.spelunker.util.ModLog;
  * @author Tsuteto
  *
  */
-// EntityItem.func_92014_d() may be named getItemStack, EntityItem.func_92013_a may be named setItemStack
 public class ItemSpawnHandler
 {
     private static Random rand = new Random();

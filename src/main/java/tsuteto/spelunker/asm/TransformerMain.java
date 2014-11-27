@@ -35,6 +35,7 @@ public class TransformerMain implements IClassTransformer, Opcodes
         registry.add(new TEntryToggleMoreOptions());
         registry.add(new TEntryEndermanGaze());
         registry.add(new TEntryDeathCause());
+        registry.add(new TEntryBlockCollisionCheck());
 
         classToEntryMapping = new HashMap<String, List<ITransformerEntry>>();
         for (ITransformerEntry entry : registry)

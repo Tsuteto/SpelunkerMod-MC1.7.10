@@ -10,7 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-@Mod(modid = "DEBUGMOD", name = "DEBUG MOD")
+//@Mod(modid = "DEBUGMOD", name = "DEBUG MOD")
 public class DebugMod
 {
     @Mod.EventHandler

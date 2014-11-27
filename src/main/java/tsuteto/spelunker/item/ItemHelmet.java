@@ -34,7 +34,7 @@ public class ItemHelmet extends ItemArmor
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type)
     {
-        return "spelunker:helmet.png";
+        return "spelunker:textures/helmet.png";
     }
 
     public Coordinate[] readFromNBT(EntityLivingBase var1)

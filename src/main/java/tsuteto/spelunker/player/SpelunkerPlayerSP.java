@@ -13,6 +13,7 @@ import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.particle.EntityFireworkSparkFX;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.Session;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldInfo;
@@ -69,6 +70,12 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
 
     public boolean isInvincible = false;
     private WatchBool statInvincible = new WatchBool(false);
+
+    // For rope action
+    public boolean isGrabbingRope = false;
+    public int ropeJumpToggleTimer = 0;
+    public boolean prevJumpping = false;
+    public boolean isRopeJumpping = false;
 
     public static Field fldEffectRendererFxLayers = ReflectionHelper.findField(EffectRenderer.class, "field_78876_b", "fxLayers");
     public static Field fldIsHittingBlock = ReflectionHelper.findField(PlayerControllerMP.class, "field_78778_j", "isHittingBlock");
@@ -252,6 +259,96 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
 
         // System.out.println("Underground: " + inUnderground() + ", Air: " +
         // getEnergy());
+
+        /*
+         * Elevator Control
+         */
+//        if (this.controlElevatorId != -1)
+//        {
+//            //ModLog.debug(player.movementInput.moveForward);
+//            int direction;
+//            if (player.isSneaking())
+//            {
+//                if (player.movementInput.moveForward > 0.1f)
+//                {
+//                    direction = 1;
+//                } else if (player.movementInput.moveForward < -0.1f)
+//                {
+//                    direction = 2;
+//                } else
+//                {
+//                    direction = 0;
+//                }
+//
+//                player.setVelocity(0.0D, player.motionY, 0.0D);
+//            }
+//            else
+//            {
+//                direction = 0;
+//            }
+//
+//            Entity entity = player.worldObj.getEntityByID(this.controlElevatorId);
+//            if (entity instanceof EntityElevator)
+//            {
+//                EntityElevator elevator = (EntityElevator)entity;
+//                if (direction == 0) elevator.setNeutral();
+//                if (direction == 1) elevator.moveUp();
+//                if (direction == 2) elevator.moveDown();
+//                if (direction != this.prevElevatorDirection)
+//                {
+//                    PacketDispatcher.packet(new PacketElevatorControlSv(this.controlElevatorId, direction)).sendToServer();
+//                    this.prevElevatorDirection = direction;
+//                }
+//            }
+//        }
+
+        // Rope Handling
+        if (isGrabbingRope)
+        {
+            if (!isRopeJumpping)
+            {
+                if (player.movementInput.jump)
+                {
+                    player.motionY = 0.2D;
+                } else if (player.isSneaking())
+                {
+                    player.motionY = -0.12D;
+                } else
+                {
+                    player.motionY = 0.0D;
+                }
+                player.motionX *= 0.2D;
+                player.motionZ *= 0.2D;
+            }
+
+            if (!prevJumpping && player.movementInput.jump)
+            {
+                if (ropeJumpToggleTimer == 0)
+                {
+                    ropeJumpToggleTimer = 7;
+                }
+                else
+                {
+                    float f = 0.3F;
+                    player.motionX = (double)(-MathHelper.sin(player.rotationYaw / 180.0F * (float) Math.PI) * f);
+                    player.motionZ = (double)(MathHelper.cos(player.rotationYaw / 180.0F * (float)Math.PI) * f);
+                    player.motionY = 0.25D;
+                    ropeJumpToggleTimer = 0;
+                    isRopeJumpping = true;
+                }
+            }
+            if (ropeJumpToggleTimer > 0)
+            {
+                ropeJumpToggleTimer--;
+            }
+            prevJumpping = player.movementInput.jump;
+            isGrabbingRope = false;
+        }
+        else
+        {
+            isRopeJumpping = false;
+        }
+
 
         spelunkerExtra.afterOnLivingUpdate();
 

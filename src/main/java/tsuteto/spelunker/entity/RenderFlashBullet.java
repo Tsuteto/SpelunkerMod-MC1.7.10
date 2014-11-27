@@ -15,7 +15,7 @@ import org.lwjgl.opengl.GL11;
  */
 public class RenderFlashBullet extends Render
 {
-    private static final ResourceLocation texture = new ResourceLocation("spelunker", "icons.png");
+    private static final ResourceLocation texture = new ResourceLocation("spelunker", "textures/icons.png");
 
     public void renderFlare(EntityFlashBullet var1, double var2, double var4, double var6, float var8, float var9)
     {

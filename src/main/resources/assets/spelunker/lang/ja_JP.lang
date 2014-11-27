@@ -58,6 +58,24 @@ entity.flashBullet.name=発光体
 entity.flash.name=フラッシュ
 
 #
+# Spelunker Level Components
+#
+itemGroup.spelunker.levelComponents=スペランカーステージやくもの(作成中)
+
+tile.spelunker:rope.name=ロープ
+tile.spelunker:liftLauncher.name=リフト射出マシン
+
+item.spelunker:levelBuilder.name=ステージ生成
+item.spelunker:levelBuilder.desc.1=このアイテムは巨大な建造物を生成し、
+item.spelunker:levelBuilder.desc.2=その一帯を上書きします。
+item.spelunker:levelBuilder.desc.3=取消できないので注意。
+item.spelunker:entityPlacer.name=やくもの設置
+
+entity.elevator.name=エレベーター
+entity.lift.name=リフト
+entity.steamHole.name=水蒸気孔
+
+#
 # moody death cause
 #
 deathScreen.title=失敗！

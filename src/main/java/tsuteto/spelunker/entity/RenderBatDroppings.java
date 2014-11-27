@@ -20,7 +20,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderBatDroppings extends Render
 {
-    private static final ResourceLocation texture = new ResourceLocation("spelunker", "batDroppings.png");
+    private static final ResourceLocation texture = new ResourceLocation("spelunker", "textures/batDroppings.png");
 
     /**
      * Actually renders the given argument. This is a synthetic bridge method, always casting down its argument and then

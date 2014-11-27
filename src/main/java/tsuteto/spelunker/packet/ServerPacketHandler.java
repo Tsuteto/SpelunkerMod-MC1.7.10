@@ -36,7 +36,7 @@ public class ServerPacketHandler
         case INIT:
             try
             {
-                SpelunkerPacketDispatcher response = new SpelunkerPacketDispatcher(SpelunkerPacketType.INIT);
+                SpelunkerPacketDispatcher response = new SpelunkerPacketDispatcher(SpelunkerPacketType.INIT_SUCCEEDED);
                 response.addByte((byte)spelunkerMp.gameMode.ordinal());
                 response.addBool(SpelunkerMod.isHardcore());
                 response.addInt(spelunkerMp.deaths);

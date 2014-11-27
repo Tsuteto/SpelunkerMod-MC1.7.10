@@ -455,7 +455,7 @@ public class EntityGunBullet extends Entity implements IProjectile, IEntityAddit
         int lthrower = data.readInt();
         if (lthrower != 0) {
             Entity lentity = worldObj.getEntityByID(lthrower);
-            if (lentity instanceof EntityLiving) {
+            if (lentity instanceof EntityLivingBase) {
                 this.shootingEntity = lentity;
             }
         }

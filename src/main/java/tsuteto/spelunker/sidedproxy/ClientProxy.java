@@ -11,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
 import tsuteto.spelunker.SpelunkerMod;
+import tsuteto.spelunker.block.SpelunkerBlocks;
 import tsuteto.spelunker.entity.*;
 import tsuteto.spelunker.eventhandler.ClientTickHandler;
 import tsuteto.spelunker.gui.ScreenRenderer;
@@ -31,6 +32,7 @@ public class ClientProxy implements ISidedProxy
      * @param player
      * @return
      */
+    @SuppressWarnings("unchecked")
     @Override
     public <T extends ISpelunkerPlayer> T getSpelunkerPlayer(EntityPlayer player)
     {
@@ -54,11 +56,8 @@ public class ClientProxy implements ISidedProxy
 
         ClientPlayerAPI.register(SpelunkerMod.modId, SpelunkerPlayerSP.class);
 
-        RenderingRegistry.registerEntityRenderingHandler(EntityGunBullet.class, new RenderGunBullet());
-        RenderingRegistry.registerEntityRenderingHandler(EntityBatDroppings.class, new RenderBatDroppings());
-        RenderingRegistry.registerEntityRenderingHandler(EntityFlash.class, new RenderFlash());
-        RenderingRegistry.registerEntityRenderingHandler(EntityFlashBullet.class, new RenderFlashBullet());
-        RenderingRegistry.registerEntityRenderingHandler(EntitySpelunkerItem.class, new RenderSpelunkerItem());
+        SpelunkerEntity.registerEntityRenderer();
+        SpelunkerBlocks.registerBlockRenderer();
     }
 
     @Override

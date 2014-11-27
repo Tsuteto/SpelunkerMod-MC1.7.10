@@ -13,7 +13,7 @@ import tsuteto.spelunker.constants.SpelunkerGameMode;
  */
 public class Settings
 {
-    public static boolean debug = Boolean.parseBoolean(System.getProperty("spelunkerMod.debug"));
+    public static boolean debug = Boolean.parseBoolean(System.getProperty("spelunkerMod.debug", "false"));
 
     public boolean hardcore = false;
     public boolean fullHP = false;
@@ -36,8 +36,13 @@ public class Settings
     public int entityFlashId = -1;
     public int entityFlashBulletId = -1;
     public int spelunkerItemId = -1;
+    public int entityElevatorId = -1;
+    public int entityLiftId = -1;
+    public int entitySteamId = -1;
 
-    public String[] cursedWords = new String[]{"進捗どうですか", "sintyokudoudesuka", "sinntyokudoudesuka", "つらい", "turai"};
+    public String[] cursedWords = new String[]{
+            "進捗どうですか", "sintyokudoudesuka", "sinntyokudoudesuka", "つらい", "turai",
+            "How's the progress", "How is the progress", "How about the progress", "How 'bout the progress", "hard"};
     public int goldenSpelunkers = 0;
     public boolean goldenSpelunkerRecipe;
 
@@ -79,9 +84,11 @@ public class Settings
         entityFlashBulletId  = cfg.get("entity", "flashBulletId", entityFlashBulletId).getInt();
         entityFlashId = cfg.get("entity", "flashId", entityFlashId).getInt();
         entityGunBulletId  = cfg.get("entity", "gunBulletId", entityGunBulletId).getInt();
+        entityElevatorId = cfg.get("entity", "elevatorId", entityElevatorId).getInt();
+        entityLiftId = cfg.get("entity", "liftId", entityLiftId).getInt();
 
         cursedWords = cfg.get("game", "cursedWords", cursedWords,
-                "For hardcore. Partial matching, non-case-sensitive, ignoring space characters. Blank to disable").getStringList();
+                "For hardcore. Partial matching, non-case-sensitive, ignoring space, quotations and commas. Blank to disable").getStringList();
 
         Property propGoldenSpelunkers = cfg.get("game", "goldenSpelunkers", goldenSpelunkers,
                 "For hardcore. How many Golden Spelunker (Fake) do players have?");

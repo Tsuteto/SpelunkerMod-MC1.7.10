@@ -58,6 +58,24 @@ entity.flashBullet.name=Luminary
 entity.flash.name=Flash
 
 #
+# Spelunker Level Components
+#
+itemGroup.spelunker.levelComponents=Spelunker Level Components (WIP)
+
+tile.spelunker:rope.name=Rope
+tile.spelunker:liftLauncher.name=Lift Launcher
+
+item.spelunker:levelBuilder.name=Level Builder
+item.spelunker:levelBuilder.desc.1=Note this item builds a huge construction
+item.spelunker:levelBuilder.desc.2=and overwrites the area of it.
+item.spelunker:levelBuilder.desc.3=This can't be cancelled.
+item.spelunker:entityPlacer.name=Place
+
+entity.elevator.name=Elevator
+entity.lift.name=Lift
+entity.steamHole.name=Steam Hole
+
+#
 # moody death cause
 #
 deathScreen.title=You failed!

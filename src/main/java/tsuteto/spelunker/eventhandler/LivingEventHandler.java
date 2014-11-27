@@ -1,6 +1,7 @@
 package tsuteto.spelunker.eventhandler;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityOwnable;
@@ -26,18 +27,20 @@ import tsuteto.spelunker.player.SpelunkerPlayerMP;
  */
 public class LivingEventHandler
 {
-    private BatDroppingsHandler controller = BatDroppingsHandler.getInstance();
+    private BatDroppingsHandler batHandler = BatDroppingsHandler.getInstance();
 
     @SubscribeEvent
     public void onLivingUpdate(LivingEvent.LivingUpdateEvent event)
     {
         EntityLivingBase entity = event.entityLiving;
 
+        // Bets
         if (entity instanceof EntityBat)
         {
-            controller.onEntityUpdate((EntityBat)event.entityLiving);
+            batHandler.onEntityUpdate((EntityBat) event.entityLiving);
         }
 
+        // Helmet handling
         int helmetInterval = entity.worldObj.isRemote ?
                 SpelunkerMod.settings().clientHelmetLightInterval
                 : SpelunkerMod.settings().serverHelmetLightInterval;
@@ -76,6 +79,8 @@ public class LivingEventHandler
                 ((ItemHelmet)SpelunkerItem.itemHelmet).removeLight(entity.worldObj, entity);
             }
         }
+
+        // Rope Handling
     }
 
     @SubscribeEvent

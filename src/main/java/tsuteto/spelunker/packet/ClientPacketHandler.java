@@ -1,7 +1,5 @@
 package tsuteto.spelunker.packet;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,7 +34,7 @@ public class ClientPacketHandler extends CommonClientPacketHandler
         SpelunkerPacketType packetType = SpelunkerPacketType.values()[data.readByte()];
 
         switch (packetType) {
-        case INIT:
+        case INIT_SUCCEEDED:
             spelunker.gameMode = SpelunkerGameMode.values()[data.readByte()];
             spelunker.hardcore = data.readBoolean();
             spelunker.deaths = data.readInt();
