@@ -1,5 +1,6 @@
 package tsuteto.spelunker.data;
 
+import com.mojang.authlib.GameProfile;
 import net.minecraft.nbt.NBTTagCompound;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.constants.SpelunkerGameMode;
@@ -20,6 +21,7 @@ public class SpelunkerWorldInfo
     private int lives;
     private boolean isDragonDefeated;
     private int goldenSpelunkers;
+    private String playerName;
 
     public SpelunkerWorldInfo()
     {
@@ -31,10 +33,18 @@ public class SpelunkerWorldInfo
         lives = SpelunkerMod.settings().initialLives - 1;
         isDragonDefeated = false;
         goldenSpelunkers = SpelunkerMod.settings().goldenSpelunkers;
+        playerName = null;
+    }
+
+    public SpelunkerWorldInfo(GameProfile profile)
+    {
+        super();
+        playerName = profile.getName();
     }
 
     public SpelunkerWorldInfo(NBTTagCompound nbttagcompound)
     {
+        playerName = nbttagcompound.getString("name");
         mode = nbttagcompound.getString("mode");
         hardcore = nbttagcompound.getBoolean("hc");
         deaths = nbttagcompound.getInteger("deaths");
@@ -59,6 +69,7 @@ public class SpelunkerWorldInfo
 
     private void updateTagCompound(NBTTagCompound nbttagcompound)
     {
+        nbttagcompound.setString("name", playerName);
         nbttagcompound.setString("mode", mode);
         nbttagcompound.setBoolean("hc", hardcore);
         nbttagcompound.setInteger("deaths", deaths);
@@ -154,4 +165,13 @@ public class SpelunkerWorldInfo
         this.goldenSpelunkers += 1;
     }
 
+    public String getPlayerName()
+    {
+        return playerName;
+    }
+
+    public void setPlayerName(String playerName)
+    {
+        this.playerName = playerName;
+    }
 }

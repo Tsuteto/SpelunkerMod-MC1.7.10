@@ -11,69 +11,85 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import tsuteto.spelunker.Settings;
 import tsuteto.spelunker.SpelunkerMod;
+import tsuteto.spelunker.entity.render.*;
 import tsuteto.spelunker.item.ItemEntityPlacer;
-import tsuteto.spelunker.item.SpelunkerItem;
 
 public class SpelunkerEntity
 {
-    public static int renderIdRope = RenderingRegistry.getNextAvailableRenderId();
-
     public static void register(SpelunkerMod core, Settings settings)
     {
-        // Register entity
-        $(EntityGunBullet.class, "gunBullet", settings.entityGunBulletId, core)
+        EntityRegister.setModInstance(core);
+
+        $(EntityGunBullet.class, "gunBullet", settings.entityGunBulletId)
                 .setMotionParams(64, 20, false).register();
-        $(EntityBatDroppings.class, "batDroppings", settings.entityBatDroppingsId, core)
+        $(EntityBatDroppings.class, "batDroppings", settings.entityBatDroppingsId)
                 .setMotionParams(64, 10, true).register();
-        $(EntityFlashBullet.class, "flashBullet", settings.entityFlashBulletId, core)
+        $(EntityFlashBullet.class, "flashBullet", settings.entityFlashBulletId)
                 .setMotionParams(64, 5, true).register();
-        $(EntityFlash.class, "flash", settings.entityFlashId, core)
+        $(EntityFlash.class, "flash", settings.entityFlashId)
                 .setMotionParams(64, 5, true).register();
-        $(EntitySpelunkerItem.class, "speItem", settings.spelunkerItemId, core)
+        $(EntitySpelunkerItem.class, "speItem", settings.entitySpelunkerItemId)
+                .setMotionParams(64, 5, true).register();
+        $(EntityDynamitePrimed.class, "dynamite", settings.entityDynamiteId)
                 .setMotionParams(64, 5, true).register();
 
-        /*
-         * Spelunker Level Components
-         */
-        $(EntityElevator.class, "elevator", settings.entityElevatorId, core)
+        $(EntityElevator.class, "elevator", settings.entityElevatorId)
                 .setMotionParams(64, 20, true)
                 .registerToEntityPlacer(0x00aa22, new ItemEntityPlacer.ISpawnHandler()
                 {
                     @Override
-                    public Entity spawn(World world, EntityPlayer player, int entityId, double x, double y, double z)
+                    public Entity spawn(World world, EntityPlayer player, int entityId, double x, double y, double z, int side)
                     {
                         Entity entity = EntityList.createEntityByID(entityId, world);
 
                         if (entity != null)
                         {
                             entity.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
-                            entity.rotationYaw = (float)(((MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3) - 1) * 90);
+                            if (player != null)
+                            {
+                                entity.rotationYaw = (float) (((MathHelper.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3) - 1) * 90);
+                            }
 
                             if (!world.getCollidingBoundingBoxes(entity, entity.boundingBox.expand(-0.1D, -0.1D, -0.1D)).isEmpty())
                             {
                                 return null;
                             }
-
-                            world.spawnEntityInWorld(entity);
                         }
 
                         return entity;
                     }
                 }).register();
 
-        $(EntityLift.class, "lift", settings.entityLiftId, core)
+        $(EntityLift.class, "lift", settings.entityLiftId)
                 .setMotionParams(64, 20, false).register();
 
-        $(EntitySteamHole.class, "steamHole", settings.entitySteamId, core)
+        $(EntitySteamHole.class, "steamHole", settings.entitySteamId)
                 .setMotionParams(64, 20, false)
-                .registerToEntityPlacer(0x881100)
+                .registerToEntityPlacer(0x881100, EntitySteamHole.getSpawnHandlerSteamable())
+                .registerToEntityPlacer(0x440800, EntitySteamHole.getSpawnHandlerPeddle(), "peddle")
                 .register();
 
+        $(EntityFlameHole.class, "flameHole", settings.entityFlameId)
+                .setMotionParams(64, 20, false)
+                .registerToEntityPlacer(0x888800, EntityFlameHole.getSpawnHandler())
+                .register();
+
+        $(EntityStillBat.class, "stillBat", settings.entityStillBatId)
+                .setMotionParams(64, 4, true)
+                .setEgg(0x111111, 0x555555)
+                .register();
+
+        $(EntityGhost.class, "ghost", settings.entityGhostId)
+                .setMotionParams(64, 4, true)
+                .setEgg(0x09b6ff, 0xd30723)
+                .register();
+
+        // EntityFallingFloor uses EntityFallingBlock in vanilla
     }
 
-    private static EntityRegister $(Class<? extends Entity> entityClass, String name, int id, Object modInstance)
+    private static EntityRegister $(Class<? extends Entity> entityClass, String name, int id)
     {
-        return new EntityRegister(entityClass, name, id, modInstance);
+        return new EntityRegister(entityClass, name, id);
     }
 
     @SideOnly(Side.CLIENT) // added on purpose!
@@ -88,26 +104,40 @@ public class SpelunkerEntity
         RenderingRegistry.registerEntityRenderingHandler(EntityElevator.class, new RenderElevator());
         RenderingRegistry.registerEntityRenderingHandler(EntityLift.class, new RenderLift());
         RenderingRegistry.registerEntityRenderingHandler(EntitySteamHole.class, new RenderSteamHole());
+        RenderingRegistry.registerEntityRenderingHandler(EntityFlameHole.class, new RenderFlameHole());
+        RenderingRegistry.registerEntityRenderingHandler(EntityStillBat.class, new RenderStillBat());
+        RenderingRegistry.registerEntityRenderingHandler(EntityDynamitePrimed.class, new RenderDynamitePrimed());
+        RenderingRegistry.registerEntityRenderingHandler(EntityGhost.class, new RenderGhost(0.5F));
+        // EntityFallingFloor uses RenderFallingBlock in vanilla
     }
 
     private static class EntityRegister
     {
+        private static Object modInstance;
+
+        public static void setModInstance(Object modInstance)
+        {
+            EntityRegister.modInstance = modInstance;
+        }
+
         private static int localId = 0;
 
         private final Class<? extends Entity> entityClass;
         private final String name;
-        private Object modInstance;
         private final int id;
 
         private int range = 64;
         private int updateFreq = 20;
         private boolean useVelocity = false;
 
-        public EntityRegister(Class<? extends Entity> entityClass, String name, int id, Object modInstance)
+        private boolean shouldAddEgg = false;
+        private int color1;
+        private int color2;
+
+        public EntityRegister(Class<? extends Entity> entityClass, String name, int id)
         {
             this.entityClass = entityClass;
             this.name = name;
-            this.modInstance = modInstance;
             this.id = id == -1 ? EntityRegistry.findGlobalUniqueEntityId() : id;
         }
 
@@ -121,18 +151,40 @@ public class SpelunkerEntity
 
         public EntityRegister registerToEntityPlacer(int color)
         {
-            ItemEntityPlacer.registerEntity(id, color);
+            ItemEntityPlacer.registerEntity(id, name, color);
             return this;
         }
+
         public EntityRegister registerToEntityPlacer(int color, ItemEntityPlacer.ISpawnHandler handler)
         {
-            ItemEntityPlacer.registerEntity(id, color, handler);
+            ItemEntityPlacer.registerEntity(id, name, color, handler);
+            return this;
+        }
+
+        public EntityRegister registerToEntityPlacer(int color, ItemEntityPlacer.ISpawnHandler handler, String name)
+        {
+            ItemEntityPlacer.registerEntity(id, name, color, handler);
+            return this;
+        }
+
+        public EntityRegister setEgg(int color1, int color2)
+        {
+            this.shouldAddEgg = true;
+            this.color1 = color1;
+            this.color2 = color2;
             return this;
         }
 
         public void register()
         {
-            EntityRegistry.registerGlobalEntityID(entityClass, name, id);
+            if (shouldAddEgg)
+            {
+                EntityRegistry.registerGlobalEntityID(entityClass, name, id, color1, color2);
+            }
+            else
+            {
+                EntityRegistry.registerGlobalEntityID(entityClass, name, id);
+            }
             EntityRegistry.registerModEntity(entityClass, name, localId, modInstance, range, updateFreq, useVelocity);
             localId++;
         }

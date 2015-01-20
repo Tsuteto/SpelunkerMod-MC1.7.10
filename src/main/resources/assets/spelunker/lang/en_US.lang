@@ -27,8 +27,8 @@ potion.bonusScore.postfix=Potion of Bonus Score
 potion.choked=Choked
 potion.heatstroke=Heat Stroke
 
-item.spelunker:goldenStatueF.desc.hc1=Cursed item; you can never drop it
-item.spelunker:goldenStatueF.desc.hc2=once you have. If you hold it and pray
+item.spelunker:goldenStatueF.desc.hc1=Cursed item; you can't give it up
+item.spelunker:goldenStatueF.desc.hc2=even if you die. If you hold it and pray
 item.spelunker:goldenStatueF.desc.hc3=by holding down a right click, you can 
 item.spelunker:goldenStatueF.desc.hc4=expel those you crafted.
 item.spelunker:goldenStatueF.desc.hc5=§o"The more you have, the greater
@@ -64,16 +64,74 @@ itemGroup.spelunker.levelComponents=Spelunker Level Components (WIP)
 
 tile.spelunker:rope.name=Rope
 tile.spelunker:liftLauncher.name=Lift Launcher
+tile.spelunker:spelunkerPortal.name=Spelunker World Portal
+tile.spelunker:startPoint.name=Start Point (For internal use)
+tile.spelunker:startPoint.desc=Don't use this! You can't remove it
+tile.spelunker:respawnGate.name=Respawn Gate (For internal use)
+tile.spelunker:respawnGate.desc=Don't use this! You can't remove it
+tile.spelunker:wall.name=Wall Block
+tile.spelunker:magicWall.name=Magic Wall Block
+tile.spelunker:fallingFloor.name=Falling Platform Block
+tile.spelunker:lockedGate.name=Locked Gate Block
+tile.spelunker:lockedGate.black.name=Locked Gate Block (Black)
+tile.spelunker:lockedGate.blue.name=Locked Gate Block (Blue)
+tile.spelunker:lockedGate.brown.name=Locked Gate Block (Brown)
+tile.spelunker:lockedGate.cyan.name=Locked Gate Block (Cyan)
+tile.spelunker:lockedGate.gray.name=Locked Gate Block (Gray)
+tile.spelunker:lockedGate.green.name=Locked Gate Block (Green)
+tile.spelunker:lockedGate.lightBlue.name=Locked Gate Block (Light Blue)
+tile.spelunker:lockedGate.lime.name=Locked Gate Block (Lime)
+tile.spelunker:lockedGate.magenta.name=Locked Gate Block (Magenta)
+tile.spelunker:lockedGate.orange.name=Locked Gate Block (Orange)
+tile.spelunker:lockedGate.pink.name=Locked Gate Block (Pink)
+tile.spelunker:lockedGate.purple.name=Locked Gate Block (Purple)
+tile.spelunker:lockedGate.red.name=Locked Gate Block (Red)
+tile.spelunker:lockedGate.silver.name=Locked Gate Block (Silver)
+tile.spelunker:lockedGate.white.name=Locked Gate Block (White)
+tile.spelunker:lockedGate.yellow.name=Locked Gate Block (Yellow)
+tile.spelunker:bumpyBlock.name=Bumpy Block
+tile.spelunker:rock.name=Rock Block
+tile.spelunker:breakableWall.name=Breakable Wall Block
+tile.spelunker:hiddenDiamond.name=Wall Block with Hidden Diamond
+tile.spelunker:itemBox.name=Item Box
+tile.spelunker:platform.name=Platform
+tile.spelunker:rail.name=Spelunker Rail
+tile.spelunker:railGirder.name=Rail Girder
+tile.spelunker:light.name=Light Block (For internal use)
+tile.spelunker:light.desc=Don't use this! You can't remove it
+tile.spelunker:batSpawner.name=Bat Spawner
 
 item.spelunker:levelBuilder.name=Level Builder
 item.spelunker:levelBuilder.desc.1=Note this item builds a huge construction
 item.spelunker:levelBuilder.desc.2=and overwrites the area of it.
-item.spelunker:levelBuilder.desc.3=This can't be cancelled.
+item.spelunker:levelBuilder.desc.3=This may take several seconds.
 item.spelunker:entityPlacer.name=Place
+item.spelunker:gateKey.name=Gate Key
+item.spelunker:gateKey.black.name=Gate Key (Black)
+item.spelunker:gateKey.blue.name=Gate Key (Blue)
+item.spelunker:gateKey.brown.name=Gate Key (Brown)
+item.spelunker:gateKey.cyan.name=Gate Key (Cyan)
+item.spelunker:gateKey.gray.name=Gate Key (Gray)
+item.spelunker:gateKey.green.name=Gate Key (Green)
+item.spelunker:gateKey.lightBlue.name=Gate Key (Light Blue)
+item.spelunker:gateKey.lime.name=Gate Key (Lime)
+item.spelunker:gateKey.magenta.name=Gate Key (Magenta)
+item.spelunker:gateKey.orange.name=Gate Key (Orange)
+item.spelunker:gateKey.pink.name=Gate Key (Pink)
+item.spelunker:gateKey.purple.name=Gate Key (Purple)
+item.spelunker:gateKey.red.name=Gate Key (Red)
+item.spelunker:gateKey.silver.name=Gate Key (Silver)
+item.spelunker:gateKey.white.name=Gate Key (White)
+item.spelunker:gateKey.yellow.name=Gate Key (Yellow)
+
+
+item.spelunker:dropItem.desc=For Item Box
 
 entity.elevator.name=Elevator
 entity.lift.name=Lift
 entity.steamHole.name=Steam Hole
+entity.peddle.name=Peddle
+entity.flameHole.name=Flame Hole
 
 #
 # moody death cause

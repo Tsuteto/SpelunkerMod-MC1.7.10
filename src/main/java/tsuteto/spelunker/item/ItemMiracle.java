@@ -9,7 +9,7 @@ public class ItemMiracle extends ItemAnimation
     @Override
     public void giveEffect(World world, SpelunkerPlayerMP spelunker)
     {
-        int tick = (int) (world.getWorldTime() & 7);
+        int tick = (int) (world.getTotalWorldTime() & 7);
         // System.out.println("Got Miracle: " + tick);
 
         switch (tick)
@@ -26,7 +26,7 @@ public class ItemMiracle extends ItemAnimation
             ((SpelunkerItem)SpelunkerItem.itemEnergy).giveEffect(world, spelunker);
             break;
         case 4:
-            ((SpelunkerItem)SpelunkerItem.itemDynamite).giveEffect(world, spelunker);
+            ((SpelunkerItem)SpelunkerItem.itemDynamiteDrop).giveEffect(world, spelunker);
             break;
         case 5:
             ((SpelunkerItem)SpelunkerItem.itemCoin).giveEffect(world, spelunker);

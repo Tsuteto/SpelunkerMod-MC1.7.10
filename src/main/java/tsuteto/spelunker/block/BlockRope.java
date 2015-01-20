@@ -1,5 +1,6 @@
 package tsuteto.spelunker.block;
 
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -9,30 +10,25 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import tsuteto.spelunker.SpelunkerMod;
-import tsuteto.spelunker.entity.SpelunkerEntity;
 import tsuteto.spelunker.player.SpelunkerPlayerSP;
-import tsuteto.spelunker.util.ModLog;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 public class BlockRope extends Block
 {
+    public static int renderIdRope = RenderingRegistry.getNextAvailableRenderId();
     private IIcon iconTip;
 
     protected BlockRope()
     {
-        super(Material.cloth);
+        super(Material.circuits);
+        this.setStepSound(soundTypeCloth);
         float half = 0.0625F * 2;
         this.setBlockBounds(0.5F - half, 0.0F, 0.5F - half, 0.5F + half, 1.0F, 0.5F + half);
     }
@@ -49,7 +45,7 @@ public class BlockRope extends Block
     @Override
     public int getRenderType()
     {
-        return SpelunkerEntity.renderIdRope;
+        return renderIdRope;
     }
 
     /**
@@ -78,9 +74,9 @@ public class BlockRope extends Block
     {
         if (entity instanceof EntityPlayer)
         {
-            if (entity.worldObj.isRemote)
+            if (entity.worldObj.isRemote && entity instanceof EntityPlayerSP)
             {
-                this.onClientControl((EntityPlayer)entity);
+                this.onClientControl((EntityPlayerSP)entity);
             }
         }
         else if (entity instanceof EntityLivingBase)
@@ -91,7 +87,7 @@ public class BlockRope extends Block
     }
 
     @SideOnly(Side.CLIENT)
-    private void onClientControl(EntityPlayer player)
+    private void onClientControl(EntityPlayerSP player)
     {
         SpelunkerPlayerSP spelunker = SpelunkerMod.getSpelunkerPlayer(player);
         spelunker.isGrabbingRope = true;

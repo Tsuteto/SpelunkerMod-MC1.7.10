@@ -24,7 +24,7 @@ public class SpelunkerBlockOre extends BlockOre
                 spelunker.addSpelunkerScore(score);
                 if (obtainedSound != null)
                 {
-                    spelunker.playSoundAtEntity(obtainedSound, 1.0f, 1.0f);
+                    spelunker.playSound(obtainedSound, 1.0f, 1.0f);
                 }
             }
         }

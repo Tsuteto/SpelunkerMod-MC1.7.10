@@ -9,35 +9,35 @@ import net.minecraft.entity.Entity;
 @SideOnly(Side.CLIENT)
 public class ModelElevator extends ModelBase
 {
-    public ModelRenderer[] boatSides = new ModelRenderer[4];
+    public ModelRenderer[] boxes = new ModelRenderer[4];
 
     public ModelElevator()
     {
         byte b0 = 48;
         byte b2 = 48;
         byte b3 = 0;
-        this.boatSides[0] = new ModelRenderer(this, 0, 0).setTextureSize(128, 128);
-        this.boatSides[0].addBox((float)(-b0 / 2), (float)(-b2 / 2 + 2), -0.0F, b0, b2 - 4, 4, 0.0F);
-        this.boatSides[0].setRotationPoint(0.0F, (float)b3, 0.0F);
-        this.boatSides[0].rotateAngleX = ((float)Math.PI / 2F);
+        this.boxes[0] = new ModelRenderer(this, 0, 0).setTextureSize(128, 128);
+        this.boxes[0].addBox((float)(-b0 / 2), (float)(-b2 / 2 + 2), -0.0F, b0, b2 - 4, 4, 0.0F);
+        this.boxes[0].setRotationPoint(0.0F, (float)b3, 0.0F);
+        this.boxes[0].rotateAngleX = ((float)Math.PI / 2F);
 
         // Fences
         b0 = 48;
         b2 = 9;
-        this.boatSides[1] = new ModelRenderer(this, 0, 52).setTextureSize(128, 128);
-        this.boatSides[1].addBox(-24.0F, -13.0F, -22.0F, b0, b2, 1, 0.0F);
-        this.boatSides[1].setRotationPoint(0.0F, (float)b3, 0.0F);
+        this.boxes[1] = new ModelRenderer(this, 0, 52).setTextureSize(128, 128);
+        this.boxes[1].addBox(-24.0F, -13.0F, -22.0F, b0, b2, 1, 0.0F);
+        this.boxes[1].setRotationPoint(0.0F, (float)b3, 0.0F);
 
-        this.boatSides[2] = new ModelRenderer(this, 0, 52).setTextureSize(128, 128);
-        this.boatSides[2].addBox(-24.0F, -13.0F, 21.0F, b0, b2, 1, 0.0F);
-        this.boatSides[2].setRotationPoint(0.0F, (float)b3, 0.0F);
+        this.boxes[2] = new ModelRenderer(this, 0, 52).setTextureSize(128, 128);
+        this.boxes[2].addBox(-24.0F, -13.0F, 21.0F, b0, b2, 1, 0.0F);
+        this.boxes[2].setRotationPoint(0.0F, (float)b3, 0.0F);
 
-        this.boatSides[3] = new ModelRenderer(this, 0, 62).setTextureSize(128, 128);
+        this.boxes[3] = new ModelRenderer(this, 0, 62).setTextureSize(128, 128);
         b0 = 42;
         b2 = 9;
-        this.boatSides[3].addBox(-21.0F, -13.0F, -24.0F, b0, b2, 1, 0.0F);
-        this.boatSides[3].setRotationPoint(0.0F, (float)b3, 0.0F);
-        this.boatSides[3].rotateAngleY = ((float)Math.PI / 2F);
+        this.boxes[3].addBox(-21.0F, -13.0F, -24.0F, b0, b2, 1, 0.0F);
+        this.boxes[3].setRotationPoint(0.0F, (float)b3, 0.0F);
+        this.boxes[3].rotateAngleY = ((float)Math.PI / 2F);
 
         // Pillars
 //        this.boatSides[4] = new ModelRenderer(this, 104, 0).setTextureSize(128, 128);
@@ -55,9 +55,9 @@ public class ModelElevator extends ModelBase
      */
     public void render(Entity p_78088_1_, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_, float p_78088_6_, float p_78088_7_)
     {
-        for (int i = 0; i < boatSides.length; ++i)
+        for (int i = 0; i < boxes.length; ++i)
         {
-            this.boatSides[i].render(p_78088_7_);
+            this.boxes[i].render(p_78088_7_);
         }
     }
 }

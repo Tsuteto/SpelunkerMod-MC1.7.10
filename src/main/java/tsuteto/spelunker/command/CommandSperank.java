@@ -68,7 +68,20 @@ public class CommandSperank extends CommandSpelunkerBase
         }
         else
         {
-            playerList = SpelunkerMod.getSaveHandler().getAvailableSpelunkerDat();
+            String[] datList = SpelunkerMod.getSaveHandler().getAvailableSpelunkerDat();
+            playerList = new String[datList.length];
+            for (int i = 0; i < datList.length; i++)
+            {
+                SpelunkerWorldInfo worldInfo = getWorldInfo(datList[i]);
+                if (worldInfo.getPlayerName() != null)
+                {
+                    playerList[i] = worldInfo.getPlayerName();
+                }
+                else
+                {
+                    playerList[i] = datList[i];
+                }
+            }
         }
 
         RankingRow[] rankingRows = new RankingRow[playerList.length];

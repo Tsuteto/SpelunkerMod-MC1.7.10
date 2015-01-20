@@ -7,47 +7,61 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
+import net.minecraft.util.Facing;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import tsuteto.spelunker.entity.EntityElevator;
+import tsuteto.spelunker.util.ModLog;
 
 import java.util.HashMap;
 import java.util.List;
 
 public class ItemEntityPlacer extends Item
 {
+    private static int nextId = 0;
+
     @SideOnly(Side.CLIENT)
     private IIcon theIcon;
 
     private static final HashMap<Integer, Info> entityRegistry = Maps.newHashMap();
+    private static final HashMap<String, Integer> nameToIdMap = Maps.newHashMap();
 
     public ItemEntityPlacer()
     {
         this.setHasSubtypes(true);
     }
 
-    public static void registerEntity(int entityId, int color, ISpawnHandler handler)
+    public static void registerEntity(int entityId, String name, int color, ISpawnHandler handler)
     {
-        entityRegistry.put(entityId, new Info(entityId, color, handler));
+        entityRegistry.put(nextId, new Info(nextId, entityId, name, color, handler));
+        nameToIdMap.put(name, nextId);
+        nextId++;
     }
 
-    public static void registerEntity(int entityId, int color)
+    public static void registerEntity(int entityId, String name, int color)
     {
-        registerEntity(entityId, color, new DefaultSpawnHandler());
+        registerEntity(entityId, name, color, new DefaultSpawnHandler());
     }
 
-    public String getItemStackDisplayName(ItemStack p_77653_1_)
+    public static int getIdFromName(String name)
     {
-        String s = ("" + StatCollector.translateToLocal(this.getUnlocalizedName() + ".name")).trim();
-        String s1 = EntityList.getStringFromID(p_77653_1_.getItemDamage());
+        return nameToIdMap.get(name);
+    }
 
-        if (s1 != null)
+    public String getItemStackDisplayName(ItemStack is)
+    {
+        String s = StatCollector.translateToLocal(this.getUnlocalizedName() + ".name").trim();
+        Info info = entityRegistry.get(is.getItemDamage());
+        if (info != null)
         {
-            s = s + " " + StatCollector.translateToLocal("entity." + s1 + ".name");
+            s = s + " " + StatCollector.translateToLocal("entity." + info.name + ".name");
         }
 
         return s;
@@ -83,7 +97,7 @@ public class ItemEntityPlacer extends Item
                 d0 = 0.5D;
             }
 
-            Entity entity = spawnEntity(p_77648_3_, p_77648_2_, p_77648_1_.getItemDamage(), (double) p_77648_4_ + 0.5D, (double) p_77648_5_ + d0, (double) p_77648_6_ + 0.5D);
+            Entity entity = spawnEntity(p_77648_3_, p_77648_2_, p_77648_1_.getItemDamage(), (double) p_77648_4_ + 0.5D, (double) p_77648_5_ + d0, (double) p_77648_6_ + 0.5D, p_77648_7_);
 
             if (entity != null)
             {
@@ -134,7 +148,7 @@ public class ItemEntityPlacer extends Item
 
                     if (p_77659_2_.getBlock(i, j, k) instanceof BlockLiquid)
                     {
-                        Entity entity = spawnEntity(p_77659_2_, p_77659_3_, p_77659_1_.getItemDamage(), (double) i, (double) j, (double) k);
+                        Entity entity = spawnEntity(p_77659_2_, p_77659_3_, p_77659_1_.getItemDamage(), (double) i, (double) j, (double) k, movingobjectposition.sideHit);
 
                         if (entity != null)
                         {
@@ -155,19 +169,23 @@ public class ItemEntityPlacer extends Item
      * Spawns the creature specified by the egg's type in the location specified by the last three parameters.
      * Parameters: world, entityID, x, y, z.
      */
-    public Entity spawnEntity(World p_77840_0_, EntityPlayer player, int p_77840_1_, double p_77840_2_, double p_77840_4_, double p_77840_6_)
+    public static Entity spawnEntity(World world, EntityPlayer player, int id, double x, double y, double z, int side)
     {
-        if (!entityRegistry.containsKey(Integer.valueOf(p_77840_1_)))
+        if (!entityRegistry.containsKey(Integer.valueOf(id)))
         {
             return null;
         }
         else
         {
             Entity entity = null;
-            Info info = entityRegistry.get(p_77840_1_);
+            Info info = entityRegistry.get(id);
             if (info != null)
             {
-                entity = info.handler.spawn(p_77840_0_, player, p_77840_1_, p_77840_2_, p_77840_4_, p_77840_6_);
+                entity = info.handler.spawn(world, player, info.spawnedID, x, y, z, side);
+                if (entity != null)
+                {
+                    world.spawnEntityInWorld(entity);
+                }
             }
             return entity;
         }
@@ -199,7 +217,7 @@ public class ItemEntityPlacer extends Item
         {
             if (!EntityLivingBase.class.isAssignableFrom(EntityList.getClassFromID(info.spawnedID)))
             {
-                p_150895_3_.add(new ItemStack(p_150895_1_, 1, info.spawnedID));
+                p_150895_3_.add(new ItemStack(p_150895_1_, 1, info.id));
             }
         }
     }
@@ -213,13 +231,17 @@ public class ItemEntityPlacer extends Item
 
     private static class Info
     {
+        public int id;
         public int spawnedID;
+        public String name;
         public int color;
         public ISpawnHandler handler;
 
-        public Info(int spawnedID, int color, ISpawnHandler handler)
+        public Info(int id, int spawnedID, String name, int color, ISpawnHandler handler)
         {
+            this.id = id;
             this.spawnedID = spawnedID;
+            this.name = name;
             this.color = color;
             this.handler = handler;
         }
@@ -227,28 +249,29 @@ public class ItemEntityPlacer extends Item
 
     public static interface ISpawnHandler
     {
-        public Entity spawn(World world, EntityPlayer player, int entityId, double x, double y, double z);
+        public Entity spawn(World world, EntityPlayer player, int entityId, double x, double y, double z, int side);
     }
 
     public static class DefaultSpawnHandler implements ISpawnHandler
     {
 
         @Override
-        public Entity spawn(World world, EntityPlayer player, int entityId, double x, double y, double z)
+        public Entity spawn(World world, EntityPlayer player, int entityId, double x, double y, double z, int side)
         {
             Entity entity = EntityList.createEntityByID(entityId, world);
 
             if (entity != null)
             {
-                entity.setLocationAndAngles(x, y, z, MathHelper.wrapAngleTo180_float(world.rand.nextFloat() * 360.0F), 0.0F);
+                entity.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
                 //entity.rotationYaw = (float)(((MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3) - 1) * 90);
 
-                if (!world.getCollidingBoundingBoxes(entity, entity.boundingBox.expand(-0.1D, -0.1D, -0.1D)).isEmpty())
+                List collidingBoxes = world.getCollidingBoundingBoxes(entity, entity.boundingBox.expand(-0.1D, -0.1D, -0.1D));
+                if (!collidingBoxes.isEmpty())
                 {
+                    ModLog.debug("%s colliding with:", entity.getCommandSenderName());
+                    for (Object box : collidingBoxes) ModLog.debug(box);
                     return null;
                 }
-
-                world.spawnEntityInWorld(entity);
             }
 
             return entity;

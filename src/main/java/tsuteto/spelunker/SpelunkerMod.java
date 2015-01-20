@@ -1,23 +1,23 @@
 package tsuteto.spelunker;
 
 import api.player.server.ServerPlayerAPI;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.potion.Potion;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.storage.SaveHandler;
 import net.minecraftforge.common.ChestGenHooks;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import tsuteto.spelunker.block.SpelunkerBlocks;
@@ -29,11 +29,19 @@ import tsuteto.spelunker.constants.SpelunkerGameMode;
 import tsuteto.spelunker.data.SpelunkerMultiWorldInfo;
 import tsuteto.spelunker.data.SpelunkerSaveHandler;
 import tsuteto.spelunker.data.SpelunkerSaveHandlerMulti;
-import tsuteto.spelunker.entity.*;
+import tsuteto.spelunker.dimension.SpelunkerLevelManager;
+import tsuteto.spelunker.entity.EntityGhost;
+import tsuteto.spelunker.entity.SpelunkerEntity;
 import tsuteto.spelunker.eventhandler.*;
 import tsuteto.spelunker.gui.ScreenRendererGameover;
 import tsuteto.spelunker.item.SpelunkerItem;
-import tsuteto.spelunker.packet.*;
+import tsuteto.spelunker.network.PacketManager;
+import tsuteto.spelunker.network.SpelunkerClientPacketHandler;
+import tsuteto.spelunker.network.SpelunkerServerPacketHandler;
+import tsuteto.spelunker.network.packet.PacketDimRegistration;
+import tsuteto.spelunker.network.packet.PacketElevatorControlCl;
+import tsuteto.spelunker.network.packet.PacketElevatorControlSv;
+import tsuteto.spelunker.network.packet.PacketElevatorState;
 import tsuteto.spelunker.player.ISpelunkerPlayer;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
 import tsuteto.spelunker.potion.PotionBonusScore;
@@ -41,9 +49,13 @@ import tsuteto.spelunker.potion.SpelunkerPotion;
 import tsuteto.spelunker.sidedproxy.ISidedProxy;
 import tsuteto.spelunker.util.ModLog;
 import tsuteto.spelunker.util.UpdateNotification;
+import tsuteto.spelunker.world.SpelunkerBiomes;
+import tsuteto.spelunker.world.WorldProviderSpelunker;
 
-import java.util.HashMap;
+import java.io.File;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * This is the Main Class of the Spelunker Mod!
@@ -51,10 +63,10 @@ import java.util.Map;
  * @author Tsuteto
  *
  */
-@Mod(modid = SpelunkerMod.modId, useMetadata = true, version = "2.2.5-MC1.7.10", acceptedMinecraftVersions = "[1.7.2,1.8)")
+@Mod(modid = SpelunkerMod.modId, useMetadata = true, version = "2.3.0-MC1.7.10", acceptedMinecraftVersions = "[1.7.2,1.8)")
 public class SpelunkerMod
 {
-    public static final String modId = "SpelunkerMod2";
+    public static final String modId = "SpelunkerMod";
     public static final String resourceDomain = "spelunker:";
 
     @Mod.Instance(modId)
@@ -75,8 +87,10 @@ public class SpelunkerMod
     public static boolean isBgm2xScoreAvailable = false;
     public static boolean isBgmInvincibleAvailable = false;
     public static boolean isBgmSpeedPotionAvailable = false;
+    public static boolean isBgmGhostComingAvailable = false;
 
-    public static Map<String, EntityPlayerMP> deadPlayerStorage = new HashMap<String, EntityPlayerMP>();
+    public static List<EntityGhost> ghostList = Lists.newArrayList();
+    public static Map<UUID, EntityPlayerMP> deadPlayerStorage = Maps.newHashMap();
 
     public static ChestGenHooks hardcoreBonusChest;
     public static CreativeTabs tabLevelComponents = new CreativeTabs("spelunker.levelComponents")
@@ -93,6 +107,7 @@ public class SpelunkerMod
     private SpelunkerSaveHandler saveHandler = null;
     private SpelunkerSaveHandlerMulti saveHandlerMulti = null;
     private SpelunkerMultiWorldInfo multiWorldInfo = null;
+    private SpelunkerLevelManager levelManager = null;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
@@ -102,6 +117,7 @@ public class SpelunkerMod
 
         ModInfo.load(metadata);
 
+        this.renameConfigFile(event.getSuggestedConfigurationFile());
         this.cfg = new Configuration(event.getSuggestedConfigurationFile());
         this.cfg.load();
 
@@ -140,6 +156,7 @@ public class SpelunkerMod
         MinecraftForge.EVENT_BUS.register(new BlockEventHandler());
         FMLCommonHandler.instance().bus().register(new PlayerEventHandler());
         FMLCommonHandler.instance().bus().register(new ServerTickHandler());
+        FMLCommonHandler.instance().bus().register(new ConnectionEventHandler());
 
         BlockAspectHC.init();
 
@@ -147,18 +164,36 @@ public class SpelunkerMod
         sidedProxy.registerComponent(this);
 
         // Initialize network handler
-        PacketManager.init(SpelunkerMod.modId)
+        PacketManager.init(modId)
                 .registerPacket(SpelunkerClientPacketHandler.class)
                 .registerPacket(SpelunkerServerPacketHandler.class)
                 .registerPacket(PacketElevatorControlCl.class)
                 .registerPacket(PacketElevatorControlSv.class)
-                .registerPacket(PacketElevatorState.class);
+                .registerPacket(PacketElevatorState.class)
+                .registerPacket(PacketDimRegistration.class)
+                .registerEventHandler(new ConnectionEventHandler());
 
         // Check BGM sound file
         sidedProxy.checkBgmSoundFile();
 
         // Register the Spelunker class for PlayerAPI
         ServerPlayerAPI.register(modId, SpelunkerPlayerMP.class);
+
+        // Biome
+        SpelunkerBiomes.register(cfg);
+
+        // Register dimension type
+        DimensionManager.registerProviderType(settings.dimTypeId, WorldProviderSpelunker.class, false);
+
+    }
+
+    private void renameConfigFile(File newCfg)
+    {
+        File oldCfg = new File(newCfg.getParent(), "SpelunkerMod2.cfg");
+        if (oldCfg.exists() && oldCfg.isFile() && !newCfg.exists())
+        {
+            oldCfg.renameTo(newCfg);
+        }
     }
 
     @Mod.EventHandler
@@ -170,6 +205,8 @@ public class SpelunkerMod
         // Replace absorption effect
         new PotionBonusScore(Potion.field_76444_x.id, false, 16284963).setPotionName("potion.bonusScore");
         new PotionBonusScore(Potion.field_76434_w.id, false, 2445989).setPotionName("potion.bonusScore");
+
+        cfg.save();
     }
 
     @Mod.EventHandler
@@ -180,11 +217,9 @@ public class SpelunkerMod
         event.registerServerCommand(new CommandSperank());
 
         // Set up SaveHandler for players
-        SaveHandler saveHandler = (SaveHandler)event.getServer().worldServers[0].getSaveHandler();
+        SaveHandler saveHandler = (SaveHandler)event.getServer().worldServerForDimension(0).getSaveHandler();
 
-        SpelunkerSaveHandler spelunkerSaveHandler = new SpelunkerSaveHandler(
-                saveHandler.getWorldDirectory(),
-                MinecraftServer.getServer().isSinglePlayer());
+        SpelunkerSaveHandler spelunkerSaveHandler = new SpelunkerSaveHandler(saveHandler.getWorldDirectory(), event.getServer().isSinglePlayer());
 
         this.saveHandler = spelunkerSaveHandler;
         ModLog.debug("loaded savehandler for single: " + saveHandler.getWorldDirectory());
@@ -200,9 +235,12 @@ public class SpelunkerMod
             saveHandlerMulti.saveData(multiWorldInfo);
         }
 
-        if (isHardcore())
+        // Set up SpelunkerLevelManager
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
         {
-//            EntityRegistry.addSpawn(EntityBat.class, 10, 32, 32, EnumCreatureType.ambient, (BiomeGenBase[])BiomeGenBase.explorationBiomesList.toArray(new BiomeGenBase[0]));
+            levelManager = new SpelunkerLevelManager(settings.dimTypeId, saveHandler.getWorldDirectory());
+            levelManager.loadLevelData();
+            levelManager.registerAll();
         }
 
         // Notify if update is available
@@ -212,11 +250,15 @@ public class SpelunkerMod
 
     }
 
+    @Mod.EventHandler
+    public void onServerStopped(FMLServerStoppedEvent event)
+    {
+        levelManager.unregisterAll();
+        levelManager = null;
+    }
+
     /**
      * Returns Spelunker instance by PlayerAPI
-     *
-     * @param player
-     * @return
      */
     public static <T extends ISpelunkerPlayer> T getSpelunkerPlayer(EntityPlayer player)
     {
@@ -279,9 +321,13 @@ public class SpelunkerMod
         return instance.multiWorldInfo.isGameToBeFinished = flag;
     }
 
+    public static SpelunkerLevelManager getLevelManager()
+    {
+        return instance.levelManager;
+    }
+
     /**
-     * This is server-side only!
-     * @return
+     * This is server-side use only!
      */
     public static boolean isHardcore()
     {

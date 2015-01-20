@@ -36,6 +36,8 @@ public interface ISpelunkerPlayer
 
     boolean isSpeedPotion();
 
+    boolean isGhostComing();
+
     void killInstantly(DamageSource dmgsrc);
 
     boolean isHardcore();

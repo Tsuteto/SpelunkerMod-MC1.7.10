@@ -29,7 +29,7 @@ import tsuteto.spelunker.blockaspect.BlockAspectHC;
 import tsuteto.spelunker.constants.SpelunkerPacketType;
 import tsuteto.spelunker.damage.SpelunkerDamageSource;
 import tsuteto.spelunker.item.SpelunkerItem;
-import tsuteto.spelunker.packet.SpelunkerPacketDispatcher;
+import tsuteto.spelunker.network.SpelunkerPacketDispatcher;
 import tsuteto.spelunker.potion.SpelunkerPotion;
 import tsuteto.spelunker.util.ModLog;
 import tsuteto.spelunker.util.Utils;

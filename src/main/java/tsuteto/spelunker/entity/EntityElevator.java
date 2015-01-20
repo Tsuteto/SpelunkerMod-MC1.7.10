@@ -12,9 +12,9 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import tsuteto.spelunker.item.SpelunkerItem;
-import tsuteto.spelunker.packet.PacketDispatcher;
-import tsuteto.spelunker.packet.PacketElevatorControlCl;
-import tsuteto.spelunker.packet.PacketElevatorControlSv;
+import tsuteto.spelunker.network.PacketDispatcher;
+import tsuteto.spelunker.network.packet.PacketElevatorControlCl;
+import tsuteto.spelunker.network.packet.PacketElevatorControlSv;
 import tsuteto.spelunker.util.ModLog;
 
 import java.util.List;

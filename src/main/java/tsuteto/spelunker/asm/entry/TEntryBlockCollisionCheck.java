@@ -45,7 +45,8 @@ public class TEntryBlockCollisionCheck implements ITransformerEntry, Opcodes
         overrideList.add(new MethodInsnNode(INVOKESTATIC,
                 "tsuteto/spelunker/eventhandler/BlockCollisionCheckHook",
                 "onBlockCollisionCheck",
-                "(L" + cnode.name + ";Lnet/minecraft/util/AxisAlignedBB;)Z"));
+                "(L" + cnode.name + ";Lnet/minecraft/util/AxisAlignedBB;)Z",
+                false));
         LabelNode l1 = new LabelNode();
         overrideList.add(new JumpInsnNode(IFEQ, l1));
         overrideList.add(new InsnNode(ICONST_1));

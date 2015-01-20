@@ -24,6 +24,6 @@ public class SoundFileFilter implements FileFilter
         String name = fullname.substring(0, p);
         String ext = fullname.substring(p + 1);
         return name.equals(soundName)
-                && (ext.equalsIgnoreCase("wav") || ext.equalsIgnoreCase("ogg") || ext.equalsIgnoreCase("mus"));
+                && (ext.equalsIgnoreCase("ogg") || ext.equalsIgnoreCase("mus"));
     }
 }

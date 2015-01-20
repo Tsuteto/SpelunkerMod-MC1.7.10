@@ -10,7 +10,7 @@ public class ItemCoin extends SpelunkerItem
     public void giveEffect(World world, SpelunkerPlayerMP spelunker)
     {
         spelunker.addSpelunkerScore(1000);
-        spelunker.playSoundAtEntity("spelunker:coin", 1.0F, 1.0F);
+        spelunker.playSound("spelunker:coin", 1.0F, 1.0F);
     }
 
     @Override

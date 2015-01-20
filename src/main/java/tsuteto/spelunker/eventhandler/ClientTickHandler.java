@@ -34,7 +34,7 @@ public class ClientTickHandler
             SpelunkerPlayerSP spelunker = SpelunkerMod.getSpelunkerPlayer(mc.thePlayer);
             if (spelunker == null) return;
 
-            long worldtime = mc.theWorld.getWorldTime();
+            long worldtime = mc.theWorld.getTotalWorldTime();
 
             if (event.type == TickEvent.Type.RENDER)
             {

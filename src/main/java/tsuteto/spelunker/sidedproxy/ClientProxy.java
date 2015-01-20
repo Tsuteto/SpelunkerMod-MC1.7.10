@@ -3,25 +3,20 @@ package tsuteto.spelunker.sidedproxy;
 import api.player.client.ClientPlayerAPI;
 import api.player.client.IClientPlayerAPI;
 import api.player.server.IServerPlayerAPI;
-import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.block.SpelunkerBlocks;
-import tsuteto.spelunker.entity.*;
+import tsuteto.spelunker.entity.SpelunkerEntity;
 import tsuteto.spelunker.eventhandler.ClientTickHandler;
 import tsuteto.spelunker.gui.ScreenRenderer;
 import tsuteto.spelunker.player.ISpelunkerPlayer;
 import tsuteto.spelunker.player.SpelunkerPlayerSP;
-import tsuteto.spelunker.sound.SoundFileFilter;
 import tsuteto.spelunker.sound.SoundHandler;
 import tsuteto.spelunker.util.Utils;
-
-import java.io.File;
 
 public class ClientProxy implements ISidedProxy
 {
@@ -44,7 +39,7 @@ public class ClientProxy implements ISidedProxy
         {
             return (T) ((IServerPlayerAPI) player).getServerPlayerBase(SpelunkerMod.modId);
         }
-        // LittleMaid or entities extending EntityPlayer
+        // EntityOtherPlayerMP, LittleMaid or EntityPlayer-extended entities
         return null;
     }
 
@@ -86,6 +81,9 @@ public class ClientProxy implements ISidedProxy
 
         if (Utils.soundFileExists("speedpotion_bgm"))
             SpelunkerMod.isBgmSpeedPotionAvailable = true;
+
+        if (Utils.soundFileExists("ghost_bgm"))
+            SpelunkerMod.isBgmGhostComingAvailable = true;
     }
 
 }

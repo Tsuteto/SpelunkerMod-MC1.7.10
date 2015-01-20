@@ -44,6 +44,11 @@ public class ItemGun extends ItemBow
             this.itemIcon = par1IconRegister.registerIcon(this.getIconString());
     }
 
+    public boolean canUseGun(EntityPlayer player, ISpelunkerPlayer spelunker)
+    {
+        return player.capabilities.isCreativeMode || spelunker.isUsingEnergy();
+    }
+
     @Override
     public void onUpdate(ItemStack itemstack, World world, Entity entity, int i, boolean flag)
     {
@@ -61,7 +66,7 @@ public class ItemGun extends ItemBow
                 }
 
                 // When getting out of the cave
-                if (!spelunker.isUsingEnergy()) player.stopUsingItem();
+                if (!this.canUseGun(player, spelunker)) player.stopUsingItem();
             }
         }
     }
@@ -77,7 +82,7 @@ public class ItemGun extends ItemBow
 
         if (spelunker != null
                 && par3EntityPlayer.getCurrentEquippedItem() == par1ItemStack
-                && spelunker.isUsingEnergy())
+                && this.canUseGun(par3EntityPlayer, spelunker))
         {
             par3EntityPlayer.setItemInUse(par1ItemStack, getMaxItemUseDuration(par1ItemStack));
             spelunker.setGunInUseCount(getMaxItemUseDuration(par1ItemStack));
@@ -121,7 +126,7 @@ public class ItemGun extends ItemBow
 
     public void trigger(ItemStack itemstack, World world, SpelunkerPlayerMP spelunker, EntityPlayerMP entityPlayer)
     {
-        if (itemstack != null && entityPlayer.isUsingItem())
+        if (itemstack != null && this.canUseGun(entityPlayer, spelunker))
         {
             if (fire(itemstack, world, spelunker, entityPlayer, itemRand.nextFloat() * -0.3F))
             {
@@ -180,7 +185,7 @@ public class ItemGun extends ItemBow
         }
         world.playSoundAtEntity(entityplayer, "spelunker:gunshot", 1.0F, 1.0F);
 
-        // For Infinity. Returns true if Infinity is enchanted
+        // For Infinity. Returns false if Infinity is enchanted
         return (EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, itemstack) <= 0)
                 && !entityplayer.capabilities.isCreativeMode;
     }

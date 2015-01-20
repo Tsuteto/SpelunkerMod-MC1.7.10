@@ -64,16 +64,73 @@ itemGroup.spelunker.levelComponents=スペランカーステージやくもの(�
 
 tile.spelunker:rope.name=ロープ
 tile.spelunker:liftLauncher.name=リフト射出マシン
+tile.spelunker:spelunkerPortal.name=スペランカーワールドポータル
+tile.spelunker:startPoint.name=スタート地点 (内部使用)
+tile.spelunker:startPoint.desc=取り除けないので使用しないで!
+tile.spelunker:respawnGate.name=リスポーンゲート (内部使用)
+tile.spelunker:respawnGate.desc=取り除けないので使用しないで!
+tile.spelunker:wall.name=壁ブロック
+tile.spelunker:magicWall.name=マジックウォールブロック
+tile.spelunker:fallingFloor.name=落ちる床ブロック
+tile.spelunker:lockedGate.name=ゲートブロック
+tile.spelunker:lockedGate.black.name=ゲートブロック (黒)
+tile.spelunker:lockedGate.blue.name=ゲートブロック (青)
+tile.spelunker:lockedGate.brown.name=ゲートブロック (茶)
+tile.spelunker:lockedGate.cyan.name=ゲートブロック (水色)
+tile.spelunker:lockedGate.gray.name=ゲートブロック (灰色)
+tile.spelunker:lockedGate.green.name=ゲートブロック (緑)
+tile.spelunker:lockedGate.lightBlue.name=ゲートブロック (ライトブルー)
+tile.spelunker:lockedGate.lime.name=ゲートブロック (ライム)
+tile.spelunker:lockedGate.magenta.name=ゲートブロック (マゼンタ)
+tile.spelunker:lockedGate.orange.name=ゲートブロック (オレンジ)
+tile.spelunker:lockedGate.pink.name=ゲートブロック (ピンク)
+tile.spelunker:lockedGate.purple.name=ゲートブロック (紫)
+tile.spelunker:lockedGate.red.name=ゲートブロック (赤)
+tile.spelunker:lockedGate.silver.name=ゲートブロック (シルバー)
+tile.spelunker:lockedGate.white.name=ゲートブロック (白)
+tile.spelunker:lockedGate.yellow.name=ゲートブロック (黄色)
+tile.spelunker:bumpyBlock.name=でこぼこ床ブロック
+tile.spelunker:rock.name=岩ブロック
+tile.spelunker:breakableWall.name=破壊可能な壁ブロック
+tile.spelunker:hiddenDiamond.name=ダイヤモンド入り壁ブロック
+tile.spelunker:itemBox.name=アイテム配置ブロック
+tile.spelunker:platform.name=足場
+tile.spelunker:rail.name=スペランカーレール
+tile.spelunker:railGirder.name=レール用橋桁
+tile.spelunker:light.name=ライトブロック (内部使用)
+tile.spelunker:light.desc=取り除けないので使用しないで!
+tile.spelunker:batSpawner.name=コウモリスポーナー
 
 item.spelunker:levelBuilder.name=ステージ生成
-item.spelunker:levelBuilder.desc.1=このアイテムは巨大な建造物を生成し、
+item.spelunker:levelBuilder.desc.1=注意: このアイテムは巨大な建造物を生成し、
 item.spelunker:levelBuilder.desc.2=その一帯を上書きします。
-item.spelunker:levelBuilder.desc.3=取消できないので注意。
+item.spelunker:levelBuilder.desc.3=生成に少し時間が掛かります。
 item.spelunker:entityPlacer.name=やくもの設置
+item.spelunker:gateKey.name=ゲートのカギ
+item.spelunker:gateKey.black.name=ゲートのカギ (黒)
+item.spelunker:gateKey.blue.name=ゲートのカギ (青)
+item.spelunker:gateKey.brown.name=ゲートのカギ (茶)
+item.spelunker:gateKey.cyan.name=ゲートのカギ (水色)
+item.spelunker:gateKey.gray.name=ゲートのカギ (灰色)
+item.spelunker:gateKey.green.name=ゲートのカギ (緑)
+item.spelunker:gateKey.lightBlue.name=ゲートのカギ (ライトブルー)
+item.spelunker:gateKey.lime.name=ゲートのカギ (ライム)
+item.spelunker:gateKey.magenta.name=ゲートのカギ (マゼンタ)
+item.spelunker:gateKey.orange.name=ゲートのカギ (オレンジ)
+item.spelunker:gateKey.pink.name=ゲートのカギ (ピンク)
+item.spelunker:gateKey.purple.name=ゲートのカギ (紫)
+item.spelunker:gateKey.red.name=ゲートのカギ (赤)
+item.spelunker:gateKey.silver.name=ゲートのカギ (シルバー)
+item.spelunker:gateKey.white.name=ゲートのカギ (白)
+item.spelunker:gateKey.yellow.name=ゲートのカギ (黄色)
+
+item.spelunker:dropItem.desc=アイテム配置ブロック設定用
 
 entity.elevator.name=エレベーター
 entity.lift.name=リフト
 entity.steamHole.name=水蒸気孔
+entity.peddle.name=小石
+entity.flameHole.name=噴火口
 
 #
 # moody death cause

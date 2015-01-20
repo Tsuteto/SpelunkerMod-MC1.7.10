@@ -3,7 +3,7 @@ package tsuteto.spelunker.item;
 import net.minecraft.world.World;
 import tsuteto.spelunker.constants.SpelunkerDifficulty;
 import tsuteto.spelunker.constants.SpelunkerPacketType;
-import tsuteto.spelunker.packet.SpelunkerPacketDispatcher;
+import tsuteto.spelunker.network.SpelunkerPacketDispatcher;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
 
 public class Item2xScore extends SpelunkerItem
@@ -12,7 +12,7 @@ public class Item2xScore extends SpelunkerItem
     public void giveEffect(World world, SpelunkerPlayerMP spelunker)
     {
         spelunker.set2xScore(90 * 20);
-        spelunker.playSoundAtEntity("spelunker:2xscore", 1.0f, 1.0f);
+        spelunker.playSound("spelunker:2xscore", 1.0f, 1.0f);
 
         SpelunkerPacketDispatcher packet = new SpelunkerPacketDispatcher(SpelunkerPacketType.GOT_2x);
         packet.sendPacketPlayer(spelunker.player());

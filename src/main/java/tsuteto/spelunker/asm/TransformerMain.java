@@ -1,7 +1,6 @@
 package tsuteto.spelunker.asm;
 
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
-import cpw.mods.fml.relauncher.FMLCorePlugin;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassReader;
@@ -129,7 +128,10 @@ public class TransformerMain implements IClassTransformer, Opcodes
 
     private static void dumpClassFile(byte[] bytes, String className)
     {
-        File file = new File(System.getProperty("spelunkerMod.dumpClsDir"), className + ".class");
+        String dumpDir = System.getProperty("spelunkerMod.dumpClsDir");
+        if (dumpDir == null) return;
+
+        File file = new File(dumpDir, className + ".class");
 
         FileOutputStream fos = null;
         try

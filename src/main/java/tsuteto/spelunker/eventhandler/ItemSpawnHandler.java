@@ -1,8 +1,5 @@
 package tsuteto.spelunker.eventhandler;
 
-import java.util.List;
-import java.util.Random;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -15,6 +12,9 @@ import tsuteto.spelunker.item.SpelunkerItem;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
 import tsuteto.spelunker.player.SpelunkerPlayerSP;
 import tsuteto.spelunker.util.ModLog;
+
+import java.util.List;
+import java.util.Random;
 
 /**
  * Handles spawning Spelunker drop items
@@ -39,10 +39,10 @@ public class ItemSpawnHandler
 
     public static void onPlayerTick(SpelunkerPlayerMP spelunker)
     {
-        if (spelunker.isUsingEnergy() && !spelunker.player().capabilities.disableDamage)
+        if (!spelunker.isInSpelunkerWorld() && spelunker.isUsingEnergy() && !spelunker.player().capabilities.disableDamage)
         {
             World world = spelunker.player().worldObj;
-            long worldtime = world.getWorldTime();
+            long worldtime = world.getTotalWorldTime();
             int interval = (spelunker.player().dimension == 0) ? 100 : 160;
             if (worldtime % interval == 0)
             {

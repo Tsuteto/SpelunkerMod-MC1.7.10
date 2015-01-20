@@ -1,7 +1,6 @@
 package tsuteto.spelunker.eventhandler;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityOwnable;
@@ -12,9 +11,9 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
-import tsuteto.spelunker.BatDroppingsHandler;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.damage.SpelunkerDamageSource;
+import tsuteto.spelunker.entity.BatDroppingsHandler;
 import tsuteto.spelunker.item.ItemHelmet;
 import tsuteto.spelunker.item.SpelunkerItem;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
@@ -27,17 +26,17 @@ import tsuteto.spelunker.player.SpelunkerPlayerMP;
  */
 public class LivingEventHandler
 {
-    private BatDroppingsHandler batHandler = BatDroppingsHandler.getInstance();
+    private BatDroppingsHandler batHandler = BatDroppingsHandler.forNormalBats();
 
     @SubscribeEvent
     public void onLivingUpdate(LivingEvent.LivingUpdateEvent event)
     {
         EntityLivingBase entity = event.entityLiving;
 
-        // Bets
+        // Normal Bats
         if (entity instanceof EntityBat)
         {
-            batHandler.onEntityUpdate((EntityBat) event.entityLiving);
+            batHandler.onEntityUpdate(event.entityLiving);
         }
 
         // Helmet handling

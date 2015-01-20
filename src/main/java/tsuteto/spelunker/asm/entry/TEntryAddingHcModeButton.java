@@ -1,16 +1,11 @@
 package tsuteto.spelunker.asm.entry;
 
-import java.util.EnumSet;
-
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.VarInsnNode;
-
-import tsuteto.spelunker.asm.ITransformerEntry;
 import cpw.mods.fml.relauncher.Side;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.*;
+import tsuteto.spelunker.asm.ITransformerEntry;
+
+import java.util.EnumSet;
 
 public class TEntryAddingHcModeButton implements ITransformerEntry, Opcodes
 {
@@ -56,7 +51,8 @@ public class TEntryAddingHcModeButton implements ITransformerEntry, Opcodes
         overrideList.add(new MethodInsnNode(INVOKESTATIC,
                 "tsuteto/spelunker/eventhandler/GuiCreateWorldHook",
                 "onInitGui",
-                "(L" + cnode.name + ";)V"));
+                "(L" + cnode.name + ";)V",
+                false));
 
         mnode.instructions.insert(mnode.instructions.get(337), overrideList);
     }

@@ -32,6 +32,9 @@ public enum SpelunkerPacketType {
 	GOT_INVINCIBLE(Side.CLIENT),
 	OUT_OF_INVINCIBLE(Side.CLIENT),
 
+    GHOST_COMING(Side.CLIENT),
+    GHOST_GONE(Side.CLIENT),
+
     GAMEOVER(Side.CLIENT),
     ALL_CLEARED(Side.CLIENT),
 
@@ -46,7 +49,7 @@ public enum SpelunkerPacketType {
     DMG_BLOCKHITTING(Side.SERVER),
     ;
 
-    public Side messageTo;
+    public final Side messageTo;
 
     SpelunkerPacketType(Side messageTo)
     {

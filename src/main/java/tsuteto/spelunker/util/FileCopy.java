@@ -1,11 +1,6 @@
 package tsuteto.spelunker.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
@@ -95,7 +90,7 @@ public class FileCopy
             is = new FileInputStream(org);
             os = new FileOutputStream(dest);
 
-            FileChannel chInput = null, chOutput = null;
+            FileChannel chInput, chOutput;
             chInput = is.getChannel();
             chOutput = os.getChannel();
 

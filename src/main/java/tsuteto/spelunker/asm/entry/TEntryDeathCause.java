@@ -1,10 +1,8 @@
 package tsuteto.spelunker.asm.entry;
 
-import com.sun.org.apache.bcel.internal.classfile.LineNumber;
 import cpw.mods.fml.relauncher.Side;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
-import tsuteto.spelunker.asm.AsmPetitUtil;
 import tsuteto.spelunker.asm.ITransformerEntry;
 import tsuteto.spelunker.asm.SpelunkerModCorePlugin;
 
@@ -48,21 +46,23 @@ public class TEntryDeathCause implements ITransformerEntry, Opcodes
         boolean obfed = SpelunkerModCorePlugin.isObfuscated;
         FieldNode fnode = cnode.fields.get(0);
 
-        int i = 0;
-        while (i < mnode.instructions.size())
-        {
-            AbstractInsnNode node = mnode.instructions.get(i);
-            if (node instanceof LineNumberNode)
-            {
-                LineNumberNode linenumber = (LineNumberNode) node;
-                System.out.printf("[%d] LINENUMBER %d%n", i, linenumber.line);
-            }
-            else
-            {
-                System.out.printf("[%d] %s%n", i, node.toString());
-            }
-            i++;
-        }
+//        // DEBUG START
+//        int i = 0;
+//        while (i < mnode.instructions.size())
+//        {
+//            AbstractInsnNode node = mnode.instructions.get(i);
+//            if (node instanceof LineNumberNode)
+//            {
+//                LineNumberNode linenumber = (LineNumberNode) node;
+//                System.out.printf("[%d] LINENUMBER %d%n", i, linenumber.line);
+//            }
+//            else
+//            {
+//                System.out.printf("[%d] %s%n", i, node.toString());
+//            }
+//            i++;
+//        }
+//        // DEBUG END
 
         InsnList overrideList = new InsnList();
 
@@ -73,7 +73,8 @@ public class TEntryDeathCause implements ITransformerEntry, Opcodes
         overrideList.add(new MethodInsnNode(INVOKESTATIC,
                 "tsuteto/spelunker/eventhandler/DeathCauseHook",
                 "onDeathCauseReplace",
-                "(Ljava/lang/String;)Ljava/lang/String;"));
+                "(Ljava/lang/String;)Ljava/lang/String;",
+                false));
         overrideList.add(new FieldInsnNode(PUTFIELD,
                 cnode.name,
                 fldKey,

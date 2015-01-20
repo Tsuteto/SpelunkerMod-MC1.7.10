@@ -20,7 +20,7 @@ import tsuteto.spelunker.item.EnumGunMaterial;
 import java.util.List;
 
 /**
- * Defines Blaster Bullets, referred to EntityFN5728SS190 by MMM
+ * Defines Blaster Bullets, based on EntityFN5728SS190 by MMM
  *
  * @author Tsuteto
  *
@@ -216,7 +216,8 @@ public class EntityGunBullet extends Entity implements IProjectile, IEntityAddit
             {
                 Entity var10 = (Entity)var5.get(var9);
 
-                if (gunmaterial == EnumGunMaterial.ORIGINAL && !(var10 instanceof EntityGhast)) {
+                if (!this.checkEffectivity(var10))
+                {
                     continue;
                 }
 
@@ -312,6 +313,11 @@ public class EntityGunBullet extends Entity implements IProjectile, IEntityAddit
         //motionY -= f6;
         setPosition(posX, posY, posZ);
         //System.out.println(String.format("%d: %.2f, %.2f, %.2f", ticksInAir, posX, posY, posZ));
+    }
+
+    private boolean checkEffectivity(Entity entity)
+    {
+        return gunmaterial != EnumGunMaterial.ORIGINAL || entity instanceof EntityGhast || entity instanceof EntityGhost;
     }
 
     /**

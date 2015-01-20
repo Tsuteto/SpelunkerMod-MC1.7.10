@@ -1,13 +1,12 @@
 package tsuteto.spelunker.data;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.logging.Level;
-
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import tsuteto.spelunker.util.ModLog;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 /**
  * Handles save data for Spelunker
@@ -34,18 +33,21 @@ public class ModSaveHandler
 
     public NBTTagCompound readData(String par1Str)
     {
+        return readData(new File(this.saveDirectory, par1Str + ".dat"));
+    }
+
+    public NBTTagCompound readData(File file)
+    {
         try
         {
-            File var2 = new File(this.saveDirectory, par1Str + ".dat");
-
-            if (var2.exists())
+            if (file.exists())
             {
-                return CompressedStreamTools.readCompressed(new FileInputStream(var2));
+                return CompressedStreamTools.readCompressed(new FileInputStream(file));
             }
         }
         catch (Exception var3)
         {
-            ModLog.warn(var3, "Failed to load NBT data: %s", par1Str + ".dat");
+            ModLog.warn(var3, "Failed to load NBT data: %s", file.getAbsolutePath());
         }
 
         return null;
@@ -53,22 +55,27 @@ public class ModSaveHandler
 
     public void saveData(NBTTagCompound var2, String filename)
     {
+        saveData(var2, new File(this.saveDirectory, filename + ".dat"));
+    }
+
+    public void saveData(NBTTagCompound var2, File datFile)
+    {
+        File tmp = new File(datFile.getParent(), datFile.getName() + ".tmp");
+
         try
         {
-            File var3 = new File(this.saveDirectory, filename + ".dat.tmp");
-            File var4 = new File(this.saveDirectory, filename + ".dat");
-            CompressedStreamTools.writeCompressed(var2, new FileOutputStream(var3));
+            CompressedStreamTools.writeCompressed(var2, new FileOutputStream(tmp));
 
-            if (var4.exists())
+            if (datFile.exists())
             {
-                var4.delete();
+                datFile.delete();
             }
 
-            var3.renameTo(var4);
+            tmp.renameTo(datFile);
         }
         catch (Exception var5)
         {
-            ModLog.warn(var5, "Failed to save NBT data: %s", filename + ".dat");
+            ModLog.warn(var5, "Failed to save NBT data: %s", datFile.getAbsolutePath());
         }
     }
 

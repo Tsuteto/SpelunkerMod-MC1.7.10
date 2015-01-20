@@ -1,12 +1,18 @@
 package tsuteto.spelunker.entity;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityBat;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import tsuteto.spelunker.block.BlockBatSpawner;
+import tsuteto.spelunker.block.SpelunkerBlocks;
 
 import java.util.List;
 
@@ -64,10 +70,41 @@ public class EntityFlash extends EntityThrowable
             {
                 if (entity instanceof EntityBat)
                 {
-                    EntityBat bat = (EntityBat)entity;
+                    EntityLivingBase bat = (EntityLivingBase)entity;
                     if (bat.canEntityBeSeen(this))
                     {
                         bat.attackEntityFrom(DamageSource.onFire, bat.getHealth());
+                    }
+                }
+            }
+
+            for (int i = -15; i < 15; i++)
+            {
+                for (int j = -10; j < 10; j++)
+                {
+                    for (int k = -15; k < 15; k++)
+                    {
+                        int x = MathHelper.floor_double(this.posX + i);
+                        int y = MathHelper.floor_double(this.posY + j);
+                        int z = MathHelper.floor_double(this.posZ + k);
+                        Block block = this.worldObj.getBlock(x, y, z);
+                        if (block == SpelunkerBlocks.blockBatSpawner)
+                        {
+                            MovingObjectPosition mop = worldObj.rayTraceBlocks(Vec3.createVectorHelper(this.posX, this.posY, this.posZ), Vec3.createVectorHelper(x, y, z));
+                            if (mop == null)
+                            {
+                                DamageSource dmgSrc;
+                                if (thrower instanceof EntityPlayer)
+                                {
+                                    dmgSrc = DamageSource.causePlayerDamage((EntityPlayer)thrower);
+                                }
+                                else
+                                {
+                                    dmgSrc = DamageSource.onFire;
+                                }
+                                ((BlockBatSpawner) block).elimitateBats(this.worldObj, x, y, z, dmgSrc);
+                            }
+                        }
                     }
                 }
             }

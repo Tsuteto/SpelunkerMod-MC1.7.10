@@ -24,11 +24,21 @@ public class ModSound extends PositionedSound
 
     public static void playBgm(ISound sound)
     {
-        if (bgmNowPlaying != null || ticksInterval != -1) return;
+        if (bgmNowPlaying != null || soundHandler.isSoundPlaying(sound) || ticksInterval != -1) return;
 
         soundHandler.playSound(sound);
         bgmNowPlaying = sound;
-        ticksInterval = 0;
+        ticksInterval = 20;
+    }
+
+    public static void intrruptBgm(ISound sound)
+    {
+        if (ticksInterval != -1) return;
+
+        stopCurrentBgm();
+        soundHandler.playSound(sound);
+        bgmNowPlaying = sound;
+        ticksInterval = 20;
     }
 
     public static void playSound(ResourceLocation resourceLocation, double x, double y, double z, float volume, float pitch)
@@ -51,7 +61,7 @@ public class ModSound extends PositionedSound
 
     public static boolean playing()
     {
-        return bgmNowPlaying != null && ticksInterval < 20;
+        return bgmNowPlaying != null || ticksInterval >= 0;
     }
 
     public static boolean isReady()
@@ -77,7 +87,7 @@ public class ModSound extends PositionedSound
         }
         if (ticksInterval != -1)
         {
-            if (++ticksInterval == 20) ticksInterval = -1;
+            --ticksInterval;
         }
     }
 

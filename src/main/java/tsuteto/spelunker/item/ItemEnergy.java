@@ -12,7 +12,7 @@ public class ItemEnergy extends ItemAnimation
         spelunker.addEnergy(3600);
         spelunker.setEnergyAlertTime(0);
         spelunker.addSpelunkerScore(100);
-        spelunker.playSoundAtEntity("spelunker:energy", 1.0F, 1.0F);
+        spelunker.playSound("spelunker:energy", 1.0F, 1.0F);
     }
 
     @Override

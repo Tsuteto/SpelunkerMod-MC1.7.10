@@ -9,5 +9,5 @@ public class SpelunkerBgm
     public static final ModSound bgmInvincible = ModSound.bgm(new ResourceLocation("spelunker:invincible_bgm"));
     public static final ModSound bgmSpeedPotion = ModSound.bgm(new ResourceLocation("spelunker:speedpotion_bgm"));
     public static final ModSound bgmAllCleared = ModSound.bgm(new ResourceLocation("spelunker:allcleared"));
-
+    public static final ModSound bgmGhostComing = ModSound.bgm(new ResourceLocation("spelunker:ghost_bgm"));
 }

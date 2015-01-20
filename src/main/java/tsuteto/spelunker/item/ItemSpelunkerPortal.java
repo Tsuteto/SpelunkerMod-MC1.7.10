@@ -1,0 +1,30 @@
+package tsuteto.spelunker.item;
+
+import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
+
+import java.util.List;
+
+public class ItemSpelunkerPortal extends ItemBlock
+{
+    public ItemSpelunkerPortal(Block block)
+    {
+        super(block);
+        this.setHasSubtypes(true);
+    }
+
+    @Override
+    public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean p_77624_4_)
+    {
+        if (itemStack.getItemDamage() == 0)
+        {
+            list.add("Unused");
+        }
+        else
+        {
+            list.add("Travel to " + itemStack.getItemDamage());
+        }
+    }
+}

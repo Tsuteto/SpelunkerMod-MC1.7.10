@@ -1,22 +1,48 @@
 package tsuteto.spelunker.util;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.item.SpelunkerItem;
-import tsuteto.spelunker.sound.SoundHandler;
 
 import java.net.URL;
 
 public class Utils
 {
+    public static final int[] vanillaColors = new int[]{
+            0,
+            170,
+            43520,
+            43690,
+            11141120,
+            11141290,
+            16755200,
+            11184810,
+            5592405,
+            5592575,
+            5635925,
+            5636095,
+            16733525,
+            16733695,
+            16777045,
+            16777215
+    };
+
+    public static int determineBlockOrientation6(World world, int x, int y, int z, EntityLivingBase entity)
+    {
+        // Following vanilla
+        return BlockPistonBase.determineOrientation(world, x, y, z, entity);
+    }
+
     public static AxisAlignedBB getTorchBlockBounds(World par1World, int par2, int par3, int par4)
     {
         int l = par1World.getBlockMetadata(par2, par3, par4) & 7;
@@ -77,9 +103,16 @@ public class Utils
         }
     }
 
+    public static long generateRandomFromCoord(int x, int y, int z)
+    {
+        long i1 = (long) (x * 3129871) ^ (long) y * 116129781L ^ (long) z;
+        i1 = i1 * i1 * 42317861L + i1 * 11L + i1;
+        return i1 >> 16;
+    }
+
     public static boolean soundFileExists(String filename)
     {
-        for (String ext : new String[]{"ogg", "wav"})
+        for (String ext : new String[]{"ogg"})
         {
             String rsrcpath = String.format("/assets/spelunker/sounds/%s.%s", filename, ext);
             URL url = SpelunkerMod.class.getResource(rsrcpath);
@@ -89,5 +122,17 @@ public class Utils
             }
         }
         return false;
+    }
+
+    public static void updatePlayerSpawnPoint(World world, int x, int y, int z, EntityPlayer player)
+    {
+        ChunkCoordinates coord = new ChunkCoordinates(x, y, z);
+        int dimId = world.provider.dimensionId;
+
+        if (!coord.equals(player.getBedLocation(dimId)))
+        {
+            player.setSpawnChunk(coord, true, dimId);
+            ModLog.debug("Player's respawn location is updated to (%d, %d, %d)", x, y, z);
+        }
     }
 }

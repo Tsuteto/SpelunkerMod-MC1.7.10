@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
 import tsuteto.spelunker.blockaspect.BlockAspectHC;
 import tsuteto.spelunker.constants.SpelunkerPacketType;
-import tsuteto.spelunker.packet.SpelunkerPacketDispatcher;
+import tsuteto.spelunker.network.SpelunkerPacketDispatcher;
 
 import java.util.Random;
 

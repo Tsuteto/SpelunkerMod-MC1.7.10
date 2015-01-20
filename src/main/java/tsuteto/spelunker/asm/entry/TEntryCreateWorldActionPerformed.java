@@ -1,19 +1,13 @@
 package tsuteto.spelunker.asm.entry;
 
-import java.util.EnumSet;
-
+import cpw.mods.fml.relauncher.Side;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.InsnNode;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.VarInsnNode;
-
+import org.objectweb.asm.tree.*;
 import tsuteto.spelunker.asm.AsmPetitUtil;
 import tsuteto.spelunker.asm.ITransformerEntry;
 import tsuteto.spelunker.asm.SpelunkerModCorePlugin;
-import cpw.mods.fml.relauncher.Side;
+
+import java.util.EnumSet;
 
 public class TEntryCreateWorldActionPerformed implements ITransformerEntry, Opcodes
 {
@@ -63,14 +57,16 @@ public class TEntryCreateWorldActionPerformed implements ITransformerEntry, Opco
             overrideList.add(new MethodInsnNode(INVOKESTATIC,
                     "tsuteto/spelunker/eventhandler/GuiCreateWorldHook",
                     "onGameModeButtonClicked",
-                    "(L" + cnode.name + ";)V"));
+                    "(L" + cnode.name + ";)V",
+                    false));
 
             overrideList.add(new VarInsnNode(ALOAD, 0));
 
             overrideList.add(new MethodInsnNode(INVOKESPECIAL,
                     cnode.name,
                     mtdUpdateButtonText,
-                    "()V"));
+                    "()V",
+                    false));
 
             overrideList.add(new InsnNode(RETURN));
 
@@ -91,7 +87,8 @@ public class TEntryCreateWorldActionPerformed implements ITransformerEntry, Opco
             overrideList.add(new MethodInsnNode(INVOKESTATIC,
                     "tsuteto/spelunker/eventhandler/GuiCreateWorldHook",
                     "onButtonClicked",
-                    "(L" + cnode.name + ";L" + clsGuiButton + ";)V"));
+                    "(L" + cnode.name + ";L" + clsGuiButton + ";)V",
+                    false));
 
             mnode.instructions.insert(mnode.instructions.get(7), overrideList);
         }

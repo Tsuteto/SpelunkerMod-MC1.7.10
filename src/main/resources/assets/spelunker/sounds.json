@@ -16,5 +16,6 @@
     "item": {"category": "master","sounds": ["spelunker:item"]},
     "jump": {"category": "master","sounds": ["spelunker:jump"]},
     "main_bgm": {"category": "master","sounds": ["spelunker:main_bgm"]},
-    "speedpotion_bgm": {"category": "master","sounds": ["spelunker:speedpotion_bgm"]}
+    "speedpotion_bgm": {"category": "master","sounds": ["spelunker:speedpotion_bgm"]},
+    "ghost_bgm": {"category": "master","sounds": ["spelunker:ghost_bgm"]}
 }

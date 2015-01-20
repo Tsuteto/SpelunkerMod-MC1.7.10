@@ -9,9 +9,12 @@ public class ModInfo
     {
         meta.modId = SpelunkerMod.modId;
         meta.name = "スペランカーMOD (SPELUNKER MOD)";
-        meta.description = "かつてファミコンで大活躍し、今に復活してなおその名を馳せる洞窟探検の偉大なる先人「スペランカー」の類い希なる能力を与えるMODです。\n\nGives you the unique skills of the great forerunner Spelunker, who once made a splendid action on NES and is still gaining popularity after his revival.";
-        meta.version = "2.2";
-        meta.credits = "Feature support by MMMさん, 綾繁さん. PlayerAPI support by Divisor. Mod video producers ミヤビさん, Silent7さん. Thanks to all of them!";
+        meta.description = "かつてファミコンで大活躍し、今に復活してなおその名を馳せる洞窟探検の偉大なる先人「スペランカー」の類い希なる能力を与えるMODです。\n\n" +
+                "Gives you the unique skills of the great forerunner Spelunker, who once made a splendid action on NES and is still gaining popularity after his revival.";
+        meta.version = "2.3";
+        meta.credits = "Feature support by MMMさん, 綾繁さん. " +
+                "PlayerAPI support by Divisor. Spelunker model by 超田中さん. " +
+                "Playing video and bug report by ミヤビさん, Silent7さん. Thanks to them all!";
         meta.logoFile = "assets/spelunker/logo.png";
         meta.url = "http://forum.minecraftuser.jp/viewtopic.php?f=13&t=1014";
         meta.updateUrl = "https://dl.dropboxusercontent.com/u/14577828/mcmod/update/spelunkermod.json";

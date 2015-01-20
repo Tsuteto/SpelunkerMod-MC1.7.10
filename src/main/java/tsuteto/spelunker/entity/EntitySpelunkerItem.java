@@ -91,8 +91,6 @@ public class EntitySpelunkerItem extends Entity
     @Override
     public void onUpdate()
     {
-        ItemStack stack = this.getDataWatcher().getWatchableObjectItemStack(10);
-
         super.onUpdate();
 
         if (this.delayBeforeCanPickup > 0)

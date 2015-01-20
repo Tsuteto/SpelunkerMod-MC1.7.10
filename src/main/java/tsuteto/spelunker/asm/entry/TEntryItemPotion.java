@@ -1,17 +1,11 @@
 package tsuteto.spelunker.asm.entry;
 
-import java.util.EnumSet;
-
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldNode;
-import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.VarInsnNode;
-
-import tsuteto.spelunker.asm.ITransformerEntry;
 import cpw.mods.fml.relauncher.Side;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.*;
+import tsuteto.spelunker.asm.ITransformerEntry;
+
+import java.util.EnumSet;
 
 public class TEntryItemPotion implements ITransformerEntry, Opcodes
 {
@@ -58,7 +52,8 @@ public class TEntryItemPotion implements ITransformerEntry, Opcodes
         overrideList.add(new MethodInsnNode(INVOKESTATIC,
                 "tsuteto/spelunker/eventhandler/PotionEventHook",
                 "onEaten",
-                "(Lnet/minecraft/item/ItemStack;Lnet/minecraft/world/World;Lnet/minecraft/entity/player/EntityPlayer;)V"));
+                "(Lnet/minecraft/item/ItemStack;Lnet/minecraft/world/World;Lnet/minecraft/entity/player/EntityPlayer;)V",
+                false));
 
         mnode.instructions.insert(mnode.instructions.get(1), overrideList);
     }

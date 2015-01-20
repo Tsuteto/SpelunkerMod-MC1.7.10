@@ -12,7 +12,7 @@ public class ItemFlashDrop extends SpelunkerItem
     {
         spelunker.player().inventory.addItemStackToInventory(new ItemStack(SpelunkerItem.itemFlash));
         spelunker.addSpelunkerScore(300);
-        spelunker.playSoundAtEntity("spelunker:flare", 1.0F, 1.0F);
+        spelunker.playSound("spelunker:flare", 1.0F, 1.0F);
     }
 
     @Override

@@ -117,6 +117,12 @@ public class ScreenRenderer
                 gui.drawTexturedModalRect(ox, guiH - oy + 1, 68, 8, 11, 10);
                 ox += 12;
             }
+            // Ghost attacking
+            if (spelunker.isGhostComing())
+            {
+                gui.drawTexturedModalRect(ox, guiH - oy + 1 - 8, 90, 0, 17, 18);
+                ox += 12;
+            }
 
         }
 

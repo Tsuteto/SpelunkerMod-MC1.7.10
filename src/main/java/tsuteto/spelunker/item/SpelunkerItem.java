@@ -1,30 +1,27 @@
 package tsuteto.spelunker.item;
 
+import com.google.common.collect.Lists;
 import cpw.mods.fml.common.registry.GameRegistry;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityList;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import tsuteto.spelunker.Settings;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.constants.SpelunkerDifficulty;
-import tsuteto.spelunker.entity.EntitySteamHole;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public abstract class SpelunkerItem extends Item
 {
     public static Item itemEnergy;
-    public static Item itemGunWood;
-    public static Item itemGunSteel;
-    public static Item itemGunSpelunker;
     public static Item itemSpeedPotion;
     public static Item itemDollar;
     public static Item item1up;
@@ -32,21 +29,40 @@ public abstract class SpelunkerItem extends Item
     public static Item itemMiracle;
     public static Item item2xScore;
     public static Item itemInvincible;
-    public static Item itemDynamite;
+    public static Item itemDynamiteDrop;
     public static Item itemFlashDrop;
+
+    public static Item itemGunWood;
+    public static Item itemGunSteel;
+    public static Item itemGunSpelunker;
     public static Item itemHelmet;
+    public static Item itemDynamite;
     public static Item itemFlash;
     public static Item itemGoldenStatue;
 
     public static Item itemLevelBuilder;
     public static Item itemEntityPlacer;
+    public static Item itemGateKey;
 
-    public static ArrayList<SpelunkerItem> dropItemRegistry = new ArrayList<SpelunkerItem>();
+    public static List<SpelunkerItem> dropItemRegistry = Lists.newArrayList();
 
     public static void load()
     {
         Settings settings = SpelunkerMod.settings();
 
+        // Spelunker Drop Items
+        itemEnergy = $("energy", new ItemEnergy()).register();
+        itemSpeedPotion = $("speedPotion", new ItemSpeedPotion()).register();
+        itemDollar = $("dollarBag", new ItemDoller()).register();
+        item1up = $("1up", new Item1up()).register();
+        itemCoin = $("coin", new ItemCoin()).register();
+        itemMiracle = $("miracle", new ItemMiracle()).register();
+        item2xScore = $("2xScore", new Item2xScore()).register();
+        itemInvincible = $("invincible", new ItemInvincible()).register();
+        itemDynamiteDrop = $("dynamiteDrop", new ItemDynamiteDrop()).register();
+        itemFlashDrop = $("flashDrop", new ItemFlashDrop()).register();
+
+        // Guns
         itemGunWood = $("woodenGun", new ItemGun(EnumGunMaterial.WOOD))
                 .register()
                 .setFull3D();
@@ -57,20 +73,10 @@ public abstract class SpelunkerItem extends Item
                 .register()
                 .setFull3D();
 
-        itemEnergy = $("energy", new ItemEnergy()).register();
-        itemSpeedPotion = $("speedPotion", new ItemSpeedPotion()).register();
-        itemDollar = $("dollarBag", new ItemDoller()).register();
-        item1up = $("1up", new Item1up()).register();
-        itemCoin = $("coin", new ItemCoin()).register();
-        itemMiracle = $("miracle", new ItemMiracle()).register();
-        item2xScore = $("2xScore", new Item2xScore()).register();
-        itemInvincible = $("invincible", new ItemInvincible()).register();
-        itemDynamite = $("dynamite", new ItemDynamite()).register();
-        itemFlashDrop = $("flashDrop", new ItemFlashDrop()).register();
+        // Tools
+        itemDynamite = $("dynamite", new ItemDynamite()).register().setCreativeTab(CreativeTabs.tabTools);
+        itemFlash = $("flash", new ItemFlash()).register().setCreativeTab(CreativeTabs.tabTools);
 
-        itemFlash = $("flash", new ItemFlash())
-                .register()
-                .setCreativeTab(CreativeTabs.tabTools);
         itemHelmet = $("helmet", new ItemHelmet(ItemArmor.ArmorMaterial.IRON, 2, 0))
                 .register()
                 .setLightRange(32)
@@ -84,9 +90,13 @@ public abstract class SpelunkerItem extends Item
                 .setMaxStackSize(1)
                 .setCreativeTab(CreativeTabs.tabMisc);
 
+        // Level Construction Components
         itemLevelBuilder = $("levelBuilder", new ItemLevelBuilder()).register()
                 .setCreativeTab(SpelunkerMod.tabLevelComponents);
         itemEntityPlacer = $("entityPlacer", new ItemEntityPlacer()).register()
+                .setCreativeTab(SpelunkerMod.tabLevelComponents);
+
+        itemGateKey = $("gateKey", new ItemGateKey()).register()
                 .setCreativeTab(SpelunkerMod.tabLevelComponents);
 
         // Register dispense behavior
@@ -190,6 +200,7 @@ public abstract class SpelunkerItem extends Item
     public SpelunkerItem()
     {
         super();
+        this.setCreativeTab(SpelunkerMod.tabLevelComponents);
         dropItemRegistry.add(this);
     }
 
@@ -213,4 +224,10 @@ public abstract class SpelunkerItem extends Item
     }
 
     public void animate() {}
+
+    @Override
+    public void addInformation(ItemStack p_77624_1_, EntityPlayer p_77624_2_, List p_77624_3_, boolean p_77624_4_)
+    {
+        p_77624_3_.add(StatCollector.translateToLocal("item.spelunker:dropItem.desc"));
+    }
 }

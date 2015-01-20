@@ -1,17 +1,12 @@
 package tsuteto.spelunker.asm.entry;
 
-import java.util.EnumSet;
-
+import cpw.mods.fml.relauncher.Side;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.VarInsnNode;
-
+import org.objectweb.asm.tree.*;
 import tsuteto.spelunker.asm.AsmPetitUtil;
 import tsuteto.spelunker.asm.ITransformerEntry;
-import cpw.mods.fml.relauncher.Side;
+
+import java.util.EnumSet;
 
 public class TEntryEndermanGaze implements ITransformerEntry, Opcodes
 {
@@ -57,7 +52,8 @@ public class TEntryEndermanGaze implements ITransformerEntry, Opcodes
         overrideList.add(new MethodInsnNode(INVOKESTATIC,
                 "tsuteto/spelunker/eventhandler/EndermanGazeHook",
                 "onEndermanGazing",
-                "(L" + cnode.name + ";L" + entityPlayer + ";)V"));
+                "(L" + cnode.name + ";L" + entityPlayer + ";)V",
+                false));
 
         mnode.instructions.insert(mnode.instructions.get(61), overrideList);
     }

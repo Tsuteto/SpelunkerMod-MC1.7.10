@@ -12,6 +12,7 @@ import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.particle.EntityFireworkSparkFX;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Session;
@@ -21,11 +22,12 @@ import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.constants.SpelunkerGameMode;
 import tsuteto.spelunker.constants.SpelunkerPacketType;
 import tsuteto.spelunker.data.ScoreManager;
-import tsuteto.spelunker.packet.SpelunkerPacketDispatcher;
+import tsuteto.spelunker.network.SpelunkerPacketDispatcher;
 import tsuteto.spelunker.sound.ModSound;
 import tsuteto.spelunker.sound.SpelunkerBgm;
 import tsuteto.spelunker.util.ModLog;
 import tsuteto.spelunker.util.WatchBool;
+import tsuteto.spelunker.world.WorldProviderSpelunker;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -70,6 +72,9 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
 
     public boolean isInvincible = false;
     private WatchBool statInvincible = new WatchBool(false);
+
+    public boolean isGhostComing = false;
+    private WatchBool statGhostComing = new WatchBool(false);
 
     // For rope action
     public boolean isGrabbingRope = false;
@@ -202,7 +207,7 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
                 {
                     if (is2xScore())
                     {
-                        ModSound.playBgm(SpelunkerBgm.bgm2xScore);
+                        ModSound.intrruptBgm(SpelunkerBgm.bgm2xScore);
                     }
                     else
                     {
@@ -212,7 +217,7 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
                 else if (is2xScore()
                         && (ModSound.getBgmNowPlaying() == null || ModSound.getBgmNowPlaying() == SpelunkerBgm.bgmMain))
                 {
-                    mc.getSoundHandler().playSound(SpelunkerBgm.bgm2xScore);
+                    ModSound.intrruptBgm(SpelunkerBgm.bgm2xScore);
                 }
             }
 
@@ -222,7 +227,7 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
                 {
                     if (isInvincible())
                     {
-                        ModSound.playBgm(SpelunkerBgm.bgmInvincible);
+                        ModSound.intrruptBgm(SpelunkerBgm.bgmInvincible);
                     }
                     else
                     {
@@ -232,7 +237,7 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
                 else if (isInvincible()
                         && (ModSound.getBgmNowPlaying() == null || ModSound.getBgmNowPlaying() == SpelunkerBgm.bgmMain))
                 {
-                    ModSound.playBgm(SpelunkerBgm.bgmInvincible);
+                    ModSound.intrruptBgm(SpelunkerBgm.bgmInvincible);
                 }
             }
 
@@ -242,7 +247,7 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
                 {
                     if (isSpeedPotion())
                     {
-                        ModSound.playBgm(SpelunkerBgm.bgmSpeedPotion);
+                        ModSound.intrruptBgm(SpelunkerBgm.bgmSpeedPotion);
                     }
                     else
                     {
@@ -252,7 +257,27 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
                 else if (isSpeedPotion()
                         && (ModSound.getBgmNowPlaying() == null || ModSound.getBgmNowPlaying() == SpelunkerBgm.bgmMain))
                 {
-                    ModSound.playBgm(SpelunkerBgm.bgmSpeedPotion);
+                    ModSound.intrruptBgm(SpelunkerBgm.bgmSpeedPotion);
+                }
+            }
+
+            if (SpelunkerMod.isBgmGhostComingAvailable)
+            {
+                if (statGhostComing.checkVal(isGhostComing()))
+                {
+                    if (isGhostComing())
+                    {
+                        ModSound.intrruptBgm(SpelunkerBgm.bgmGhostComing);
+                    }
+                    else
+                    {
+                        ModSound.stopBgm(SpelunkerBgm.bgmGhostComing);
+                    }
+                }
+                else if (isGhostComing()
+                        && (ModSound.getBgmNowPlaying() == null || ModSound.getBgmNowPlaying() == SpelunkerBgm.bgmMain))
+                {
+                    ModSound.intrruptBgm(SpelunkerBgm.bgmGhostComing);
                 }
             }
         }
@@ -356,7 +381,6 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
         {
             hasStartedGameStable = true;
         }
-
     }
 
     @Override
@@ -414,6 +438,23 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
     public void afterSetDead()
     {
         ModSound.stopCurrentBgm();
+    }
+
+    @Override
+    public void beforeOnDeath(DamageSource damageSource)
+    {
+        if (isInSpelunkerWorld())
+        {
+            InventoryPlayer inventory = player.inventory;
+            for (int i = 0; i < inventory.mainInventory.length; i++)
+            {
+                inventory.mainInventory[i] = null;
+            }
+            for (int i = 0; i < inventory.armorInventory.length; i++)
+            {
+                inventory.armorInventory[i] = null;
+            }
+        }
     }
 
     public void setDifficultyHardcore()
@@ -479,6 +520,11 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
         return isSpeedPotion;
     }
 
+    public boolean isGhostComing()
+    {
+        return isGhostComing;
+    }
+
     private float getSoundPitch()
     {
         return 1.0F;
@@ -535,5 +581,10 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
     public boolean isHardcore()
     {
         return hardcore;
+    }
+
+    public boolean isInSpelunkerWorld()
+    {
+        return player.worldObj.provider instanceof WorldProviderSpelunker;
     }
 }

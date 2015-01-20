@@ -4,19 +4,25 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.WorldProvider;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.constants.SpelunkerPacketType;
 import tsuteto.spelunker.damage.SpelunkerDamageSource;
-import tsuteto.spelunker.packet.SpelunkerPacketDispatcher;
+import tsuteto.spelunker.dimension.SpelunkerLevelManagerClient;
+import tsuteto.spelunker.item.SpelunkerItem;
+import tsuteto.spelunker.network.SpelunkerPacketDispatcher;
 import tsuteto.spelunker.player.ISpelunkerPlayer;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
 import tsuteto.spelunker.player.SpelunkerPlayerSP;
 import tsuteto.spelunker.potion.SpelunkerPotion;
+import tsuteto.spelunker.world.WorldProviderSpelunker;
 
 /**
  * Handles events on Spelunker
@@ -67,6 +73,28 @@ public class PlayerEventHandler
                 spelunker.isReady = false;
                 spelunker.isInitializing = false;
             }
+
+            SpelunkerLevelManagerClient.unregisterAll();
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event)
+    {
+        WorldProvider worldProvider1 = DimensionManager.getProvider(event.fromDim);
+        WorldProvider worldProvider2 = DimensionManager.getProvider(event.toDim);
+
+        // Remove gate keys from player's inventory
+        if (worldProvider1 instanceof WorldProviderSpelunker || worldProvider2 instanceof WorldProviderSpelunker)
+        {
+            InventoryPlayer inventory = event.player.inventory;
+            for (int i = 0; i < inventory.mainInventory.length; i++)
+            {
+                if (inventory.mainInventory[i] != null && inventory.mainInventory[i].getItem() == SpelunkerItem.itemGateKey)
+                {
+                    inventory.mainInventory[i] = null;
+                }
+            }
         }
     }
 
@@ -86,12 +114,12 @@ public class PlayerEventHandler
 
             if (spelunker != null)
             {
-                EntityPlayerMP deadPlayer = SpelunkerMod.deadPlayerStorage.get(player.getCommandSenderName());
+                EntityPlayerMP deadPlayer = SpelunkerMod.deadPlayerStorage.get(player.getUniqueID());
 
                 if (deadPlayer != null)
                 {
                     spelunker.onRespawn(deadPlayer);
-                    SpelunkerMod.deadPlayerStorage.remove(player.getCommandSenderName());
+                    SpelunkerMod.deadPlayerStorage.remove(player.getUniqueID());
                 }
             }
         }

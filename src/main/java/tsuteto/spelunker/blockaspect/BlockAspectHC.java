@@ -1,11 +1,5 @@
 package tsuteto.spelunker.blockaspect;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-
 import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -14,6 +8,11 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import tsuteto.spelunker.damage.SpelunkerDamageSource;
+
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
 
 /**
  * For hardcore spelunker for now
@@ -39,7 +38,7 @@ public class BlockAspectHC<T>
     public static final Map<Aspect, List<BlockAspectHC>> registry = new EnumMap<Aspect, List<BlockAspectHC>>(Aspect.class)
     {
         {
-            for (Aspect a : EnumSet.allOf(Aspect.class))
+            for (Aspect a : Aspect.values())
             {
                 put(a, Lists.<BlockAspectHC>newArrayList());
             }

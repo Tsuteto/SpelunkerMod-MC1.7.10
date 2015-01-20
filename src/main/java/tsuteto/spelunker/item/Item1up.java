@@ -18,7 +18,7 @@ public class Item1up extends SpelunkerItem
         {
             spelunker.player().addExperience(30);
         }
-        spelunker.playSoundAtEntity("spelunker:1up", 1.0F, 1.0F);
+        spelunker.playSound("spelunker:1up", 1.0F, 1.0F);
     }
 
     @Override

@@ -1,9 +1,6 @@
 package tsuteto.spelunker.eventhandler;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiCreateWorld;
 import net.minecraft.client.gui.GuiScreen;
@@ -11,10 +8,12 @@ import net.minecraftforge.common.ChestGenHooks;
 import org.apache.logging.log4j.Level;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.constants.SpelunkerGameMode;
-import tsuteto.spelunker.gui.GuiIconButton;
+import tsuteto.spelunker.gui.GuiHardcoreButton;
 import tsuteto.spelunker.util.FieldAccessor;
 import tsuteto.spelunker.util.ModLog;
-import cpw.mods.fml.relauncher.ReflectionHelper;
+
+import java.util.List;
+import java.util.Map;
 
 public class GuiCreateWorldHook
 {
@@ -109,7 +108,7 @@ public class GuiCreateWorldHook
     {
         try
         {
-            buttonList.get(gui).add(new GuiIconButton(9, gui.width / 2 + 100, 115, 15, 30));
+            buttonList.get(gui).add(new GuiHardcoreButton(9, gui.width / 2 + 100, 115, 15, 30));
         }
         catch (Exception e)
         {
@@ -140,7 +139,7 @@ public class GuiCreateWorldHook
     {
         if (button.id == 9)
         {
-            GuiIconButton iconbtn = (GuiIconButton)button;
+            GuiHardcoreButton iconbtn = (GuiHardcoreButton)button;
             iconbtn.toggle();
             SpelunkerMod.settings().hardcore = iconbtn.isTurnedOn();
             if (iconbtn.isTurnedOn())
@@ -179,7 +178,7 @@ public class GuiCreateWorldHook
                 GuiButton btn = (GuiButton)obj;
                 if (btn.id == 9)
                 {
-                    btn.enabled = !par1;
+                    btn.visible = !par1;
                 }
             }
         } catch (IllegalAccessException e)

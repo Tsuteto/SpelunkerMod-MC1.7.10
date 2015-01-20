@@ -10,7 +10,7 @@ public class ItemDoller extends SpelunkerItem
     public void giveEffect(World world, SpelunkerPlayerMP spelunker)
     {
         spelunker.addSpelunkerScore(500);
-        spelunker.playSoundAtEntity("spelunker:dollar", 1.0F, 1.0F);
+        spelunker.playSound("spelunker:dollar", 1.0F, 1.0F);
     }
 
     @Override

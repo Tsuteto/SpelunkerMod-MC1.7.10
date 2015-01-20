@@ -1,11 +1,13 @@
 package tsuteto.spelunker.entity;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import tsuteto.spelunker.block.SpelunkerBlocks;
 import tsuteto.spelunker.damage.SpelunkerDamageSource;
 
 import java.util.List;
@@ -75,7 +77,11 @@ public class EntityBatDroppings extends EntityThrowable
 
         if (!this.worldObj.isRemote && par1MovingObjectPosition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
         {
-            this.setDead();
+            Block block = this.worldObj.getBlock(par1MovingObjectPosition.blockX, par1MovingObjectPosition.blockY, par1MovingObjectPosition.blockZ);
+            if (block != SpelunkerBlocks.blockBatSpawner)
+            {
+                this.setDead();
+            }
         }
     }
 

@@ -6,7 +6,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 import tsuteto.spelunker.constants.SpelunkerDifficulty;
 import tsuteto.spelunker.constants.SpelunkerPacketType;
-import tsuteto.spelunker.packet.SpelunkerPacketDispatcher;
+import tsuteto.spelunker.network.SpelunkerPacketDispatcher;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
 
 public class ItemSpeedPotion extends SpelunkerItem
@@ -16,7 +16,7 @@ public class ItemSpeedPotion extends SpelunkerItem
     {
         spelunker.player().addPotionEffect(new PotionEffect(Potion.moveSpeed.getId(), 600, 3));
         spelunker.setSpeedPotion(30 * 20);
-        spelunker.playSoundAtEntity("spelunker:item", 1.0F, 1.0F);
+        spelunker.playSound("spelunker:item", 1.0F, 1.0F);
 
         SpelunkerPacketDispatcher packet = new SpelunkerPacketDispatcher(SpelunkerPacketType.GOT_POTION);
         packet.sendPacketPlayer(spelunker.player());

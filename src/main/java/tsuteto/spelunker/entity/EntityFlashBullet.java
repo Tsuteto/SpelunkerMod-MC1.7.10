@@ -39,9 +39,9 @@ public class EntityFlashBullet extends Entity
     @Override
     protected void readEntityFromNBT(NBTTagCompound var1)
     {
-        this.lightUpX = var1.getShort("lightUpX");
-        this.lightUpY = var1.getShort("lightUpY");
-        this.lightUpZ = var1.getShort("lightUpZ");
+        this.lightUpX = var1.getShort("LightX");
+        this.lightUpY = var1.getShort("LightY");
+        this.lightUpZ = var1.getShort("LightZ");
     }
 
     /**
@@ -50,9 +50,9 @@ public class EntityFlashBullet extends Entity
     @Override
     protected void writeEntityToNBT(NBTTagCompound var1)
     {
-        var1.setInteger("spelunkerflash.prevXTileTarget", this.lightUpX);
-        var1.setInteger("spelunkerflash.prevYTileTarget", this.lightUpY);
-        var1.setInteger("spelunkerflash.prevZTileTarget", this.lightUpZ);
+        var1.setInteger("LightX", this.lightUpX);
+        var1.setInteger("LightY", this.lightUpY);
+        var1.setInteger("LightZ", this.lightUpZ);
     }
 
     protected void onImpact(MovingObjectPosition var1)

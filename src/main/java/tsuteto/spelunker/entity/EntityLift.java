@@ -5,20 +5,14 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import tsuteto.spelunker.item.SpelunkerItem;
-import tsuteto.spelunker.packet.PacketDispatcher;
-import tsuteto.spelunker.packet.PacketElevatorControlCl;
-import tsuteto.spelunker.packet.PacketElevatorControlSv;
-import tsuteto.spelunker.util.ModLog;
 
 import java.util.List;
 
@@ -138,10 +132,19 @@ public class EntityLift extends Entity implements IEntityAdditionalSpawnData
     {
         super.onUpdate();
 
-        if (this.motionY != 0.0D)
+        if (this.motionY > 0.0D)
         {
 
-            List list1 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.addCoord(0.0D, Math.abs(this.motionY), 0.0D));
+            List list1 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this,
+                    this.boundingBox.addCoord(0.0D, 0.1D, 0.0D),
+                    new IEntitySelector()
+                    {
+                        @Override
+                        public boolean isEntityApplicable(Entity entity)
+                        {
+                            return !(entity instanceof EntityLift) && !(entity instanceof EntityGhost);
+                        }
+                    });
 
             for (Object obj : list1)
             {
