@@ -23,7 +23,7 @@ public class SpelunkerWorldInfo
     private int goldenSpelunkers;
     private String playerName;
 
-    public SpelunkerWorldInfo()
+    private SpelunkerWorldInfo()
     {
         mode = SpelunkerMod.settings().gameMode.toString();
         hardcore = SpelunkerMod.settings().hardcore;
@@ -38,7 +38,7 @@ public class SpelunkerWorldInfo
 
     public SpelunkerWorldInfo(GameProfile profile)
     {
-        super();
+        this();
         playerName = profile.getName();
     }
 
