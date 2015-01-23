@@ -61,7 +61,7 @@ public class BlockItemBox extends BlockRespawnPoint
                 }
                 else
                 {
-                    taken = player.inventory.addItemStackToInventory(te.itemContained);
+                    taken = player.inventory.addItemStackToInventory(te.itemContained.copy());
                 }
 
                 if (taken)

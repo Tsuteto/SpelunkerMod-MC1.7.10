@@ -21,14 +21,14 @@ public class PacketDimRegistration extends AbstractPacket implements MessageToCl
     @Override
     public void encodeInto(ByteBuf buffer)
     {
-        buffer.writeByte(dimIds.length);
+        buffer.writeShort(dimIds.length);
         for (int dimId : dimIds) buffer.writeInt(dimId);
     }
 
     @Override
     public void decodeInto(ByteBuf buffer)
     {
-        dimIds = new int[buffer.readByte()];
+        dimIds = new int[buffer.readShort()];
         for (int i = 0; i < dimIds.length; i++)
         {
             dimIds[i] = buffer.readInt();

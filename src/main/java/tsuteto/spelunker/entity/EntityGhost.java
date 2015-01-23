@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
@@ -92,6 +93,11 @@ public class EntityGhost extends EntityCreature implements IMob
             this.entityToAttack = null;
         }
 
+        if (this.entityToAttack instanceof EntityPlayerMP && ((EntityPlayerMP)this.entityToAttack).theItemInWorldManager.isCreative())
+        {
+            this.entityToAttack = null;
+        }
+
         if (this.entityToAttack != null)
         {
             double d0 = this.entityToAttack.posX + 0.5D - this.posX;
@@ -117,7 +123,7 @@ public class EntityGhost extends EntityCreature implements IMob
         }
     }
 
-    protected Entity findPlayerToAttack()
+    protected EntityPlayer findPlayerToAttack()
     {
         EntityPlayer entityplayer = this.worldObj.getClosestVulnerablePlayerToEntity(this, 32.0D);
         return entityplayer;

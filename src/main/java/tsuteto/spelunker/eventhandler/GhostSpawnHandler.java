@@ -13,7 +13,7 @@ import java.util.Random;
 
 public abstract class GhostSpawnHandler
 {
-    public static GhostSpawnHandler create(EntityPlayer player, SpelunkerPlayerMP spelunker, Random rand)
+    public static GhostSpawnHandler create(SpelunkerPlayerMP spelunker, Random rand)
     {
         if (spelunker.isInSpelunkerWorld())
         {
@@ -62,7 +62,7 @@ public abstract class GhostSpawnHandler
     public void spawnCheck()
     {
         double ghostSpawnRate = SpelunkerDifficulty.getSettings(player.worldObj).ghostSpawnRate;
-        if (spelunker.isInCave() && ghostSpawnRate > 0 && !isGhostComing)
+        if (player.isEntityAlive() && spelunker.isInCave() && ghostSpawnRate > 0 && !isGhostComing)
         {
             if (timeUntilNextSpawn < 0)
             {
@@ -81,12 +81,20 @@ public abstract class GhostSpawnHandler
 
     public void readFromNBT(NBTTagCompound nbtTagCompound)
     {
-        timeUntilNextSpawn = nbtTagCompound.getInteger("Spelunker_Ghost");
+        if (nbtTagCompound.hasKey("Spelunker_Ghost") && nbtTagCompound.getTag("Spelunker_Ghost") instanceof NBTTagCompound)
+        {
+            NBTTagCompound tag = nbtTagCompound.getCompoundTag("Spelunker_Ghost");
+            timeUntilNextSpawn = tag.getInteger("Timer");
+        }
+        ModLog.debug("GSH Loaded: Timer=" + timeUntilNextSpawn);
     }
 
     public void writeToNBT(NBTTagCompound nbtTagCompound)
     {
-        nbtTagCompound.setInteger("Spelunker_Ghost", timeUntilNextSpawn);
+        NBTTagCompound tag = new NBTTagCompound();
+        tag.setInteger("Timer", timeUntilNextSpawn);
+
+        nbtTagCompound.setTag("Spelunker_Ghost", tag);
     }
 
     public abstract boolean isGhostComing();

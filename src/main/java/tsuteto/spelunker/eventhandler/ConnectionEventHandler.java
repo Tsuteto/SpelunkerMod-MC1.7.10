@@ -15,7 +15,7 @@ import tsuteto.spelunker.network.packet.PacketDimRegistration;
 
 public class ConnectionEventHandler
 {
-    private boolean connected = false;
+    private boolean connectedToMultiServer = false;
 
     @SubscribeEvent
     public void onConnectionReceived(FMLNetworkEvent.ServerConnectionFromClientEvent event)
@@ -26,16 +26,16 @@ public class ConnectionEventHandler
     @SubscribeEvent
     public void connectionOpened(FMLNetworkEvent.ClientConnectedToServerEvent event)
     {
-        connected = true;
+        connectedToMultiServer = !FMLClientHandler.instance().getClient().isSingleplayer();
     }
 
     @SubscribeEvent
     public void onConnectionClosed(FMLNetworkEvent.ClientDisconnectionFromServerEvent event)
     {
-        if (connected)
+        if (connectedToMultiServer)
         {
             SpelunkerLevelManagerClient.unregisterAll();
-            connected = false;
+            connectedToMultiServer = false;
         }
     }
 

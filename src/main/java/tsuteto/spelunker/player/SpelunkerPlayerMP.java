@@ -107,7 +107,7 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
     protected Random rand = new Random();
     private int prevExpLevel = -1;
     protected boolean aroundSurface = false;
-    protected GhostSpawnHandler ghostSpawnHandler;
+    protected GhostSpawnHandler ghostSpawnHandler = GhostSpawnHandler.create(this, this.rand);
 
     private ItemStack[] mainInventoryToCarryover;
     private ItemStack[] armorInventoryToCarryover;
@@ -125,13 +125,12 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
         statUsingEnergy = new WatchBool(statUnderground.getVal());
 
         energy = getMaxEnergy();
+
         if (!SpelunkerMod.settings().fullHP)
         {
             player.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(0.1D);
             player.setHealth(0.1f);
         }
-
-        ghostSpawnHandler = GhostSpawnHandler.create(player, this, this.rand);
     }
 
     @Override

@@ -25,7 +25,9 @@ public class GhostSpawnHandlerSpelunkerLevel extends GhostSpawnHandler
     {
         for (EntityGhost ghost : SpelunkerMod.ghostList)
         {
-            if (ghost.isEntityAlive() && ghost.getEntityToAttack() != null && player.getDistanceToEntity(ghost) < 32.0D)
+            if (player.dimension == ghost.dimension
+                    && ghost.isEntityAlive() && ghost.getEntityToAttack() != null
+                    && player.getDistanceToEntity(ghost) < 32.0D)
             {
                 return true;
             }

@@ -12,7 +12,6 @@ import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.particle.EntityFireworkSparkFX;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Session;
@@ -189,6 +188,86 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
          */
         if (player.isEntityAlive())
         {
+            if (SpelunkerMod.isBgm2xScoreAvailable)
+            {
+                if (stat2xScore.checkVal(is2xScore()))
+                {
+                    if (is2xScore())
+                    {
+                        ModSound.interruptBgm(SpelunkerBgm.bgm2xScore);
+                    }
+                    else
+                    {
+                        ModSound.stopBgm(SpelunkerBgm.bgm2xScore);
+                    }
+                }
+                else if (is2xScore()
+                        && (ModSound.getBgmNowPlaying() == null || ModSound.getBgmNowPlaying() == SpelunkerBgm.bgmMain))
+                {
+                    ModSound.interruptBgm(SpelunkerBgm.bgm2xScore);
+                }
+            }
+
+            if (SpelunkerMod.isBgmInvincibleAvailable)
+            {
+                if (statInvincible.checkVal(isInvincible()))
+                {
+                    if (isInvincible())
+                    {
+                        ModSound.interruptBgm(SpelunkerBgm.bgmInvincible);
+                    }
+                    else
+                    {
+                        ModSound.stopBgm(SpelunkerBgm.bgmInvincible);
+                    }
+                }
+                else if (isInvincible()
+                        && (ModSound.getBgmNowPlaying() == null || ModSound.getBgmNowPlaying() == SpelunkerBgm.bgmMain))
+                {
+                    ModSound.interruptBgm(SpelunkerBgm.bgmInvincible);
+                }
+            }
+
+            if (SpelunkerMod.isBgmSpeedPotionAvailable)
+            {
+                if (statSpeedPotion.checkVal(isSpeedPotion()))
+                {
+                    if (isSpeedPotion())
+                    {
+                        ModSound.interruptBgm(SpelunkerBgm.bgmSpeedPotion);
+                    }
+                    else
+                    {
+                        ModSound.stopBgm(SpelunkerBgm.bgmSpeedPotion);
+                    }
+                }
+                else if (isSpeedPotion()
+                        && (ModSound.getBgmNowPlaying() == null || ModSound.getBgmNowPlaying() == SpelunkerBgm.bgmMain))
+                {
+                    ModSound.interruptBgm(SpelunkerBgm.bgmSpeedPotion);
+                }
+            }
+
+            if (SpelunkerMod.isBgmGhostComingAvailable)
+            {
+                if (statGhostComing.checkVal(isGhostComing()))
+                {
+                    if (isGhostComing())
+                    {
+                        ModSound.interruptBgm(SpelunkerBgm.bgmGhostComing);
+                    }
+                    else
+                    {
+                        ModSound.stopBgm(SpelunkerBgm.bgmGhostComing);
+                    }
+                }
+                else if (isGhostComing()
+                        && (ModSound.getBgmNowPlaying() == null || ModSound.getBgmNowPlaying() == SpelunkerBgm.bgmMain))
+                {
+                    ModSound.interruptBgm(SpelunkerBgm.bgmGhostComing);
+                }
+            }
+
             if (SpelunkerMod.isBgmMainAvailable)
             {
                 if (statInCave.checkVal(isUsingEnergy()) && !isUsingEnergy())
@@ -200,86 +279,10 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
                     ModSound.playBgm(SpelunkerBgm.bgmMain);
                 }
             }
-
-            if (SpelunkerMod.isBgm2xScoreAvailable)
-            {
-                if (stat2xScore.checkVal(is2xScore()))
-                {
-                    if (is2xScore())
-                    {
-                        ModSound.intrruptBgm(SpelunkerBgm.bgm2xScore);
-                    }
-                    else
-                    {
-                        ModSound.stopBgm(SpelunkerBgm.bgm2xScore);
-                    }
-                }
-                else if (is2xScore()
-                        && (ModSound.getBgmNowPlaying() == null || ModSound.getBgmNowPlaying() == SpelunkerBgm.bgmMain))
-                {
-                    ModSound.intrruptBgm(SpelunkerBgm.bgm2xScore);
-                }
-            }
-
-            if (SpelunkerMod.isBgmInvincibleAvailable)
-            {
-                if (statInvincible.checkVal(isInvincible()))
-                {
-                    if (isInvincible())
-                    {
-                        ModSound.intrruptBgm(SpelunkerBgm.bgmInvincible);
-                    }
-                    else
-                    {
-                        ModSound.stopBgm(SpelunkerBgm.bgmInvincible);
-                    }
-                }
-                else if (isInvincible()
-                        && (ModSound.getBgmNowPlaying() == null || ModSound.getBgmNowPlaying() == SpelunkerBgm.bgmMain))
-                {
-                    ModSound.intrruptBgm(SpelunkerBgm.bgmInvincible);
-                }
-            }
-
-            if (SpelunkerMod.isBgmSpeedPotionAvailable)
-            {
-                if (statSpeedPotion.checkVal(isSpeedPotion()))
-                {
-                    if (isSpeedPotion())
-                    {
-                        ModSound.intrruptBgm(SpelunkerBgm.bgmSpeedPotion);
-                    }
-                    else
-                    {
-                        ModSound.stopBgm(SpelunkerBgm.bgmSpeedPotion);
-                    }
-                }
-                else if (isSpeedPotion()
-                        && (ModSound.getBgmNowPlaying() == null || ModSound.getBgmNowPlaying() == SpelunkerBgm.bgmMain))
-                {
-                    ModSound.intrruptBgm(SpelunkerBgm.bgmSpeedPotion);
-                }
-            }
-
-            if (SpelunkerMod.isBgmGhostComingAvailable)
-            {
-                if (statGhostComing.checkVal(isGhostComing()))
-                {
-                    if (isGhostComing())
-                    {
-                        ModSound.intrruptBgm(SpelunkerBgm.bgmGhostComing);
-                    }
-                    else
-                    {
-                        ModSound.stopBgm(SpelunkerBgm.bgmGhostComing);
-                    }
-                }
-                else if (isGhostComing()
-                        && (ModSound.getBgmNowPlaying() == null || ModSound.getBgmNowPlaying() == SpelunkerBgm.bgmMain))
-                {
-                    ModSound.intrruptBgm(SpelunkerBgm.bgmGhostComing);
-                }
-            }
+        }
+        else
+        {
+            ModSound.stopCurrentBgm();
         }
 
         // System.out.println("Underground: " + inUnderground() + ", Air: " +
@@ -432,29 +435,6 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
     @Override
     public void killInstantly(DamageSource dmgsrc)
     {
-    }
-
-    @Override
-    public void afterSetDead()
-    {
-        ModSound.stopCurrentBgm();
-    }
-
-    @Override
-    public void beforeOnDeath(DamageSource damageSource)
-    {
-        if (isInSpelunkerWorld())
-        {
-            InventoryPlayer inventory = player.inventory;
-            for (int i = 0; i < inventory.mainInventory.length; i++)
-            {
-                inventory.mainInventory[i] = null;
-            }
-            for (int i = 0; i < inventory.armorInventory.length; i++)
-            {
-                inventory.armorInventory[i] = null;
-            }
-        }
     }
 
     public void setDifficultyHardcore()

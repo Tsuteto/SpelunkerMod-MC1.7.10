@@ -63,7 +63,7 @@ import java.util.UUID;
  * @author Tsuteto
  *
  */
-@Mod(modid = SpelunkerMod.modId, useMetadata = true, version = "2.3.1-MC1.7.10", acceptedMinecraftVersions = "[1.7.2,1.8)")
+@Mod(modid = SpelunkerMod.modId, useMetadata = true, version = "2.3.2-MC1.7.10", acceptedMinecraftVersions = "[1.7.2,1.8)")
 public class SpelunkerMod
 {
     public static final String modId = "SpelunkerMod";

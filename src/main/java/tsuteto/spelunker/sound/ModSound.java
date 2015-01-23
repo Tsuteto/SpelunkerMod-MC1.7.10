@@ -19,23 +19,33 @@ public class ModSound extends PositionedSound
 
     public static ModSound bgm(ResourceLocation resourceLocation)
     {
-        return new ModSound(resourceLocation, 1.0F, 1.0F, true, 0, ISound.AttenuationType.NONE, 0.0F, 0.0F, 0.0F);
+        return bgm(resourceLocation, 1.0F);
+    }
+
+    public static ModSound bgm(ResourceLocation resourceLocation, float volume)
+    {
+        return new ModSound(resourceLocation, volume, 1.0F, true, 0, AttenuationType.NONE, 0.0F, 0.0F, 0.0F);
     }
 
     public static void playBgm(ISound sound)
     {
-        if (bgmNowPlaying != null || soundHandler.isSoundPlaying(sound) || ticksInterval != -1) return;
+        if (bgmNowPlaying != null || ticksInterval != -1) return;
 
         soundHandler.playSound(sound);
         bgmNowPlaying = sound;
         ticksInterval = 20;
     }
 
-    public static void intrruptBgm(ISound sound)
+    public static void interruptBgm(ISound sound)
     {
-        if (ticksInterval != -1) return;
+        if (bgmNowPlaying == sound || ticksInterval != -1) return;
 
         stopCurrentBgm();
+        try
+        {
+            Thread.sleep(10);
+        }
+        catch (InterruptedException ignored) {}
         soundHandler.playSound(sound);
         bgmNowPlaying = sound;
         ticksInterval = 20;

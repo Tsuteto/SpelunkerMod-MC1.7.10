@@ -1,5 +1,6 @@
 package tsuteto.spelunker.eventhandler;
 
+import net.minecraft.util.MathHelper;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.entity.EntityGhost;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
@@ -25,7 +26,9 @@ public class GhostSpawnHandlerNormalWorld extends GhostSpawnHandler
     {
         for (EntityGhost ghost : SpelunkerMod.ghostList)
         {
-            if (ghost.isEntityAlive() && ghost.getEntityToAttack() != null && player.getDistanceToEntity(ghost) < 32.0D)
+            if (player.dimension == ghost.dimension
+                    && ghost.isEntityAlive() && ghost.getEntityToAttack() != null
+                    && player.getDistanceToEntity(ghost) < 32.0D)
             {
                 return true;
             }
@@ -39,14 +42,17 @@ public class GhostSpawnHandlerNormalWorld extends GhostSpawnHandler
         for (int i = 0; i < 10; i++)
         {
             int remaining = rand.nextInt(25) + 40;
-            int x = rand.nextInt(remaining);
-            int y = rand.nextInt(remaining -= x);
-            int z = remaining - y;
-            double dist = Math.sqrt(x * x + y * y + z * z);
-            ModLog.debug("Ghost at (%d, %d, %d) dist=%f", x, y, z, dist);
-            EntityGhost ghost = new EntityGhost(player.worldObj, x + player.posX, y + player.posY, z + player.posZ);
-            if (dist < 32.0D && player.worldObj.getClosestVulnerablePlayerToEntity(ghost, 24.0D) == null)
+            int dx = rand.nextInt(remaining);
+            int dy = rand.nextInt(remaining -= dx);
+            int dz = remaining - dy;
+            float dist = MathHelper.sqrt_double(dx * dx + dy * dy + dz * dz);
+            ModLog.debug("Ghost at (%d, %d, %d) dist=%f", dx, dy, dz, dist);
+            double x = dx + player.posX;
+            double y = dy + player.posY;
+            double z = dz + player.posZ;
+            if (dist < 32.0D && player.worldObj.getClosestVulnerablePlayer(x, y, z, 24.0D) == null)
             {
+                EntityGhost ghost = new EntityGhost(player.worldObj, x, y, z);
                 ghost.setType(EntityGhost.Type.NORMAL);
                 if (player.worldObj.spawnEntityInWorld(ghost))
                 {

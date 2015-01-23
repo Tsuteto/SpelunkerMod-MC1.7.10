@@ -25,8 +25,8 @@ public class TileEntityItemBox extends TileEntityRespawnPoint
         if (prevItem == null || this.itemContained == null || !prevItem.isItemEqual(this.itemContained))
         {
             this.shouldUpdateItem = true;
-            this.respawnTimer = 0;
         }
+        this.respawnTimer = 0;
     }
 
     public int getItemRespawnTime()
@@ -98,6 +98,7 @@ public class TileEntityItemBox extends TileEntityRespawnPoint
         this.respawnTimer = p_145839_1_.getShort("Respawn");
         NBTTagCompound nbtItem = p_145839_1_.getCompoundTag("Item");
         this.itemContained = ItemStack.loadItemStackFromNBT(nbtItem);
+        if (this.itemContained.stackSize == 0) this.itemContained.stackSize = 1;
         this.shouldUpdateItem = true;
     }
 
