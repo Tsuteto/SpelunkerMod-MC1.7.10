@@ -14,6 +14,7 @@ import tsuteto.spelunker.block.tileentity.TileEntitySpelunkerPortal;
 import tsuteto.spelunker.dimension.SpelunkerDimensionTeleportation;
 import tsuteto.spelunker.dimension.SpelunkerLevelInfo;
 import tsuteto.spelunker.dimension.SpelunkerLevelManager;
+import tsuteto.spelunker.util.Utils;
 
 import java.util.ArrayList;
 
@@ -51,6 +52,11 @@ public class BlockSpelunkerPortal extends BlockContainer4Directions
                     levelManager.register(info);
                 }
                 levelManager.syncLevel(te.travelTo, player);
+
+                //ForgeDirection dir = ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z));
+                //Utils.updatePlayerSpawnPoint(world, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, player);
+                Utils.updatePlayerSpawnPoint(world, x, y, z, player);
+
                 dimensionTeleportation.transferPlayerToDimension((EntityPlayerMP) player, te.travelTo);
             }
             else
@@ -61,7 +67,7 @@ public class BlockSpelunkerPortal extends BlockContainer4Directions
         }
         else
         {
-            return false;
+            return true;
         }
 
     }

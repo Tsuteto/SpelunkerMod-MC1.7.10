@@ -457,7 +457,7 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
 
     public boolean shouldAvoidDamage(DamageSource dmgsrc)
     {
-        if (getTimeSpawnInv() && isInSpelunkerWorld())
+        if (getTimeSpawnInv() && !isInSpelunkerWorld())
         {
 
             if (dmgsrc instanceof SpelunkerDamageSource)
@@ -1120,7 +1120,7 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
 
     public void playSound(String name, float volume, float pitch)
     {
-        player.playSound(name, volume, pitch);
+        player.worldObj.playSoundAtEntity(player, name, volume, pitch);
     }
 
     /*

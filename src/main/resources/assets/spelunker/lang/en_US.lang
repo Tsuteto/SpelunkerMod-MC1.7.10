@@ -47,6 +47,7 @@ item.spelunker:miracle.name=Miracle
 item.spelunker:2xScore.name=2x Score
 item.spelunker:invincible.name=Invincible
 item.spelunker:dynamite.name=Dynamite
+item.spelunker:dynamiteDrop.name=Dynamite
 item.spelunker:helmet.name=Spelunker's Helmet
 item.spelunker:flash.name=Flash
 item.spelunker:flashDrop.name=Flash
@@ -56,6 +57,7 @@ entity.gunBullet.name=Blaster Bullet
 entity.batDroppings.name=Bat Droppings
 entity.flashBullet.name=Luminary
 entity.flash.name=Flash
+entity.ghost.name=Ghost
 
 #
 # Spelunker Level Components

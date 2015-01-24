@@ -1,18 +1,23 @@
 package tsuteto.spelunker.eventhandler;
 
+import com.google.common.collect.Lists;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import tsuteto.spelunker.constants.SpelunkerDifficulty;
 import tsuteto.spelunker.constants.SpelunkerPacketType;
+import tsuteto.spelunker.entity.EntityGhost;
 import tsuteto.spelunker.network.SpelunkerPacketDispatcher;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
 import tsuteto.spelunker.util.ModLog;
 import tsuteto.spelunker.util.WatchBool;
 
+import java.util.List;
 import java.util.Random;
 
 public abstract class GhostSpawnHandler
 {
+    public static List<EntityGhost> ghostList = Lists.newArrayList();
+
     public static GhostSpawnHandler create(SpelunkerPlayerMP spelunker, Random rand)
     {
         if (spelunker.isInSpelunkerWorld())
@@ -23,6 +28,11 @@ public abstract class GhostSpawnHandler
         {
             return new GhostSpawnHandlerNormalWorld(spelunker, rand);
         }
+    }
+
+    public static void onWorldClosed()
+    {
+        ghostList.clear();
     }
 
     protected EntityPlayer player;

@@ -15,7 +15,6 @@ import java.io.File;
  */
 public class SpelunkerSaveHandler extends ModSaveHandler
 {
-    private final String oldFileNameForSingle = "spelunker";
     private final boolean isSingle;
     private File oldSaveDirForSingle;
 
@@ -26,6 +25,8 @@ public class SpelunkerSaveHandler extends ModSaveHandler
         super(new File(worldDir, "spelunkers"));
         this.oldSaveDirForSingle = worldDir;
         this.isSingle = isSingle;
+
+        ModLog.debug("Located data for single: " + this.getSaveDirectory());
     }
 
     public void migrateSaveData(String username, String uuid)
@@ -33,7 +34,7 @@ public class SpelunkerSaveHandler extends ModSaveHandler
         File oldFile, newFile;
         if (isSingle)
         {
-            oldFile = new File(oldSaveDirForSingle, oldFileNameForSingle + ".dat");
+            oldFile = new File(oldSaveDirForSingle, "spelunker.dat");
         }
         else
         {

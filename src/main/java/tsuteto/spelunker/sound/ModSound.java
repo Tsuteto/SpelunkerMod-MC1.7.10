@@ -41,11 +41,6 @@ public class ModSound extends PositionedSound
         if (bgmNowPlaying == sound || ticksInterval != -1) return;
 
         stopCurrentBgm();
-        try
-        {
-            Thread.sleep(10);
-        }
-        catch (InterruptedException ignored) {}
         soundHandler.playSound(sound);
         bgmNowPlaying = sound;
         ticksInterval = 20;
@@ -59,11 +54,12 @@ public class ModSound extends PositionedSound
     public static void stopBgm(ISound sound)
     {
         soundHandler.stopSound(sound);
+        ticksInterval = 20;
     }
 
     public static void stopCurrentBgm()
     {
-        if (bgmNowPlaying != null)
+        if (bgmNowPlaying != null && soundHandler.isSoundPlaying(bgmNowPlaying))
         {
             soundHandler.stopSound(bgmNowPlaying);
         }
@@ -89,10 +85,10 @@ public class ModSound extends PositionedSound
         if (bgmNowPlaying != null)
         {
             boolean playing = isReady() && soundHandler.isSoundPlaying(bgmNowPlaying);
-            if (!playing)
+            if (!playing && ticksInterval == -1)
             {
                 bgmNowPlaying = null;
-                ticksInterval = 0;
+                ticksInterval = 20;
             }
         }
         if (ticksInterval != -1)

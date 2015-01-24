@@ -1,7 +1,6 @@
 package tsuteto.spelunker;
 
 import api.player.server.ServerPlayerAPI;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
@@ -30,7 +29,6 @@ import tsuteto.spelunker.data.SpelunkerMultiWorldInfo;
 import tsuteto.spelunker.data.SpelunkerSaveHandler;
 import tsuteto.spelunker.data.SpelunkerSaveHandlerMulti;
 import tsuteto.spelunker.dimension.SpelunkerLevelManager;
-import tsuteto.spelunker.entity.EntityGhost;
 import tsuteto.spelunker.entity.SpelunkerEntity;
 import tsuteto.spelunker.eventhandler.*;
 import tsuteto.spelunker.gui.ScreenRendererGameover;
@@ -53,7 +51,6 @@ import tsuteto.spelunker.world.SpelunkerBiomes;
 import tsuteto.spelunker.world.WorldProviderSpelunker;
 
 import java.io.File;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -63,7 +60,7 @@ import java.util.UUID;
  * @author Tsuteto
  *
  */
-@Mod(modid = SpelunkerMod.modId, useMetadata = true, version = "2.3.2-MC1.7.10", acceptedMinecraftVersions = "[1.7.2,1.8)")
+@Mod(modid = SpelunkerMod.modId, useMetadata = true, version = "2.3.4-MC1.7.10", acceptedMinecraftVersions = "[1.7.2,1.8)")
 public class SpelunkerMod
 {
     public static final String modId = "SpelunkerMod";
@@ -89,7 +86,6 @@ public class SpelunkerMod
     public static boolean isBgmSpeedPotionAvailable = false;
     public static boolean isBgmGhostComingAvailable = false;
 
-    public static List<EntityGhost> ghostList = Lists.newArrayList();
     public static Map<UUID, EntityPlayerMP> deadPlayerStorage = Maps.newHashMap();
 
     public static ChestGenHooks hardcoreBonusChest;
@@ -222,7 +218,6 @@ public class SpelunkerMod
         SpelunkerSaveHandler spelunkerSaveHandler = new SpelunkerSaveHandler(saveHandler.getWorldDirectory(), event.getServer().isSinglePlayer());
 
         this.saveHandler = spelunkerSaveHandler;
-        ModLog.debug("loaded savehandler for single: " + saveHandler.getWorldDirectory());
 
         // Set up SaveHandler for world
         SpelunkerSaveHandlerMulti multiSaveHandler = new SpelunkerSaveHandlerMulti(saveHandler.getWorldDirectory());
@@ -246,15 +241,17 @@ public class SpelunkerMod
         // Notify if update is available
         UpdateNotification.instance().onServerStarting(event);
 
-        ModLog.debug("loaded savehandler for multi: " + saveHandler.getWorldDirectory());
-
     }
 
     @Mod.EventHandler
     public void onServerStopped(FMLServerStoppedEvent event)
     {
+        ModLog.debug("Processing for the closing server");
+
         levelManager.unregisterAll();
         levelManager = null;
+
+        GhostSpawnHandler.onWorldClosed();
     }
 
     /**

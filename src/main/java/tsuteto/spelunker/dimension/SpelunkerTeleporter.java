@@ -83,7 +83,6 @@ public class SpelunkerTeleporter extends Teleporter
         int i1 = j;
         int j1 = k;
         int k1 = 0;
-        int l1 = random.nextInt(4);
         for(int i2 = i - byte0; i2 <= i + byte0; i2++)
         {
             double d1 = (i2 + 0.5D) - i;
@@ -98,7 +97,7 @@ public class SpelunkerTeleporter extends Teleporter
                     }
                     for(; k4 > 0 && world.isAirBlock(i2, k4 - 1, j3); k4--) { }
 label0:
-                    for(int k5 = l1; k5 < l1 + 4; k5++)
+                    for(int k5 = 0; k5 < 4; k5++)
                     {
                         int l6 = k5 % 2;
                         int i8 = 1 - l6;
@@ -160,7 +159,7 @@ label0:
                         }
                         for(; l4 > 0 && world.isAirBlock(j2, l4 - 1, k3); l4--) { }
 label1:
-                        for(int l5 = l1; l5 < l1 + 2; l5++)
+                        for(int l5 = 0; l5 < 4; l5++)
                         {
                             int i7 = l5 % 2;
                             int j8 = 1 - i7;
@@ -241,7 +240,7 @@ label1:
         }
 
         entity.motionX = entity.motionY = entity.motionZ = 0.0D;
-        entity.setLocationAndAngles(l2 + i4, i3, l3 + j4, entity.rotationYaw, entity.rotationPitch);
+        entity.setLocationAndAngles(l2 + i4 + 0.5D, i3, l3 + j4 + 0.5D, entity.rotationYaw, entity.rotationPitch);
     }
 
     /**

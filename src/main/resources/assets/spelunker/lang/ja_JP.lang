@@ -47,6 +47,7 @@ item.spelunker:miracle.name=ミラクル
 item.spelunker:2xScore.name=スコア2倍
 item.spelunker:invincible.name=無敵
 item.spelunker:dynamite.name=ダイナマイト
+item.spelunker:dynamiteDrop.name=ダイナマイト
 item.spelunker:helmet.name=スペランカーヘルメット
 item.spelunker:flash.name=フラッシュ
 item.spelunker:flashDrop.name=フラッシュ
@@ -56,6 +57,7 @@ entity.gunBullet.name=ブラスターの弾
 entity.batDroppings.name=コウモリのフン
 entity.flashBullet.name=発光体
 entity.flash.name=フラッシュ
+entity.ghost.name=ゴースト
 
 #
 # Spelunker Level Components

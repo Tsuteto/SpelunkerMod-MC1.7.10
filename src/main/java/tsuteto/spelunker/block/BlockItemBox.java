@@ -47,6 +47,8 @@ public class BlockItemBox extends BlockRespawnPoint
 
     public void onItemTaken(World world, int x, int y, int z, EntityPlayer player)
     {
+        if (player.capabilities.isCreativeMode) return;
+
         SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(player);
         if (spelunker != null)
         {

@@ -9,7 +9,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
-import tsuteto.spelunker.SpelunkerMod;
+import tsuteto.spelunker.eventhandler.GhostSpawnHandler;
 
 public class EntityGhost extends EntityCreature implements IMob
 {
@@ -34,7 +34,7 @@ public class EntityGhost extends EntityCreature implements IMob
         this.setSize(3F, 3F);
         if (!p_i1738_1_.isRemote)
         {
-            SpelunkerMod.ghostList.add(this);
+            GhostSpawnHandler.ghostList.add(this);
         }
     }
 
@@ -148,7 +148,7 @@ public class EntityGhost extends EntityCreature implements IMob
         super.setDead();
         if (!worldObj.isRemote)
         {
-            SpelunkerMod.ghostList.remove(this);
+            GhostSpawnHandler.ghostList.remove(this);
         }
     }
 

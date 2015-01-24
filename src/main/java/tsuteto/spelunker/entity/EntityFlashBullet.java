@@ -24,6 +24,7 @@ public class EntityFlashBullet extends Entity
     public EntityFlashBullet(World var1)
     {
         super(var1);
+        this.noClip = true;
         this.ticksLive = 0;
         this.motionX = 0.0D;
         this.motionY = -0.01D;
@@ -32,6 +33,29 @@ public class EntityFlashBullet extends Entity
 
     @Override
     protected void entityInit() {}
+
+    public boolean canBePushed()
+    {
+        return false;
+    }
+
+    protected void collideWithEntity(Entity p_82167_1_) {}
+
+    protected void collideWithNearbyEntities() {}
+
+    protected boolean canTriggerWalking()
+    {
+        return false;
+    }
+
+    protected void fall(float p_70069_1_) {}
+
+    protected void updateFallState(double p_70064_1_, boolean p_70064_3_) {}
+
+    public boolean doesEntityNotTriggerPressurePlate()
+    {
+        return true;
+    }
 
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.

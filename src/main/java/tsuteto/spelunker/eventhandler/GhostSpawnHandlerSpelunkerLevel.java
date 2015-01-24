@@ -1,6 +1,5 @@
 package tsuteto.spelunker.eventhandler;
 
-import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.entity.EntityGhost;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
 import tsuteto.spelunker.util.ModLog;
@@ -23,7 +22,7 @@ public class GhostSpawnHandlerSpelunkerLevel extends GhostSpawnHandler
     @Override
     public boolean isGhostComing()
     {
-        for (EntityGhost ghost : SpelunkerMod.ghostList)
+        for (EntityGhost ghost : ghostList)
         {
             if (player.dimension == ghost.dimension
                     && ghost.isEntityAlive() && ghost.getEntityToAttack() != null
