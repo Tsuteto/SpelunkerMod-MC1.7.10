@@ -7,9 +7,9 @@ import tsuteto.spelunker.block.BlockRespawnPoint;
 
 public class MapPieceRespawnPoint extends MapPieceBlock
 {
-    public MapPieceRespawnPoint(int color)
+    public MapPieceRespawnPoint(String name, int color)
     {
-        super(color);
+        super(name, color);
     }
 
     @Override

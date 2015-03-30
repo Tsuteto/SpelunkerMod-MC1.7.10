@@ -9,7 +9,10 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.eventhandler.GhostSpawnHandler;
+import tsuteto.spelunker.player.SpelunkerPlayerMP;
+import tsuteto.spelunker.util.PlayerUtils;
 
 public class EntityGhost extends EntityCreature implements IMob
 {
@@ -93,9 +96,14 @@ public class EntityGhost extends EntityCreature implements IMob
             this.entityToAttack = null;
         }
 
-        if (this.entityToAttack instanceof EntityPlayerMP && ((EntityPlayerMP)this.entityToAttack).theItemInWorldManager.isCreative())
+        if (this.entityToAttack instanceof EntityPlayerMP)
         {
-            this.entityToAttack = null;
+            EntityPlayerMP player = (EntityPlayerMP)this.entityToAttack;
+            SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(player);
+            if (!spelunker.isInCave() || player.theItemInWorldManager.isCreative())
+            {
+                this.entityToAttack = null;
+            }
         }
 
         if (this.entityToAttack != null)
@@ -125,7 +133,7 @@ public class EntityGhost extends EntityCreature implements IMob
 
     protected EntityPlayer findPlayerToAttack()
     {
-        EntityPlayer entityplayer = this.worldObj.getClosestVulnerablePlayerToEntity(this, 32.0D);
+        EntityPlayer entityplayer = PlayerUtils.getClosestVulnerableSpelunkerToEntity(this, 32.0D);
         return entityplayer;
     }
 

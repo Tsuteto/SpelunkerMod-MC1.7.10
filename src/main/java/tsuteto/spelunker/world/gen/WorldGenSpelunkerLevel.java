@@ -4,8 +4,11 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
+import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.block.SpelunkerBlocks;
+import tsuteto.spelunker.dimension.SpelunkerLevelInfo;
 import tsuteto.spelunker.world.levelmapper.MapPiece;
+import tsuteto.spelunker.world.levelmapper.MapPieces;
 import tsuteto.spelunker.world.levelmapper.SpelunkerLevelMapper;
 
 import java.util.Random;
@@ -22,8 +25,17 @@ public class WorldGenSpelunkerLevel extends WorldGenerator
     @Override
     public boolean generate(World world, Random rand, int ox, int oy, int oz)
     {
-        SpelunkerLevelMapper mapper = SpelunkerLevelMapper.getInstance();
+        SpelunkerLevelInfo info = SpelunkerMod.levelManager().getLevelInfo(world.provider.dimensionId);
+        if (info == null) return false;
 
+        SpelunkerLevelMapper mapper = new SpelunkerLevelMapper(SpelunkerMod.mapManager().getInfo(info.mapFileName));
+        this.generateLevel(world, rand, ox, oy, oz, mapper);
+
+        return true;
+    }
+
+    public void generateLevel(World world, Random random, int ox, int oy, int oz, SpelunkerLevelMapper mapper)
+    {
         int w = mapper.getWidth();
         int h = mapper.getHeight();
         for (int i = 0; i < w; i++)
@@ -58,14 +70,12 @@ public class WorldGenSpelunkerLevel extends WorldGenerator
                     piece.place(this, world, x, y, oz);
                 }
 
-                if (piece != SpelunkerLevelMapper.wall)
+                if (piece != MapPieces.wall)
                 {
                     this.setBlockAndNotifyAdequately(world, x, y, oz - 1, SpelunkerBlocks.blockMagicWall, 3);
                 }
             }
         }
-
-        return true;
     }
 
     @Override

@@ -17,7 +17,7 @@ Spelunker.wrongPotionId3=I:choked=%s   I:sunstroke=%s
 Spelunker.spehisc=%1$s's high score: %2$d
 
 Spelunker.update.server=SpelunkerMod updated to %1$s, available at %2$s
-Spelunker.update.client=§SpelunkerMod§r updated to §a%1$s§r! %2$s
+Spelunker.update.client=§eSpelunkerMod§r updated to §a%1$s§r! %2$s
 Spelunker.update.link=§nDownload here§r
 
 entity.egg.name=Egg
@@ -67,6 +67,8 @@ itemGroup.spelunker.levelComponents=Spelunker Level Components (WIP)
 tile.spelunker:rope.name=Rope
 tile.spelunker:liftLauncher.name=Lift Launcher
 tile.spelunker:spelunkerPortal.name=Spelunker World Portal
+tile.spelunker:spelunkerPortal.denied.on=Only owner can modify Spelunker Portal. Owner: %s
+tile.spelunker:spelunkerPortal.denied.off=Only owner can modify Spelunker Portal. Owner: someone offline
 tile.spelunker:startPoint.name=Start Point (For internal use)
 tile.spelunker:startPoint.desc=Don't use this! You can't remove it
 tile.spelunker:respawnGate.name=Respawn Gate (For internal use)
@@ -104,6 +106,7 @@ tile.spelunker:light.desc=Don't use this! You can't remove it
 tile.spelunker:batSpawner.name=Bat Spawner
 
 item.spelunker:levelBuilder.name=Level Builder
+item.spelunker:levelBuilder.desc.level=§a%s§r
 item.spelunker:levelBuilder.desc.1=Note this item builds a huge construction
 item.spelunker:levelBuilder.desc.2=and overwrites the area of it.
 item.spelunker:levelBuilder.desc.3=This may take several seconds.
@@ -125,9 +128,11 @@ item.spelunker:gateKey.red.name=Gate Key (Red)
 item.spelunker:gateKey.silver.name=Gate Key (Silver)
 item.spelunker:gateKey.white.name=Gate Key (White)
 item.spelunker:gateKey.yellow.name=Gate Key (Yellow)
-
-
+item.spelunker:spelunkerPortal.unused=Unused yet
+item.spelunker:spelunkerPortal.dimId=For the dimension %s
+item.spelunker:spelunkerPortal.level=§a%s§r
 item.spelunker:dropItem.desc=For Item Box
+item.spelunker:mapPieceGuide.name=Spelunker Level Creation Guide
 
 entity.elevator.name=Elevator
 entity.lift.name=Lift
@@ -135,10 +140,58 @@ entity.steamHole.name=Steam Hole
 entity.peddle.name=Peddle
 entity.flameHole.name=Flame Hole
 
+Spelunker.mapSelect=Spelunker Level Map Select
+Spelunker.mapSelect.switchMap=Switch Map
+Spelunker.mapSelect.switchQuestion=Are you sure you want to switch the map to '%s'?
+Spelunker.mapSelect.switchWarning=Once switched, you cannot undo.
+
+Spelunker.mapPiece.subject=§nColor Legend of Level Map§r
+Spelunker.mapPiece.startPoint=Start point (Only one placed)
+Spelunker.mapPiece.portal=Portal block
+Spelunker.mapPiece.respawnPoint=Respawn point
+Spelunker.mapPiece.air=Space
+Spelunker.mapPiece.wall=Wall block
+Spelunker.mapPiece.platform=Platform block
+Spelunker.mapPiece.ladder=Ladder
+Spelunker.mapPiece.liftUp=Lift (up)
+Spelunker.mapPiece.liftDown=Lift (down)
+Spelunker.mapPiece.rope=Rope block
+Spelunker.mapPiece.bumpy=Bumpy block
+Spelunker.mapPiece.fallingFloor=Falling floor block
+Spelunker.mapPiece.rock=Breakable Rock block
+Spelunker.mapPiece.wallBreakable=Breakable wall block
+Spelunker.mapPiece.hiddenDiamond=Wall block w/ hidden diamond
+Spelunker.mapPiece.rail=Rail
+Spelunker.mapPiece.pillar=Rail bridge pillar
+Spelunker.mapPiece.railPlatform=Platform of rail
+Spelunker.mapPiece.minecart=Item box: minecart
+Spelunker.mapPiece.flameHole=Flame hole
+Spelunker.mapPiece.elevatorRight=Elevator (right)
+Spelunker.mapPiece.elevatorLeft=Elevator (left)
+Spelunker.mapPiece.peddleUp=Peddle (up)
+Spelunker.mapPiece.peddleDown=Peddle (down)
+Spelunker.mapPiece.peddleRight=Peddle (right)
+Spelunker.mapPiece.peddleLeft=Peddle (left)
+Spelunker.mapPiece.steamHoleUp=Steam hole (up)
+Spelunker.mapPiece.steamHoleDown=Steam hole (down)
+Spelunker.mapPiece.steamHoleRight=Steam hole (right)
+Spelunker.mapPiece.steamHoleLeft=Steam hole (left)
+Spelunker.mapPiece.batSpawner=Bat spawner
+Spelunker.mapPiece.gateBlue=Locked gate (blue)
+Spelunker.mapPiece.gateRed=Locked gate (red)
+Spelunker.mapPiece.energy=Item box: energy
+Spelunker.mapPiece.dynamite=Item box: dynamite
+Spelunker.mapPiece.flash=Item box: flash
+Spelunker.mapPiece.coin=Item box: coin
+Spelunker.mapPiece.dollar=Item box: dollar bag
+Spelunker.mapPiece.miracle=Item box: miracle
+Spelunker.mapPiece.gateKeyBlue=Item box: gate key (blue)
+Spelunker.mapPiece.gateKeyRed=Item box: gate key (red)
+
 #
 # moody death cause
 #
-deathScreen.title=You failed!
+deathScreen.title=You missed!
 
 # Original death cause
 spe.moo.death.attack.drained=%1$s ran out of energy and reluctantly got home

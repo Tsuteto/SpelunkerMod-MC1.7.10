@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import tsuteto.spelunker.block.tileentity.TileEntityRespawnPoint;
 import tsuteto.spelunker.util.ModLog;
-import tsuteto.spelunker.util.Utils;
+import tsuteto.spelunker.util.PlayerUtils;
 
 public class BlockRespawnPoint extends BlockContainer
 {
@@ -31,11 +31,16 @@ public class BlockRespawnPoint extends BlockContainer
     {
         if (!world.isRemote)
         {
-            if (entity instanceof EntityPlayer)
+            if (this.shouldSetRespawnPoint(world, x, y, z, entity))
             {
                 this.setPlayerRespawnPoint(world, x, y, z, (EntityPlayer) entity);
             }
         }
+    }
+
+    public boolean shouldSetRespawnPoint(World world, int x, int y, int z, Entity entity)
+    {
+        return entity instanceof EntityPlayer;
     }
 
     public void setPlayerRespawnPoint(World world, int x, int y, int z, EntityPlayer player)
@@ -43,14 +48,14 @@ public class BlockRespawnPoint extends BlockContainer
         Block block = world.getBlock(x, y, z);
         if (this.isRespawnPoint(block))
         {
-            Utils.updatePlayerSpawnPoint(world, x, y, z, player);
+            PlayerUtils.updatePlayerSpawnPoint(world, x, y, z, player);
         }
         else if (block == SpelunkerBlocks.blockRespawnGate)
         {
             TileEntityRespawnPoint gate = (TileEntityRespawnPoint) world.getTileEntity(x, y, z);
             if (gate.respawnPoint != null)
             {
-                Utils.updatePlayerSpawnPoint(world, gate.respawnPoint.posX, gate.respawnPoint.posY, gate.respawnPoint.posZ, player);
+                PlayerUtils.updatePlayerSpawnPoint(world, gate.respawnPoint.posX, gate.respawnPoint.posY, gate.respawnPoint.posZ, player);
             }
         }
     }

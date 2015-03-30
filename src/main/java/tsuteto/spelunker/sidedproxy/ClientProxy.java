@@ -3,7 +3,9 @@ package tsuteto.spelunker.sidedproxy;
 import api.player.client.ClientPlayerAPI;
 import api.player.client.IClientPlayerAPI;
 import api.player.server.IServerPlayerAPI;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -15,8 +17,9 @@ import tsuteto.spelunker.eventhandler.ClientTickHandler;
 import tsuteto.spelunker.gui.ScreenRenderer;
 import tsuteto.spelunker.player.ISpelunkerPlayer;
 import tsuteto.spelunker.player.SpelunkerPlayerSP;
-import tsuteto.spelunker.sound.SoundHandler;
 import tsuteto.spelunker.util.Utils;
+
+import java.io.File;
 
 public class ClientProxy implements ISidedProxy
 {
@@ -61,12 +64,6 @@ public class ClientProxy implements ISidedProxy
     }
 
     @Override
-    public void installSoundFiles()
-    {
-        MinecraftForge.EVENT_BUS.register(new SoundHandler());
-    }
-
-    @Override
     public void checkBgmSoundFile()
     {
         // BGM file check
@@ -84,6 +81,13 @@ public class ClientProxy implements ISidedProxy
 
         if (Utils.soundFileExists("ghost_bgm"))
             SpelunkerMod.isBgmGhostComingAvailable = true;
+    }
+
+    @Override
+    public File getMapDataDir()
+    {
+        Minecraft mc = FMLClientHandler.instance().getClient();
+        return mc.mcDataDir;
     }
 
 }

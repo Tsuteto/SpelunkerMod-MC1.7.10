@@ -13,9 +13,9 @@ public class MapPieceBlock extends MapPieceSingle
 {
     private List<TileEntryBlock> blockMapping = Lists.newArrayList();
 
-    public MapPieceBlock(int color)
+    public MapPieceBlock(String name, int color)
     {
-        super(color);
+        super(name, color);
     }
 
     public MapPieceBlock putBlock(int x, int y, int z, Block block)

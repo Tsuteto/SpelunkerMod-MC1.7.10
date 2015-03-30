@@ -9,9 +9,9 @@ import tsuteto.spelunker.block.tileentity.TileEntityItemBox;
 
 public class MapPieceItem extends MapPieceBlock
 {
-    public MapPieceItem(int color)
+    public MapPieceItem(String name, int color)
     {
-        super(color);
+        super(name, color);
     }
 
     public MapPieceItem setItem(ItemStack itemStack)

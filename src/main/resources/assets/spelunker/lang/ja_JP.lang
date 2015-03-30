@@ -67,6 +67,8 @@ itemGroup.spelunker.levelComponents=スペランカーステージやくもの(�
 tile.spelunker:rope.name=ロープ
 tile.spelunker:liftLauncher.name=リフト射出マシン
 tile.spelunker:spelunkerPortal.name=スペランカーワールドポータル
+tile.spelunker:spelunkerPortal.denied.on=所有者のみスペランカポータルを変更できます。 所有者: %s
+tile.spelunker:spelunkerPortal.denied.off=所有者のみスペランカポータルを変更できます。 所有者: オフラインの誰か
 tile.spelunker:startPoint.name=スタート地点 (内部使用)
 tile.spelunker:startPoint.desc=取り除けないので使用しないで!
 tile.spelunker:respawnGate.name=リスポーンゲート (内部使用)
@@ -104,6 +106,7 @@ tile.spelunker:light.desc=取り除けないので使用しないで!
 tile.spelunker:batSpawner.name=コウモリスポーナー
 
 item.spelunker:levelBuilder.name=ステージ生成
+item.spelunker:levelBuilder.desc.level=§a%s§r
 item.spelunker:levelBuilder.desc.1=注意: このアイテムは巨大な建造物を生成し、
 item.spelunker:levelBuilder.desc.2=その一帯を上書きします。
 item.spelunker:levelBuilder.desc.3=生成に少し時間が掛かります。
@@ -125,14 +128,65 @@ item.spelunker:gateKey.red.name=ゲートのカギ (赤)
 item.spelunker:gateKey.silver.name=ゲートのカギ (シルバー)
 item.spelunker:gateKey.white.name=ゲートのカギ (白)
 item.spelunker:gateKey.yellow.name=ゲートのカギ (黄色)
-
+item.spelunker:spelunkerPortal.unused=未使用
+item.spelunker:spelunkerPortal.dimId=ディメンション %s へ
+item.spelunker:spelunkerPortal.level=§a%s§r
 item.spelunker:dropItem.desc=アイテム配置ブロック設定用
+item.spelunker:mapPieceGuide.name=スペランカーステージ作成ガイド
 
 entity.elevator.name=エレベーター
 entity.lift.name=リフト
 entity.steamHole.name=水蒸気孔
 entity.peddle.name=小石
 entity.flameHole.name=噴火口
+
+Spelunker.mapSelect=スペランカーステージマップ選択
+Spelunker.mapSelect.switchMap=マップ切り替え
+Spelunker.mapSelect.switchQuestion=本当にステージを'%s'に切り替えますか?
+Spelunker.mapSelect.switchWarning=切り替えると取り消しできません。
+
+Spelunker.mapPiece.subject=§nステージマップの色凡例§r
+Spelunker.mapPiece.startPoint=スタート地点 (一度だけ設置可能)
+Spelunker.mapPiece.portal=ポータルブロック
+Spelunker.mapPiece.respawnPoint=リスポーン地点
+Spelunker.mapPiece.air=空間
+Spelunker.mapPiece.wall=壁ブロック
+Spelunker.mapPiece.platform=足場ブロック
+Spelunker.mapPiece.ladder=梯子
+Spelunker.mapPiece.liftUp=リフト射出マシン (上)
+Spelunker.mapPiece.liftDown=リフト射出マシン (下)
+Spelunker.mapPiece.rope=ロープブロック
+Spelunker.mapPiece.bumpy=でこぼこ床ブロック
+Spelunker.mapPiece.fallingFloor=落ちる床ブロック
+Spelunker.mapPiece.rock=岩ブロック
+Spelunker.mapPiece.wallBreakable=破壊可能な壁ブロック
+Spelunker.mapPiece.hiddenDiamond=ダイヤモンド入り壁ブロック
+Spelunker.mapPiece.rail=レール
+Spelunker.mapPiece.pillar=レールの橋柱
+Spelunker.mapPiece.railPlatform=カート乗り場
+Spelunker.mapPiece.minecart=アイテム配置: マインカート
+Spelunker.mapPiece.flameHole=噴火口
+Spelunker.mapPiece.elevatorRight=エレベーター (右)
+Spelunker.mapPiece.elevatorLeft=エレベーター (左)
+Spelunker.mapPiece.peddleUp=小石 (上)
+Spelunker.mapPiece.peddleDown=小石 (下)
+Spelunker.mapPiece.peddleRight=小石 (右)
+Spelunker.mapPiece.peddleLeft=小石 (左)
+Spelunker.mapPiece.steamHoleUp=水蒸気孔 (上)
+Spelunker.mapPiece.steamHoleDown=水蒸気孔 (下)
+Spelunker.mapPiece.steamHoleRight=水蒸気孔 (右)
+Spelunker.mapPiece.steamHoleLeft=水蒸気孔 (左)
+Spelunker.mapPiece.batSpawner=コウモリスポーナー
+Spelunker.mapPiece.gateBlue=ゲートブロック (青)
+Spelunker.mapPiece.gateRed=ゲートブロック (赤)
+Spelunker.mapPiece.energy=アイテム配置: エネルギー
+Spelunker.mapPiece.dynamite=アイテム配置: ダイナマイト
+Spelunker.mapPiece.flash=アイテム配置: フラッシュ
+Spelunker.mapPiece.coin=アイテム配置: コイン
+Spelunker.mapPiece.dollar=アイテム配置: ドル袋
+Spelunker.mapPiece.miracle=アイテム配置: ミラクル
+Spelunker.mapPiece.gateKeyBlue=アイテム配置: ゲートのカギ (青)
+Spelunker.mapPiece.gateKeyRed=アイテム配置: ゲートのカギ (赤)
 
 #
 # moody death cause

@@ -7,6 +7,7 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,15 +32,14 @@ import tsuteto.spelunker.data.SpelunkerSaveHandlerMulti;
 import tsuteto.spelunker.dimension.SpelunkerLevelManager;
 import tsuteto.spelunker.entity.SpelunkerEntity;
 import tsuteto.spelunker.eventhandler.*;
-import tsuteto.spelunker.gui.ScreenRendererGameover;
+import tsuteto.spelunker.gui.ScreenRendererGameOverlay;
+import tsuteto.spelunker.gui.SpelunkerGuiHandler;
 import tsuteto.spelunker.item.SpelunkerItem;
+import tsuteto.spelunker.levelmap.SpelunkerMapManager;
 import tsuteto.spelunker.network.PacketManager;
 import tsuteto.spelunker.network.SpelunkerClientPacketHandler;
 import tsuteto.spelunker.network.SpelunkerServerPacketHandler;
-import tsuteto.spelunker.network.packet.PacketDimRegistration;
-import tsuteto.spelunker.network.packet.PacketElevatorControlCl;
-import tsuteto.spelunker.network.packet.PacketElevatorControlSv;
-import tsuteto.spelunker.network.packet.PacketElevatorState;
+import tsuteto.spelunker.network.packet.*;
 import tsuteto.spelunker.player.ISpelunkerPlayer;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
 import tsuteto.spelunker.potion.PotionBonusScore;
@@ -60,14 +60,16 @@ import java.util.UUID;
  * @author Tsuteto
  *
  */
-@Mod(modid = SpelunkerMod.modId, useMetadata = true, version = "2.3.4-MC1.7.10", acceptedMinecraftVersions = "[1.7.2,1.8)")
+@Mod(modid = SpelunkerMod.modId, useMetadata = true, version = "2.3.4.5-MC1.7.10", acceptedMinecraftVersions = "[1.7.2,1.8)")
 public class SpelunkerMod
 {
     public static final String modId = "SpelunkerMod";
     public static final String resourceDomain = "spelunker:";
 
+    public static final String levelMapFileDir = "Spelunker Maps";
+
     @Mod.Instance(modId)
-    private static SpelunkerMod instance;
+    public static SpelunkerMod instance;
 
     @Mod.Metadata(modId)
     private static ModMetadata metadata;
@@ -99,11 +101,12 @@ public class SpelunkerMod
     private Settings settings = new Settings();
     public UpdateNotification update = null;
 
-    private ScreenRendererGameover renderScreen = new ScreenRendererGameover();
+    private ScreenRendererGameOverlay renderScreen = new ScreenRendererGameOverlay();
     private SpelunkerSaveHandler saveHandler = null;
     private SpelunkerSaveHandlerMulti saveHandlerMulti = null;
     private SpelunkerMultiWorldInfo multiWorldInfo = null;
     private SpelunkerLevelManager levelManager = null;
+    private SpelunkerMapManager mapManager = null;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
@@ -122,9 +125,6 @@ public class SpelunkerMod
 
         this.cfg.save();
 
-        // Install sound files
-        sidedProxy.installSoundFiles();
-
         SpelunkerItem.load();
         SpelunkerBlocks.load();
 
@@ -133,8 +133,6 @@ public class SpelunkerMod
 
         // Register entities
         SpelunkerEntity.register(this, this.settings);
-
-        //sidedProxy.registerWavFiles();
 
         // Update check!
         UpdateNotification.instance().checkUpdate();
@@ -153,6 +151,7 @@ public class SpelunkerMod
         FMLCommonHandler.instance().bus().register(new PlayerEventHandler());
         FMLCommonHandler.instance().bus().register(new ServerTickHandler());
         FMLCommonHandler.instance().bus().register(new ConnectionEventHandler());
+        NetworkRegistry.INSTANCE.registerGuiHandler(this, new SpelunkerGuiHandler());
 
         BlockAspectHC.init();
 
@@ -167,9 +166,11 @@ public class SpelunkerMod
                 .registerPacket(PacketElevatorControlSv.class)
                 .registerPacket(PacketElevatorState.class)
                 .registerPacket(PacketDimRegistration.class)
+                .registerPacket(PacketContainerData.class)
+                .registerPacket(PacketGuiControl.class)
                 .registerEventHandler(new ConnectionEventHandler());
 
-        // Check BGM sound file
+        // Check if BGM sound files exist
         sidedProxy.checkBgmSoundFile();
 
         // Register the Spelunker class for PlayerAPI
@@ -181,6 +182,8 @@ public class SpelunkerMod
         // Register dimension type
         DimensionManager.registerProviderType(settings.dimTypeId, WorldProviderSpelunker.class, false);
 
+        // Spelunker Level Map Manager
+        mapManager = new SpelunkerMapManager(getMapDataDir());
     }
 
     private void renameConfigFile(File newCfg)
@@ -304,11 +307,6 @@ public class SpelunkerMod
         instance.saveHandlerMulti.saveData(instance.multiWorldInfo);
     }
 
-    public ScreenRendererGameover getScreenRenderer()
-    {
-        return renderScreen;
-    }
-
     public static boolean isGameToBeFinished()
     {
         return instance.multiWorldInfo.isGameToBeFinished;
@@ -318,9 +316,19 @@ public class SpelunkerMod
         return instance.multiWorldInfo.isGameToBeFinished = flag;
     }
 
-    public static SpelunkerLevelManager getLevelManager()
+    public ScreenRendererGameOverlay gameScreenRenderer()
+    {
+        return renderScreen;
+    }
+
+    public static SpelunkerLevelManager levelManager()
     {
         return instance.levelManager;
+    }
+
+    public static SpelunkerMapManager mapManager()
+    {
+        return instance.mapManager;
     }
 
     /**
@@ -329,5 +337,10 @@ public class SpelunkerMod
     public static boolean isHardcore()
     {
         return instance.multiWorldInfo.hardcore;
+    }
+
+    public static File getMapDataDir()
+    {
+        return new File(sidedProxy.getMapDataDir(), levelMapFileDir);
     }
 }

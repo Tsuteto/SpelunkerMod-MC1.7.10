@@ -92,7 +92,7 @@ public class CommandSperank extends CommandSpelunkerBase
     @Override
     public String getCommandUsage(ICommandSender par1ICommandSender)
     {
-        return "/sperank sc|hisc|death [page 1-|all]";
+        return "/sperank <sc|hisc|death> [page|all]";
     }
 
     @Override
@@ -117,7 +117,7 @@ public class CommandSperank extends CommandSpelunkerBase
                 throw new WrongUsageException(getCommandUsage(commandSender));
             }
 
-            if (args.length == 2)
+            if (args.length >= 2)
             {
                 if (args[1].equals("all"))
                 {

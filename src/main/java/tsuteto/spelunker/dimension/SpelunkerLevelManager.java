@@ -113,7 +113,10 @@ public class SpelunkerLevelManager
     public void register(SpelunkerLevelInfo info)
     {
         registeredLevels.put(info.dimId, info);
-        DimensionManager.registerDimension(info.dimId, dimTypeId);
+        if (!DimensionManager.isDimensionRegistered(info.dimId))
+        {
+            DimensionManager.registerDimension(info.dimId, dimTypeId);
+        }
         saveLevelData();
     }
 
@@ -134,6 +137,11 @@ public class SpelunkerLevelManager
                 DimensionManager.unregisterDimension(dimId);
             }
         }
+    }
+
+    public SpelunkerLevelInfo getLevelInfo(int dimId)
+    {
+        return this.registeredLevels.get(dimId);
     }
 
     public void syncAllLevels(NetworkManager manager)

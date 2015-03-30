@@ -14,7 +14,7 @@ import tsuteto.spelunker.player.SpelunkerPlayerSP;
 import tsuteto.spelunker.potion.SpelunkerPotion;
 import tsuteto.spelunker.sound.ModSound;
 import tsuteto.spelunker.sound.SpelunkerBgm;
-import tsuteto.spelunker.util.Utils;
+import tsuteto.spelunker.util.PlayerUtils;
 
 /**
  * Handles network packets on client side
@@ -134,7 +134,7 @@ public class ClientPacketHandler extends CommonClientPacketHandler
 
             case RESET_GS:
                 int numGs = data.readInt();
-                Utils.giveGoldenSpelunker(entityPlayer, numGs);
+                PlayerUtils.giveGoldenSpelunker(entityPlayer, numGs);
                 break;
 
             case CHECK_POTION_ID:

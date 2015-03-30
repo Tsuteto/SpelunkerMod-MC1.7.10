@@ -38,7 +38,7 @@ public class ClientTickHandler
 
             if (event.type == TickEvent.Type.RENDER)
             {
-                mod.getScreenRenderer().renderGameOverlay(mc, mc.thePlayer, spelunker, worldtime);
+                mod.gameScreenRenderer().renderGameOverlay(mc, mc.thePlayer, spelunker, worldtime);
             }
             else if (event.type == TickEvent.Type.CLIENT)
             {

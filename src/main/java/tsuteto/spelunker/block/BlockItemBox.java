@@ -3,6 +3,7 @@ package tsuteto.spelunker.block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -32,6 +33,20 @@ public class BlockItemBox extends BlockRespawnPoint
             }
         }
         return false;
+    }
+
+    public boolean shouldSetRespawnPoint(World world, int x, int y, int z, Entity entity)
+    {
+        TileEntityItemBox te = (TileEntityItemBox)world.getTileEntity(x, y, z);
+        if (te.itemContained != null)
+        {
+            Item item = te.itemContained.getItem();
+            return entity instanceof EntityPlayer && item instanceof SpelunkerItem && item != SpelunkerItem.itemGateKey;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     @Override

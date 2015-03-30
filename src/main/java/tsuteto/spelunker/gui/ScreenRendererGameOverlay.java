@@ -1,19 +1,16 @@
 package tsuteto.spelunker.gui;
 
-import java.awt.Color;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGameOver;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.util.ResourceLocation;
-
 import org.lwjgl.opengl.GL11;
-
 import tsuteto.spelunker.constants.SpelunkerGameMode;
 import tsuteto.spelunker.player.SpelunkerPlayerSP;
+
+import java.awt.*;
 
 /**
  * Renders Spelunker status on the screen
@@ -21,7 +18,7 @@ import tsuteto.spelunker.player.SpelunkerPlayerSP;
  * @author Tsuteto
  *
  */
-public class ScreenRendererGameover
+public class ScreenRendererGameOverlay
 {
     public void renderGameOverlay(Minecraft mc, EntityPlayerSP player, SpelunkerPlayerSP spelunker, long worldtime)
     {

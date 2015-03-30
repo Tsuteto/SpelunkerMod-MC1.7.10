@@ -43,6 +43,7 @@ public abstract class SpelunkerItem extends Item
     public static Item itemLevelBuilder;
     public static Item itemEntityPlacer;
     public static Item itemGateKey;
+    public static Item itemMapPieceGuide;
 
     public static List<SpelunkerItem> dropItemRegistry = Lists.newArrayList();
 
@@ -97,6 +98,10 @@ public abstract class SpelunkerItem extends Item
                 .setCreativeTab(SpelunkerMod.tabLevelComponents);
 
         itemGateKey = $("gateKey", new ItemGateKey()).register()
+                .setCreativeTab(SpelunkerMod.tabLevelComponents);
+
+        itemMapPieceGuide = $("mapPieceGuide", new ItemMapPieceGuide())
+                .register()
                 .setCreativeTab(SpelunkerMod.tabLevelComponents);
 
         // Register dispense behavior

@@ -8,9 +8,9 @@ import tsuteto.spelunker.block.tileentity.TileEntityLockedGate;
 
 public class MapPieceLockedGate extends MapPieceBlock
 {
-    public MapPieceLockedGate(int color, int side, final int gateColor)
+    public MapPieceLockedGate(String name, int color, int side, final int gateColor)
     {
-        super(color);
+        super(name, color);
         this.fillBlock(SpelunkerBlocks.blockLockedGate, side, new TileEntryBlock.IHandler()
         {
             @Override

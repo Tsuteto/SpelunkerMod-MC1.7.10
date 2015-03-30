@@ -249,6 +249,8 @@ label1:
     @Override
     public boolean placeInExistingPortal(Entity par1Entity, double x, double y, double z, float par8)
     {
+        par1Entity.setLocationAndAngles(0, 128, 0, par1Entity.rotationYaw, par1Entity.rotationPitch);
+
         short short1 = 256;
         double d3 = -1.0D;
         int i = 0;

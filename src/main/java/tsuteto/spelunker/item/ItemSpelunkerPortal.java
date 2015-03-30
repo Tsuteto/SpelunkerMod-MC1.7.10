@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.StatCollector;
 
 import java.util.List;
 
@@ -20,11 +21,12 @@ public class ItemSpelunkerPortal extends ItemBlock
     {
         if (itemStack.getItemDamage() == 0)
         {
-            list.add("Unused");
+            list.add(StatCollector.translateToLocal("item.spelunker:spelunkerPortal.unused"));
         }
         else
         {
-            list.add("Travel to " + itemStack.getItemDamage());
+            //list.add(StatCollector.translateToLocalFormatted("item.spelunker:spelunkerPortal.level", info.levelName));
+            list.add(StatCollector.translateToLocalFormatted("item.spelunker:spelunkerPortal.dimId", itemStack.getItemDamage()));
         }
     }
 }

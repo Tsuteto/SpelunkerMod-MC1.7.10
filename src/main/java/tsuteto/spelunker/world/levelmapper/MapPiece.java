@@ -8,4 +8,5 @@ public interface MapPiece
     void place(WorldGenSpelunkerLevel gen, World world, int x, int y, int z);
 
     int getColor();
+    String getName();
 }

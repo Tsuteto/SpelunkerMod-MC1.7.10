@@ -7,21 +7,19 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.block.tileentity.TileEntitySpelunkerPortal;
 import tsuteto.spelunker.dimension.SpelunkerDimensionTeleportation;
-import tsuteto.spelunker.dimension.SpelunkerLevelInfo;
-import tsuteto.spelunker.dimension.SpelunkerLevelManager;
-import tsuteto.spelunker.util.Utils;
+import tsuteto.spelunker.gui.SpelunkerGuiHandler;
+import tsuteto.spelunker.util.PlayerUtils;
 
 import java.util.ArrayList;
 
 public class BlockSpelunkerPortal extends BlockContainer4Directions
 {
-    SpelunkerDimensionTeleportation dimensionTeleportation = new SpelunkerDimensionTeleportation();
-
     public BlockSpelunkerPortal(Material p_i45386_1_)
     {
         super(p_i45386_1_);
@@ -35,33 +33,26 @@ public class BlockSpelunkerPortal extends BlockContainer4Directions
             if (player.dimension == 0)
             {
                 TileEntitySpelunkerPortal te = (TileEntitySpelunkerPortal)world.getTileEntity(x, y, z);
-                if (te.travelTo == 0)
+                if (te.levelInfo == null)
                 {
-                    te.travelTo = DimensionManager.getNextFreeDimId();
+                    this.openMapSelectorGui(world, x, y, z, player, te);
                 }
-
-                SpelunkerLevelManager levelManager = SpelunkerMod.getLevelManager();
-
-                if (!DimensionManager.isDimensionRegistered(te.travelTo))
+                else
                 {
-                    // Register new dimension (with static parameters for now)
-                    SpelunkerLevelInfo info = new SpelunkerLevelInfo();
-                    info.dimId = te.travelTo;
-                    info.levelName = "Test Level";
-                    info.mapFileName = "testLevel.png";
-                    levelManager.register(info);
+                    if (player.isSneaking())
+                    {
+                        this.openMapSelectorGui(world, x, y, z, player, te);
+                    }
+                    else
+                    {
+                        this.teleportPlayerToLevel(world, x, y, z, player, te);
+                    }
                 }
-                levelManager.syncLevel(te.travelTo, player);
-
-                //ForgeDirection dir = ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z));
-                //Utils.updatePlayerSpawnPoint(world, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, player);
-                Utils.updatePlayerSpawnPoint(world, x, y, z, player);
-
-                dimensionTeleportation.transferPlayerToDimension((EntityPlayerMP) player, te.travelTo);
+                return true;
             }
             else
             {
-                dimensionTeleportation.transferPlayerToDimension((EntityPlayerMP) player, 0);
+                SpelunkerDimensionTeleportation.transferPlayerToDimension((EntityPlayerMP) player, 0);
             }
             return true;
         }
@@ -72,6 +63,36 @@ public class BlockSpelunkerPortal extends BlockContainer4Directions
 
     }
 
+    public  void openMapSelectorGui(World world, int x, int y, int z, EntityPlayer player, TileEntitySpelunkerPortal te)
+    {
+        if (te != null)
+        {
+            if (te.isOwner(player))
+            {
+                player.openGui(SpelunkerMod.instance, SpelunkerGuiHandler.GUIID_SPELUNKER_PORTAL, world, x, y, z);
+            }
+            else
+            {
+                EntityLivingBase ownerEntity = te.getOwner();
+                if (ownerEntity != null)
+                {
+                    player.addChatComponentMessage(new ChatComponentTranslation("tile.spelunker:spelunkerPortal.denied.on", ownerEntity.getCommandSenderName()));
+                }
+                else
+                {
+                    player.addChatComponentMessage(new ChatComponentTranslation("tile.spelunker:spelunkerPortal.denied.off"));
+                }
+            }
+        }
+    }
+
+    public void teleportPlayerToLevel(World world, int x, int y, int z, EntityPlayer player, TileEntitySpelunkerPortal te)
+    {
+        SpelunkerMod.levelManager().syncLevel(te.levelInfo.dimId, player);
+        PlayerUtils.updatePlayerSpawnPoint(world, x, y, z, player);
+        SpelunkerDimensionTeleportation.transferPlayerToDimension((EntityPlayerMP) player, te.levelInfo.dimId);
+    }
+
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLivingBase, ItemStack itemStack)
     {
@@ -80,7 +101,14 @@ public class BlockSpelunkerPortal extends BlockContainer4Directions
         if (!world.isRemote)
         {
             TileEntitySpelunkerPortal te = (TileEntitySpelunkerPortal) world.getTileEntity(x, y, z);
-            te.travelTo = itemStack.getItemDamage();
+            if (itemStack.getItemDamage() != 0)
+            {
+                te.levelInfo = SpelunkerMod.levelManager().getLevelInfo(itemStack.getItemDamage());
+            }
+            if (entityLivingBase instanceof EntityPlayer)
+            {
+                te.owner = entityLivingBase.getUniqueID().toString();
+            }
         }
     }
 
@@ -113,11 +141,35 @@ public class BlockSpelunkerPortal extends BlockContainer4Directions
                 Item item = getItemDropped(metadata, world.rand, fortune);
                 if (item != null)
                 {
-                    ret.add(new ItemStack(item, 1, te.travelTo));
+                    ItemStack stack;
+                    if (te.levelInfo != null)
+                    {
+                        stack = new ItemStack(item, 1, te.levelInfo.dimId);
+                    }
+                    else
+                    {
+                        stack = new ItemStack(item, 1, 0);
+                    }
+                    ret.add(stack);
                 }
             }
         }
         return ret;
+    }
+
+    @Override
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
+    {
+        Item item = Item.getItemFromBlock(this);
+        TileEntitySpelunkerPortal te = (TileEntitySpelunkerPortal)world.getTileEntity(x, y, z);
+        if (te.levelInfo != null)
+        {
+            return new ItemStack(item, 1, te.levelInfo.dimId);
+        }
+        else
+        {
+            return new ItemStack(item, 1, 0);
+        }
     }
 
     @Override

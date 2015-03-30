@@ -31,7 +31,9 @@ import tsuteto.spelunker.damage.SpelunkerDamageSource;
 import tsuteto.spelunker.item.SpelunkerItem;
 import tsuteto.spelunker.network.SpelunkerPacketDispatcher;
 import tsuteto.spelunker.potion.SpelunkerPotion;
+import tsuteto.spelunker.util.BlockUtils;
 import tsuteto.spelunker.util.ModLog;
+import tsuteto.spelunker.util.PlayerUtils;
 import tsuteto.spelunker.util.Utils;
 
 import java.lang.reflect.Field;
@@ -448,7 +450,7 @@ public class SpelunkerHardcoreMP extends SpelunkerNormalMP
                         // Torches
                         if (block == Blocks.torch)
                         {
-                            AxisAlignedBB torch = Utils.getTorchBlockBounds(world, k1, i2, l1);
+                            AxisAlignedBB torch = BlockUtils.getTorchBlockBounds(world, k1, i2, l1);
                             if (par1AxisAlignedBB.intersectsWith(torch))
                             {
                                 player.attackEntityFrom(DamageSource.onFire, 1.0f);
@@ -461,7 +463,7 @@ public class SpelunkerHardcoreMP extends SpelunkerNormalMP
                         if (block == Blocks.vine)
                         {
                             block.setBlockBoundsBasedOnState(world, k1, i2, l1);
-                            AxisAlignedBB bounds = Utils.getCollisionBoundingBoxFromPool(world, block, k1, i2, l1);
+                            AxisAlignedBB bounds = BlockUtils.getCollisionBoundingBoxFromPool(world, block, k1, i2, l1);
                             if (par1AxisAlignedBB.intersectsWith(bounds))
                             {
                                 player.attackEntityFrom(SpelunkerDamageSource.grass, 1.0f);
@@ -474,7 +476,7 @@ public class SpelunkerHardcoreMP extends SpelunkerNormalMP
                         if (block == Blocks.tripwire)
                         {
                             block.setBlockBoundsBasedOnState(world, k1, i2, l1);
-                            AxisAlignedBB bounds = Utils.getCollisionBoundingBoxFromPool(world, block, k1, i2, l1);
+                            AxisAlignedBB bounds = BlockUtils.getCollisionBoundingBoxFromPool(world, block, k1, i2, l1);
                             if (par1AxisAlignedBB.intersectsWith(bounds))
                             {
                                 player.attackEntityFrom(SpelunkerDamageSource.falldown, 1.0f);
@@ -639,7 +641,7 @@ public class SpelunkerHardcoreMP extends SpelunkerNormalMP
     public void giveGoldenSpelunkers()
     {
         int goldenSpelunkers = spelunker.getWorldInfo().getGoldenSpelunkers();
-        Utils.giveGoldenSpelunker(player, goldenSpelunkers);
+        PlayerUtils.giveGoldenSpelunker(player, goldenSpelunkers);
         new SpelunkerPacketDispatcher(SpelunkerPacketType.RESET_GS)
                 .addInt(goldenSpelunkers).sendPacketPlayer(player);
     }

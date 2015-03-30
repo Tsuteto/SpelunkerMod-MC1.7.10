@@ -12,9 +12,9 @@ public class MapPieceEntity extends MapPieceSingle
 {
     private List<TileEntryEntity> tileMapping = Lists.newArrayList();
 
-    public MapPieceEntity(int color)
+    public MapPieceEntity(String name, int color)
     {
-        super(color);
+        super(name, color);
     }
 
     public MapPieceEntity addEntity(int x, int y, int z, int side, String name)

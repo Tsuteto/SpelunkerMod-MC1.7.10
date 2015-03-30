@@ -2,6 +2,7 @@ package tsuteto.spelunker.world;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldProvider;
@@ -111,10 +112,10 @@ public class WorldProviderSpelunker extends WorldProvider
         return this.worldObj.getTopBlock(p_76566_1_, p_76566_2_).getMaterial().blocksMovement();
     }
 
-//    public ChunkCoordinates getEntrancePortalLocation()
-//    {
-//        return new ChunkCoordinates(100, 50, 0);
-//    }
+    public ChunkCoordinates getEntrancePortalLocation()
+    {
+        return new ChunkCoordinates(0, 128, 0);
+    }
 
     public int getActualHeight()
     {

@@ -53,6 +53,7 @@ public class Settings
     public boolean goldenSpelunkerRecipe;
 
     public boolean updateCheck = true;
+    public boolean restoreSample = false;
 
     public void load(Configuration cfg, Side side)
     {
@@ -115,5 +116,12 @@ public class Settings
 
         // Level Building
         dimTypeId = cfg.get("levelbuilding", "dimensionTypeId", dimTypeId).getInt();
+
+        // Misc
+        updateCheck = cfg.get("misc", "updateCheck", updateCheck).getBoolean(updateCheck);
+
+        Property propRestoreSample = cfg.get("misc", "restoreSampleMap", restoreSample, "If true, sample map files will be restored once at the next start-up and the flag will be back to false.");
+        restoreSample = propRestoreSample.getBoolean(restoreSample);
+        propRestoreSample.set(false);
     }
 }

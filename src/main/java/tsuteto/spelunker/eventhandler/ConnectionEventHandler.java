@@ -20,7 +20,7 @@ public class ConnectionEventHandler
     @SubscribeEvent
     public void onConnectionReceived(FMLNetworkEvent.ServerConnectionFromClientEvent event)
     {
-        SpelunkerMod.getLevelManager().syncAllLevels(event.manager);
+        SpelunkerMod.levelManager().syncAllLevels(event.manager);
     }
 
     @SubscribeEvent

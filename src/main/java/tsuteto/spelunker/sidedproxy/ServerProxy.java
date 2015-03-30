@@ -6,6 +6,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.player.ISpelunkerPlayer;
 
+import java.io.File;
+
 
 public class ServerProxy implements ISidedProxy
 {
@@ -42,7 +44,8 @@ public class ServerProxy implements ISidedProxy
     }
 
     @Override
-    public void installSoundFiles()
+    public File getMapDataDir()
     {
+        return new File(".");
     }
 }
