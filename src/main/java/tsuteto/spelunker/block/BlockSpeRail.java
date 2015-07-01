@@ -14,7 +14,7 @@ public class BlockSpeRail extends BlockRailBase
     @SideOnly(Side.CLIENT)
     private IIcon iconCorner;
 
-    protected BlockSpeRail(boolean p_i45389_1_)
+    public BlockSpeRail(boolean p_i45389_1_)
     {
         super(p_i45389_1_);
     }

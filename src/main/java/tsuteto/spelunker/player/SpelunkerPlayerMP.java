@@ -40,19 +40,21 @@ import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.WorldInfo;
 import tsuteto.spelunker.SpelunkerMod;
+import tsuteto.spelunker.achievement.AchievementMgr;
 import tsuteto.spelunker.constants.SpelunkerDifficulty;
 import tsuteto.spelunker.constants.SpelunkerGameMode;
 import tsuteto.spelunker.constants.SpelunkerPacketType;
 import tsuteto.spelunker.damage.SpelunkerDamageSource;
 import tsuteto.spelunker.data.ScoreManager;
 import tsuteto.spelunker.data.SpelunkerSaveHandler;
-import tsuteto.spelunker.data.SpelunkerWorldInfo;
+import tsuteto.spelunker.data.SpelunkerWorldPlayerInfo;
 import tsuteto.spelunker.entity.EntityGhost;
 import tsuteto.spelunker.entity.EntitySpelunkerItem;
 import tsuteto.spelunker.entity.EntityStillBat;
 import tsuteto.spelunker.eventhandler.GhostSpawnHandler;
 import tsuteto.spelunker.eventhandler.ItemSpawnHandler;
-import tsuteto.spelunker.item.SpelunkerItem;
+import tsuteto.spelunker.init.SpeAchievementList;
+import tsuteto.spelunker.init.SpelunkerItems;
 import tsuteto.spelunker.network.SpelunkerPacketDispatcher;
 import tsuteto.spelunker.util.ModLog;
 import tsuteto.spelunker.util.WatchBool;
@@ -60,7 +62,6 @@ import tsuteto.spelunker.world.WorldProviderSpelunker;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -96,7 +97,7 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
     public int gunDamageCount = 0;
     public int energyAlertTime;
 
-    private SpelunkerWorldInfo worldInfo;
+    private SpelunkerWorldPlayerInfo worldInfo;
     private SpelunkerSaveHandler saveHandler;
 
     private int time2xScore;
@@ -158,12 +159,12 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
             if (worldInfo == null)
             {
                 // Initialize world info
-                worldInfo = new SpelunkerWorldInfo(gameProfile);
+                worldInfo = new SpelunkerWorldPlayerInfo(gameProfile);
                 saveHandler.saveSpelunker(this);
                 worldInfo = saveHandler.loadSpelunker(uuid.toString());
 
                 isFirstLogin = true;
-                timeSpawnInv = 100;
+                this.setSpawnTimeInv(100);
             }
             else
             {
@@ -457,7 +458,7 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
 
     public boolean shouldAvoidDamage(DamageSource dmgsrc)
     {
-        if (getTimeSpawnInv() && !isInSpelunkerWorld())
+        if (isWithinSpawnTimeInv() && !isInSpelunkerWorld())
         {
 
             if (dmgsrc instanceof SpelunkerDamageSource)
@@ -476,7 +477,7 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
         }
     }
 
-    public boolean getTimeSpawnInv()
+    public boolean isWithinSpawnTimeInv()
     {
         return timeSpawnInv > 0;
     }
@@ -503,24 +504,26 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
             if (player.dimension == 1 && !worldInfo.isDragonDefeated())
             {
                 // Give 500000 pts. to each spelunker
-                Iterator itr = MinecraftServer.getServer().getConfigurationManager().playerEntityList.iterator();
 
-                while (itr.hasNext())
+                for (Object playerList : MinecraftServer.getServer().getConfigurationManager().playerEntityList)
                 {
-                    EntityPlayerMP player = (EntityPlayerMP) itr.next();
+                    EntityPlayerMP player = (EntityPlayerMP) playerList;
                     SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(player);
                     if (spelunker != null)
                     {
-                        SpelunkerWorldInfo winfo = spelunker.worldInfo;
+                        SpelunkerWorldPlayerInfo winfo = spelunker.worldInfo;
                         if (!winfo.isDragonDefeated())
                         {
-                            spelunker.addSpelunkerScore(500000);
+                            spelunker.addSpelunkerScore(SpelunkerMod.bonusAllCleared, true);
                             winfo.setDragonDefeated();
                             spelunker.saveSpelunker();
                         }
                     }
+                    AchievementMgr.achieve(player, SpeAchievementList.Key.defeatDragon);
                 }
-                new SpelunkerPacketDispatcher(SpelunkerPacketType.ALL_CLEARED).sendPacketAll();
+                new SpelunkerPacketDispatcher(SpelunkerPacketType.ALL_CLEARED)
+                        .addInt(this.calcActualScore(SpelunkerMod.bonusAllCleared, true))
+                        .sendPacketAll();
             }
             else
             {
@@ -576,6 +579,7 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
             else if (entityliving instanceof EntityWither)
             {
                 this.addSpelunkerScore(100000);
+                AchievementMgr.achieve(player, SpeAchievementList.Key.defeatWither);
             }
             else
             {
@@ -677,7 +681,7 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
         InventoryPlayer inventory = player.inventory;
         for (int i = 0; i < inventory.mainInventory.length; i++)
         {
-            if (inventory.mainInventory[i] != null && inventory.mainInventory[i].getItem() == SpelunkerItem.itemGoldenStatue)
+            if (inventory.mainInventory[i] != null && inventory.mainInventory[i].getItem() == SpelunkerItems.itemGoldenStatue)
             {
                 inventory.mainInventory[i] = null;
             }
@@ -710,6 +714,8 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
         {
             deaths += 1;
             worldInfo.setDeaths(deaths);
+
+            AchievementMgr.achieveDeaths(deaths, this.player());
 
             if (this.gameMode == SpelunkerGameMode.Adventure)
             {
@@ -797,7 +803,7 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
     {
         BanEntry banentry = new UserListBansEntry(player.getGameProfile(), null, SpelunkerMod.modId, null, "Out of lives of spelunker");
         MinecraftServer.getServer().getConfigurationManager().func_152608_h().func_152687_a(banentry);
-        player.playerNetServerHandler.kickPlayerFromServer("You failed too much. Game over, man, it\'s game over!");
+        player.playerNetServerHandler.kickPlayerFromServer("You missed too much. Game over, man, it\'s game over!");
     }
 
     public void setDifficultyHardcore()
@@ -869,30 +875,49 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
     @Override
     public void addSpelunkerScore(int amount)
     {
-        if (player.capabilities.isCreativeMode || player.worldObj.difficultySetting == EnumDifficulty.PEACEFUL)
-        {
-            return;
-        }
+        this.addSpelunkerScore(amount, false);
+    }
 
-        if (player.worldObj.difficultySetting == EnumDifficulty.EASY)
-        {
-            amount /= 4;
-        }
-
-        if (is2xScore())
-        {
-            amount *= 2;
-        }
-
-        amount = amount / 10 * 10;
-
+    public void addSpelunkerScore(int amount, boolean isBonus)
+    {
+        amount = this.calcActualScore(amount, isBonus);
         spelunkerScore.addScore(amount);
+
+        AchievementMgr.achieveScore(spelunkerScore.scoreActual, this.player());
 
         if (amount > 0)
         {
             new SpelunkerPacketDispatcher(SpelunkerPacketType.SCORE)
                     .addInt(spelunkerScore.scoreActual)
                     .sendPacketPlayer(player);
+        }
+    }
+
+    public int calcActualScore(int amount, boolean isBonus)
+    {
+        amount = (int)(amount * this.getScoreMultiplier() / 10) * 10;
+
+        if (!isBonus && is2xScore())
+        {
+            amount *= 2;
+        }
+        return amount;
+    }
+
+    public float getScoreMultiplier()
+    {
+        if (player.capabilities.isCreativeMode || player.worldObj.difficultySetting == EnumDifficulty.PEACEFUL)
+        {
+            return 0.0f;
+        }
+
+        if (player.worldObj.difficultySetting == EnumDifficulty.EASY)
+        {
+            return 0.25f;
+        }
+        else
+        {
+            return 1.0f;
         }
     }
 
@@ -1032,7 +1057,7 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
             }
         }
 
-        timeSpawnInv = 60;
+        this.setSpawnTimeInv(60);
 
         // Additional
         this.spelunkerExtra.onRespawn(deadPlayer);
@@ -1137,9 +1162,22 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
         return this.playerAPI;
     }
 
-    public SpelunkerWorldInfo getWorldInfo()
+    public SpelunkerWorldPlayerInfo getWorldInfo()
     {
         return worldInfo;
+    }
+
+    public void setSpawnTimeInv(int ticks)
+    {
+        this.timeSpawnInv = ticks;
+        SpelunkerPacketDispatcher.of(SpelunkerPacketType.SPAWN_INV)
+                .addInt(ticks)
+                .sendPacketPlayer(player);
+    }
+
+    public int getSpawnTimeInv()
+    {
+        return this.timeSpawnInv;
     }
 
     @Override

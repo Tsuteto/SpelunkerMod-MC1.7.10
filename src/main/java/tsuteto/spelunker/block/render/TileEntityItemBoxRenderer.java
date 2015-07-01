@@ -1,17 +1,18 @@
 package tsuteto.spelunker.block.render;
 
+import cpw.mods.fml.client.FMLClientHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import tsuteto.spelunker.block.tileentity.TileEntityItemBox;
-import tsuteto.spelunker.util.ModLog;
 
-public class TileEntityItemContainerRenderer extends TileEntitySpecialRenderer
+public class TileEntityItemBoxRenderer extends TileEntitySpecialRenderer
 {
     private RenderItem itemRenderer = new RenderItem();
 
-    public TileEntityItemContainerRenderer()
+    public TileEntityItemBoxRenderer()
     {
         this.itemRenderer.setRenderManager(RenderManager.instance);
     }
@@ -19,16 +20,16 @@ public class TileEntityItemContainerRenderer extends TileEntitySpecialRenderer
     @Override
     public void renderTileEntityAt(TileEntity te, double x, double y, double z, float partialTick)
     {
-        TileEntityItemBox itemContainer = (TileEntityItemBox)te;
-        if (itemContainer != null && itemContainer.isItemAvailable())
+        TileEntityItemBox itemBox = (TileEntityItemBox) te;
+        Minecraft mc = FMLClientHandler.instance().getClient();
+        if (itemBox != null)
         {
-            if (itemContainer.itemEntity != null)
+            if (itemBox.isItemAvailable() || mc.thePlayer.capabilities.isCreativeMode)
             {
-                itemRenderer.doRender(itemContainer.itemEntity, x + 0.5D, y + 0.25D, z + 0.5D, 0.0F, partialTick);
-            }
-            else
-            {
-                ModLog.debug("ItemEntity is null!");
+                if (itemBox.itemEntity != null)
+                {
+                    itemRenderer.doRender(itemBox.itemEntity, x + 0.5D, y + 0.25D, z + 0.5D, 0.0F, partialTick);
+                }
             }
         }
     }

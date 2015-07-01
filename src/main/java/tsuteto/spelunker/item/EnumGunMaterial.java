@@ -6,6 +6,7 @@ public enum EnumGunMaterial
     IRON(     4,  4,  2.5F,  8, 4, 30, 131, true),
     ORIGINAL( 5,  8, 20.0F, 20, 3, 20, 500, true),
     GOLD(    10, 12,  3.0F,  2, 8, 30,  32, false),
+    SPE_WORLD(4,  4,  2.5F,  8, 4, 30,  -1, true),
     CLIENT(   0,  1,    0F, 99, 0,  0,   0, false);
 
     private final int damageVsEntity;

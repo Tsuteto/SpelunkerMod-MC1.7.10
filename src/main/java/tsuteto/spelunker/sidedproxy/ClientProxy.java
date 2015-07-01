@@ -11,10 +11,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
 import tsuteto.spelunker.SpelunkerMod;
-import tsuteto.spelunker.block.SpelunkerBlocks;
-import tsuteto.spelunker.entity.SpelunkerEntity;
 import tsuteto.spelunker.eventhandler.ClientTickHandler;
 import tsuteto.spelunker.gui.ScreenRenderer;
+import tsuteto.spelunker.init.SpelunkerBlocks;
+import tsuteto.spelunker.init.SpelunkerEntity;
 import tsuteto.spelunker.player.ISpelunkerPlayer;
 import tsuteto.spelunker.player.SpelunkerPlayerSP;
 import tsuteto.spelunker.util.Utils;
@@ -81,13 +81,19 @@ public class ClientProxy implements ISidedProxy
 
         if (Utils.soundFileExists("ghost_bgm"))
             SpelunkerMod.isBgmGhostComingAvailable = true;
+
+        if (Utils.soundFileExists("checkpoint"))
+            SpelunkerMod.isBgmCheckPointAvailable = true;
+
+        if (Utils.soundFileExists("allcleared"))
+            SpelunkerMod.isBgmAllCleardAvailable = true;
     }
 
     @Override
     public File getMapDataDir()
     {
         Minecraft mc = FMLClientHandler.instance().getClient();
-        return mc.mcDataDir;
+        return new File(mc.mcDataDir, SpelunkerMod.levelMapFileDir);
     }
 
 }

@@ -28,7 +28,7 @@ import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.blockaspect.BlockAspectHC;
 import tsuteto.spelunker.constants.SpelunkerPacketType;
 import tsuteto.spelunker.damage.SpelunkerDamageSource;
-import tsuteto.spelunker.item.SpelunkerItem;
+import tsuteto.spelunker.init.SpelunkerItems;
 import tsuteto.spelunker.network.SpelunkerPacketDispatcher;
 import tsuteto.spelunker.potion.SpelunkerPotion;
 import tsuteto.spelunker.util.BlockUtils;
@@ -117,7 +117,7 @@ public class SpelunkerHardcoreMP extends SpelunkerNormalMP
         int pz = MathHelper.floor_double(player.posZ);
         BiomeGenBase biome = player.worldObj.getBiomeGenForCoords(px, pz);
 
-        isRainHit = player.worldObj.canLightningStrikeAt(px, py, pz);
+        isRainHit = player.worldObj.canLightningStrikeAt(px, py + 1, pz);
         isSnowHit = this.isSnowHit(px, py, pz);
         isInColdPlace = biome.getEnableSnow();
         isInHighPlace = player.posY + player.getEyeHeight() > 85;
@@ -273,13 +273,13 @@ public class SpelunkerHardcoreMP extends SpelunkerNormalMP
             for (int i = 0; i < player.inventory.mainInventory.length; ++i)
             {
                 ItemStack slot = player.inventory.mainInventory[i];
-                if (slot != null && slot.getItem() == SpelunkerItem.itemGoldenStatue)
+                if (slot != null && slot.getItem() == SpelunkerItems.itemGoldenStatue)
                 {
                     currGs++;
                 }
             }
             ItemStack itemGrabbed = player.inventory.getItemStack();
-            if (itemGrabbed != null && itemGrabbed.getItem() == SpelunkerItem.itemGoldenStatue)
+            if (itemGrabbed != null && itemGrabbed.getItem() == SpelunkerItems.itemGoldenStatue)
             {
                 currGs++;
             }

@@ -3,20 +3,20 @@ package tsuteto.spelunker.item;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBow;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.world.World;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.entity.EntityGunBullet;
 import tsuteto.spelunker.player.ISpelunkerPlayer;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
+
+import java.util.List;
 
 public class ItemGun extends ItemBow
 {
@@ -27,7 +27,10 @@ public class ItemGun extends ItemBow
         super();
         this.gunMaterial = gunMaterial;
         maxStackSize = 1;
-        setMaxDamage(gunMaterial.getMaxUses());
+        if (!this.isUnlimited())
+        {
+            setMaxDamage(gunMaterial.getMaxUses());
+        }
     }
 
     @Override
@@ -35,6 +38,11 @@ public class ItemGun extends ItemBow
     {
         this.setTextureName(par1Str);
         return super.setUnlocalizedName(par1Str);
+    }
+
+    public boolean isUnlimited()
+    {
+        return gunMaterial.getMaxUses() == -1;
     }
 
     @Override
@@ -117,7 +125,10 @@ public class ItemGun extends ItemBow
                 spelunker.gunInUseCount = 0;
                 if (!world.isRemote)
                 {
-                    itemstack.damageItem(spelunker.gunDamageCount, entityPlayer);
+                    if (!this.isUnlimited())
+                    {
+                        itemstack.damageItem(spelunker.gunDamageCount, entityPlayer);
+                    }
                     spelunker.gunDamageCount = 0;
                 }
             }
@@ -175,7 +186,7 @@ public class ItemGun extends ItemBow
             world.spawnEntityInWorld(entityBullet);
         }
 
-        if (world.isRemote)
+        if (world.isRemote && !this.isUnlimited())
         {
             itemstack.damageItem(1, entityplayer);
         }
@@ -215,5 +226,31 @@ public class ItemGun extends ItemBow
     public int getItemEnchantability()
     {
         return this.gunMaterial.getEnchantability();
+    }
+
+    @Override
+    public EnumRarity getRarity(ItemStack p_77613_1_)
+    {
+        switch (this.gunMaterial)
+        {
+            case ORIGINAL:
+                return EnumRarity.rare;
+            default:
+                return EnumRarity.common;
+        }
+    }
+
+    @Override
+    public void addInformation(ItemStack p_77624_1_, EntityPlayer p_77624_2_, List p_77624_3_, boolean p_77624_4_)
+    {
+        switch (this.gunMaterial)
+        {
+            case ORIGINAL:
+                p_77624_3_.add(I18n.format("item.spelunker:spelunkerGun.org.info"));
+                break;
+            case SPE_WORLD:
+                p_77624_3_.add(I18n.format("item.spelunker:spelunkerGun.sw.info"));
+                break;
+        }
     }
 }

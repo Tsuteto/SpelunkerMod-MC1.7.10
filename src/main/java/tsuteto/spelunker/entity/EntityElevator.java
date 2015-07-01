@@ -11,7 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
-import tsuteto.spelunker.item.SpelunkerItem;
+import tsuteto.spelunker.init.SpelunkerItems;
 import tsuteto.spelunker.network.PacketDispatcher;
 import tsuteto.spelunker.network.packet.PacketElevatorControlCl;
 import tsuteto.spelunker.network.packet.PacketElevatorControlSv;
@@ -19,7 +19,7 @@ import tsuteto.spelunker.util.ModLog;
 
 import java.util.List;
 
-public class EntityElevator extends Entity
+public class EntityElevator extends Entity implements IEntityPlatform
 {
     public static final double moveSpeed = 0.2D;
     public static int MODE_STILL = 0;
@@ -119,7 +119,7 @@ public class EntityElevator extends Entity
             {
                 if (!flag)
                 {
-                    this.entityDropItem(new ItemStack(SpelunkerItem.itemEntityPlacer, 1, EntityList.getEntityID(this)), 0.0F);
+                    this.entityDropItem(new ItemStack(SpelunkerItems.itemEntityPlacer, 1, EntityList.getEntityID(this)), 0.0F);
                 }
 
                 this.setDead();

@@ -25,7 +25,7 @@ public class MapPieceBlock extends MapPieceSingle
 
     public MapPieceBlock putBlock(int x, int y, int z, Block block, int meta)
     {
-        return this.putBlock(x, y, z, block, 0, null);
+        return this.putBlock(x, y, z, block, meta, null);
     }
 
     public MapPieceBlock putBlock(int x, int y, int z, Block block, int meta, TileEntryBlock.IHandler handler)
@@ -78,7 +78,7 @@ public class MapPieceBlock extends MapPieceSingle
     }
 
     @Override
-    public void place(WorldGenSpelunkerLevel gen, World world, int x, int y, int z)
+    public void place(WorldGenSpelunkerLevel gen, World world, int x, int y, int z, SpelunkerLevelMapper mapper, int mapX, int mapY)
     {
         for (TileEntryBlock entry : this.blockMapping)
         {
@@ -87,7 +87,7 @@ public class MapPieceBlock extends MapPieceSingle
             if (entry.handler != null)
             {
                 TileEntity te = world.getTileEntity(x + entry.offsetX, y + entry.offsetY, z + entry.offsetZ);
-                entry.handler.apply(world, x + entry.offsetX, y + entry.offsetY, z + entry.offsetZ, entry.block.block, entry.block.meta, te);
+                entry.handler.apply(gen, world, x + entry.offsetX, y + entry.offsetY, z + entry.offsetZ, entry.block.block, entry.block.meta, te);
             }
         }
     }

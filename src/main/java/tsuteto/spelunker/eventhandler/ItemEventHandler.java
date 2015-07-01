@@ -8,7 +8,7 @@ import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.damage.SpelunkerDamageSource;
-import tsuteto.spelunker.item.SpelunkerItem;
+import tsuteto.spelunker.init.SpelunkerItems;
 import tsuteto.spelunker.player.ISpelunkerPlayer;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
 
@@ -20,7 +20,7 @@ public class ItemEventHandler
         ItemStack stack = entity.getEntityItem();
         EntityPlayer player = event.player;
 
-        if (stack.getItem() == SpelunkerItem.itemGoldenStatue)
+        if (stack.getItem() == SpelunkerItems.itemGoldenStatue)
         {
             ISpelunkerPlayer spelunker = SpelunkerMod.getSpelunkerPlayer(player);
             if (spelunker != null && spelunker.isHardcore())
@@ -38,7 +38,7 @@ public class ItemEventHandler
         ItemStack stack = entity.getEntityItem();
         EntityPlayer player = event.entityPlayer;
 
-        if (stack.getItem() == SpelunkerItem.itemGoldenStatue)
+        if (stack.getItem() == SpelunkerItems.itemGoldenStatue)
         {
             SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(player);
             if (spelunker != null && spelunker.isHardcore())

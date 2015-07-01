@@ -41,7 +41,7 @@ public class MapPieceEntity extends MapPieceSingle
     }
 
     @Override
-    public void place(WorldGenSpelunkerLevel gen, World world, int ox, int oy, int oz)
+    public void place(WorldGenSpelunkerLevel gen, World world, int ox, int oy, int oz, SpelunkerLevelMapper mapper, int mapX, int mapY)
     {
         for (TileEntryEntity entry : this.tileMapping)
         {
@@ -49,8 +49,7 @@ public class MapPieceEntity extends MapPieceSingle
             int y = oy + entry.offsetY;
             int z = oz + entry.offsetZ;
             // Spawn Entity
-            Entity entity = ItemEntityPlacer.spawnEntity(
-                    world, null, ItemEntityPlacer.getIdFromName(entry.entityName), x + 0.5D, y + 0.5D, z + 0.5D, entry.side);
+            Entity entity = this.spawnEntity(world, entry.entityName, x, y, z, entry.side);
             if (entity != null && entry.handler != null)
             {
                 entry.handler.apply(world, x, y, z, entity);
@@ -58,4 +57,9 @@ public class MapPieceEntity extends MapPieceSingle
         }
     }
 
+    protected Entity spawnEntity(World world, String entityName, int x, int y, int z, int side)
+    {
+        return ItemEntityPlacer.spawnEntity(
+                world, null, ItemEntityPlacer.getIdFromName(entityName), x + 0.5D, y + 0.5D, z + 0.5D, side);
+    }
 }

@@ -54,6 +54,7 @@ public class ServerPacketHandler
                 response.addInt(spelunkerMp.spelunkerScore.scoreActual);
                 response.addInt(spelunkerMp.spelunkerScore.hiscore);
                 response.addInt(spelunkerMp.getMaxEnergy());
+                response.addInt(spelunkerMp.getSpawnTimeInv());
                 response.sendPacketPlayer(player);
 
                 if (spelunkerMp.isUsingEnergy()) {

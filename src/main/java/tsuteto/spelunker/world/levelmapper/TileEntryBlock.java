@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import tsuteto.spelunker.util.BlockParam;
+import tsuteto.spelunker.world.gen.WorldGenSpelunkerLevel;
 
 class TileEntryBlock
 {
@@ -34,6 +35,6 @@ class TileEntryBlock
 
     interface IHandler
     {
-        void apply(World world, int x, int y, int z, Block block, int meta, TileEntity tileEntity);
+        void apply(WorldGenSpelunkerLevel gen, World world, int x, int y, int z, Block block, int meta, TileEntity tileEntity);
     }
 }

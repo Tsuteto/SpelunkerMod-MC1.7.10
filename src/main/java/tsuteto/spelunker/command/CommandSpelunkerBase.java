@@ -7,7 +7,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.data.SpelunkerSaveHandler;
-import tsuteto.spelunker.data.SpelunkerWorldInfo;
+import tsuteto.spelunker.data.SpelunkerWorldPlayerInfo;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
 
 /**
@@ -37,14 +37,14 @@ public abstract class CommandSpelunkerBase extends CommandBase
         return MinecraftServer.getServer().getConfigurationManager().func_152612_a(par1Str);
     }
 
-    protected SpelunkerWorldInfo getWorldInfo(String par1Str)
+    protected SpelunkerWorldPlayerInfo getWorldInfo(String par1Str)
     {
         EntityPlayerMP var2 = MinecraftServer.getServer().getConfigurationManager().func_152612_a(par1Str);
 
         if (var2 == null)
         {
             SpelunkerSaveHandler saveHandler = SpelunkerMod.getSaveHandler();
-            SpelunkerWorldInfo worldInfo = saveHandler.loadSpelunker(par1Str);
+            SpelunkerWorldPlayerInfo worldInfo = saveHandler.loadSpelunker(par1Str);
             if (worldInfo == null)
             {
                 return null;

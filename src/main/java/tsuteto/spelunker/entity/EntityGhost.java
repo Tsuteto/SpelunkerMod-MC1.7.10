@@ -2,6 +2,7 @@ package tsuteto.spelunker.entity;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -10,7 +11,9 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import tsuteto.spelunker.SpelunkerMod;
+import tsuteto.spelunker.achievement.AchievementMgr;
 import tsuteto.spelunker.eventhandler.GhostSpawnHandler;
+import tsuteto.spelunker.init.SpeAchievementList;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
 import tsuteto.spelunker.util.PlayerUtils;
 
@@ -35,10 +38,6 @@ public class EntityGhost extends EntityCreature implements IMob
         super(p_i1738_1_);
         this.noClip = true;
         this.setSize(3F, 3F);
-        if (!p_i1738_1_.isRemote)
-        {
-            GhostSpawnHandler.ghostList.add(this);
-        }
     }
 
     public EntityGhost(World world, double x, double y, double z)
@@ -52,6 +51,11 @@ public class EntityGhost extends EntityCreature implements IMob
     {
         super.entityInit();
         this.dataWatcher.addObject(16, Byte.valueOf((byte) 0));
+
+        if (!this.worldObj.isRemote)
+        {
+            GhostSpawnHandler.ghostList.add(this);
+        }
     }
 
     protected boolean isAIEnabled()
@@ -131,6 +135,13 @@ public class EntityGhost extends EntityCreature implements IMob
         }
     }
 
+    @Override
+    public boolean attackEntityAsMob(Entity p_70652_1_)
+    {
+        float f = (float)this.getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
+        return p_70652_1_.attackEntityFrom(DamageSource.causeMobDamage(this), f);
+    }
+
     protected EntityPlayer findPlayerToAttack()
     {
         EntityPlayer entityplayer = PlayerUtils.getClosestVulnerableSpelunkerToEntity(this, 32.0D);
@@ -140,13 +151,24 @@ public class EntityGhost extends EntityCreature implements IMob
     @Override
     public boolean attackEntityFrom(DamageSource p_70097_1_, float p_70097_2_)
     {
-        if (p_70097_1_.isProjectile() || p_70097_1_.canHarmInCreative())
+        if (p_70097_1_.getSourceOfDamage() instanceof EntityGunBullet || p_70097_1_.canHarmInCreative())
         {
             return super.attackEntityFrom(p_70097_1_, p_70097_2_);
         }
         else
         {
             return false;
+        }
+    }
+
+    @Override
+    public void onDeath(DamageSource p_70645_1_)
+    {
+        super.onDeath(p_70645_1_);
+        Entity shooter = p_70645_1_.getEntity();
+        if (shooter instanceof EntityPlayer)
+        {
+            AchievementMgr.achieve((EntityPlayer)shooter, SpeAchievementList.Key.ghost);
         }
     }
 
@@ -256,4 +278,11 @@ public class EntityGhost extends EntityCreature implements IMob
     {
         return Type.values()[this.dataWatcher.getWatchableObjectByte(16)];
     }
+
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(3.0F);
+    }
+
 }

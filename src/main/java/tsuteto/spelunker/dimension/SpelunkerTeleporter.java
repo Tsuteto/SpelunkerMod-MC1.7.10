@@ -12,7 +12,7 @@ import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import tsuteto.spelunker.block.SpelunkerBlocks;
+import tsuteto.spelunker.init.SpelunkerBlocks;
 
 import java.util.ArrayList;
 import java.util.Iterator;

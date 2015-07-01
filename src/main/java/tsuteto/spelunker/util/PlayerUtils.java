@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import tsuteto.spelunker.SpelunkerMod;
-import tsuteto.spelunker.item.SpelunkerItem;
+import tsuteto.spelunker.init.SpelunkerItems;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
 
 public class PlayerUtils
@@ -17,7 +17,7 @@ public class PlayerUtils
         InventoryPlayer inventory = player.inventory;
         for (int i = 0; i < numGs; i++)
         {
-            inventory.mainInventory[(i + 9) % inventory.mainInventory.length] = new ItemStack(SpelunkerItem.itemGoldenStatue);
+            inventory.mainInventory[(i + 9) % inventory.mainInventory.length] = new ItemStack(SpelunkerItems.itemGoldenStatue);
         }
     }
 

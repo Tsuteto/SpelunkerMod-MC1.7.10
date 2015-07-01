@@ -4,8 +4,9 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import tsuteto.spelunker.block.SpelunkerBlocks;
 import tsuteto.spelunker.block.tileentity.TileEntityItemBox;
+import tsuteto.spelunker.init.SpelunkerBlocks;
+import tsuteto.spelunker.world.gen.WorldGenSpelunkerLevel;
 
 public class MapPieceItem extends MapPieceBlock
 {
@@ -35,7 +36,7 @@ public class MapPieceItem extends MapPieceBlock
         }
 
         @Override
-        public void apply(World world, int x, int y, int z, Block block, int meta, TileEntity tileEntity)
+        public void apply(WorldGenSpelunkerLevel gen, World world, int x, int y, int z, Block block, int meta, TileEntity tileEntity)
         {
             ((TileEntityItemBox) tileEntity).setItemStack(this.itemStack);
         }

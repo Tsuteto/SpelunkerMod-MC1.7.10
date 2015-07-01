@@ -1,4 +1,4 @@
-package tsuteto.spelunker.block;
+package tsuteto.spelunker.init;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -7,18 +7,24 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemCloth;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import tsuteto.spelunker.SpelunkerMod;
+import tsuteto.spelunker.block.*;
 import tsuteto.spelunker.block.render.*;
 import tsuteto.spelunker.block.tileentity.*;
 import tsuteto.spelunker.item.ItemBlockInvisible;
+import tsuteto.spelunker.item.ItemItemBox;
 import tsuteto.spelunker.item.ItemSpelunkerPortal;
 
 public class SpelunkerBlocks
 {
-    public static Block blockSpelunkerPortal;
+    public static Block blockSpelunkerPortal1;
+    public static Block blockSpelunkerPortal2;
     public static Block blockWall;
     public static Block blockMagicWall;
     public static Block blockLiftDispatcher;
@@ -38,22 +44,36 @@ public class SpelunkerBlocks
     public static Block blockRock;
     public static Block blockBreakableWall;
     public static Block blockHiddenDiamond;
+    public static Block blockPyramid;
+    public static Block blockLadder;
+    public static Block blockItemSpawnPoint;
+    public static Block blockCheckpoint;
+    public static Block blockCheckpointStatue1;
+    public static Block blockCheckpointStatue2;
 
     public static void load()
     {
-        blockSpelunkerPortal = $("spelunkerPortal", new BlockSpelunkerPortal(Material.iron))
-                .withTileEntity(TileEntitySpelunkerPortal.class)
+        blockSpelunkerPortal1 = $("spelunkerPortal", new BlockSpelunkerPortal(BlockSpelunkerPortal.Type.CUSTOM))
                 .wrappedBy(ItemSpelunkerPortal.class)
                 .registerBlock()
                 .setHardness(2.0F)
+                .setResistance(6000000.0F)
                 .setCreativeTab(SpelunkerMod.tabLevelComponents)
                 ;
+        blockSpelunkerPortal2 = $("spelunkerPortal2", new BlockSpelunkerPortal(BlockSpelunkerPortal.Type.SURVIVAL))
+                .wrappedBy(ItemSpelunkerPortal.class)
+                .registerBlock()
+                .setHardness(2.0F)
+                .setResistance(6000000.0F)
+                .setCreativeTab(SpelunkerMod.tabLevelComponents)
+                ;
+        GameRegistry.registerTileEntity(TileEntitySpelunkerPortalStage.class, SpelunkerMod.resourceDomain + "spelunkerPortal");
+        GameRegistry.registerTileEntity(TileEntitySpelunkerPortalStatue.class, SpelunkerMod.resourceDomain + "spelunkerPortalStatue");
 
         blockStartPoint = $("startPoint", new BlockRespawnPoint(SpelunkerMaterial.invisible))
                 .withTileEntity(TileEntityRespawnPoint.class)
                 .wrappedBy(ItemBlockInvisible.class)
                 .registerBlock()
-                .setBlockTextureName(SpelunkerMod.resourceDomain + "transparent")
                 .setBlockUnbreakable()
                 .setResistance(6000000.0F)
                 ;
@@ -62,7 +82,6 @@ public class SpelunkerBlocks
                 .withTileEntity(TileEntityRespawnPoint.class)
                 .wrappedBy(ItemBlockInvisible.class)
                 .registerBlock()
-                .setBlockTextureName(SpelunkerMod.resourceDomain + "transparent")
                 .setBlockUnbreakable()
                 .setResistance(6000000.0F)
                 ;
@@ -132,8 +151,26 @@ public class SpelunkerBlocks
                 .setResistance(0.0F)
                 .setCreativeTab(SpelunkerMod.tabLevelComponents)
                 ;
+        blockPyramid = $("pyramid", new Block(Material.rock)
+                {
+                    @Override
+                    public IIcon getIcon(int p_149691_1_, int p_149691_2_)
+                    {
+                        return Blocks.sandstone.getIcon(p_149691_1_, 2);
+                    }
+
+                    @Override
+                    public void registerBlockIcons(IIconRegister p_149651_1_) {}
+                })
+                .registerBlock()
+                .setBlockUnbreakable()
+                .setResistance(6000000.0F)
+                .setCreativeTab(SpelunkerMod.tabLevelComponents)
+                ;
         blockItemBox = $("itemBox", new BlockItemBox(SpelunkerMaterial.invisible))
                 .withTileEntity(TileEntityItemBox.class)
+                .withTileEntity(TileEntityItemBoxHidden.class, "itemBoxHidden")
+                .wrappedBy(ItemItemBox.class)
                 .registerBlock()
                 .setBlockUnbreakable()
                 .setResistance(6000000.0F)
@@ -174,6 +211,42 @@ public class SpelunkerBlocks
                 .setResistance(6000000.0F)
                 .setCreativeTab(SpelunkerMod.tabLevelComponents)
                 ;
+
+        blockLadder = $("ladder", new BlockSpeLadder())
+                .registerBlock()
+                .setBlockUnbreakable()
+                .setResistance(6000000.0F)
+                .setCreativeTab(SpelunkerMod.tabLevelComponents)
+                ;
+
+        blockItemSpawnPoint = $("itemSpawnPoint", new BlockItemSpawnPoint(SpelunkerMaterial.invisible))
+                .withTileEntity(TileEntityItemSpawnPoint.class)
+                .registerBlock()
+                .setBlockUnbreakable()
+                .setResistance(6000000.0F)
+                // N/A in creative tab, placed by placer item
+                ;
+
+        blockCheckpoint = $("checkpoint", new BlockCheckpoint(SpelunkerMaterial.invisible))
+                .withTileEntity(TileEntityCheckpoint.class)
+                .registerBlock()
+                .setBlockUnbreakable()
+                .setResistance(6000000.0F)
+                ;
+
+        blockCheckpointStatue1 = new BlockCPStatue(0);
+        $("cpStatue1", blockCheckpointStatue1)
+                .withResource("cpStatue")
+                .registerBlock()
+                .setBlockUnbreakable()
+                .setResistance(6000000.0F);
+
+        blockCheckpointStatue2 = new BlockCPStatue(1);
+        $("cpStatue2", blockCheckpointStatue2)
+                .withResource("cpStatue")
+                .registerBlock()
+                .setBlockUnbreakable()
+                .setResistance(6000000.0F);
     }
 
     public static <T extends Block> BlockRegister<T> $(String name, T block)
@@ -188,8 +261,9 @@ public class SpelunkerBlocks
         RenderingRegistry.registerBlockHandler(new BlockLockedGateRenderer());
         RenderingRegistry.registerBlockHandler(new BlockBumpyRenderer());
 
-        ClientRegistry.registerTileEntity(TileEntityItemBox.class, SpelunkerMod.resourceDomain + "itemContainerRen", new TileEntityItemContainerRenderer());
-        ClientRegistry.registerTileEntity(TileEntitySpelunkerPortal.class, SpelunkerMod.resourceDomain + "spelunkerPortalRen", new TileEntitySpelunkerPortalRenderer());
+        ClientRegistry.registerTileEntity(TileEntityItemBox.class, SpelunkerMod.resourceDomain + "itemContainerRen", new TileEntityItemBoxRenderer());
+        ClientRegistry.registerTileEntity(TileEntitySpelunkerPortalStage.class, SpelunkerMod.resourceDomain + "spelunkerPortalRen1", new TileEntitySpelunkerPortalRenderer());
+        ClientRegistry.registerTileEntity(TileEntitySpelunkerPortalStatue.class, SpelunkerMod.resourceDomain + "spelunkerPortalRen2", new TileEntitySpelunkerPortalRenderer());
     }
 
     private static class BlockRegister<T extends Block>

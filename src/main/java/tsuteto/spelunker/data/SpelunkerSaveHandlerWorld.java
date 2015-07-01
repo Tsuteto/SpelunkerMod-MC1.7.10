@@ -11,24 +11,24 @@ import java.io.File;
  * @author Tsuteto
  *
  */
-public class SpelunkerSaveHandlerMulti extends ModSaveHandler
+public class SpelunkerSaveHandlerWorld extends ModSaveHandler
 {
     private static final String filename = "SpelunkerMod";
 
-    public SpelunkerSaveHandlerMulti(File worldDir)
+    public SpelunkerSaveHandlerWorld(File worldDir)
     {
         super(worldDir);
         ModLog.debug("Located data for multi: " + this.getSaveDirectory());
     }
 
-    public SpelunkerMultiWorldInfo loadData()
+    public SpelunkerWorldGeneralInfo loadData()
     {
         this.migration();
 
         NBTTagCompound var2 = this.readData(filename);
         if (var2 != null)
         {
-            return new SpelunkerMultiWorldInfo(var2);
+            return new SpelunkerWorldGeneralInfo(var2);
         }
         else
         {
@@ -36,7 +36,7 @@ public class SpelunkerSaveHandlerMulti extends ModSaveHandler
         }
     }
 
-    public void saveData(SpelunkerMultiWorldInfo multiWorldInfo)
+    public void saveData(SpelunkerWorldGeneralInfo multiWorldInfo)
     {
         super.saveData(multiWorldInfo.getNBTTagCompound(), filename);
     }

@@ -20,21 +20,20 @@ import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-import tsuteto.spelunker.block.SpelunkerBlocks;
 import tsuteto.spelunker.blockaspect.BlockAspectHC;
+import tsuteto.spelunker.command.CommandResetGhost;
 import tsuteto.spelunker.command.CommandSpedeath;
 import tsuteto.spelunker.command.CommandSpehisc;
 import tsuteto.spelunker.command.CommandSperank;
 import tsuteto.spelunker.constants.SpelunkerGameMode;
-import tsuteto.spelunker.data.SpelunkerMultiWorldInfo;
 import tsuteto.spelunker.data.SpelunkerSaveHandler;
-import tsuteto.spelunker.data.SpelunkerSaveHandlerMulti;
+import tsuteto.spelunker.data.SpelunkerSaveHandlerWorld;
+import tsuteto.spelunker.data.SpelunkerWorldGeneralInfo;
 import tsuteto.spelunker.dimension.SpelunkerLevelManager;
-import tsuteto.spelunker.entity.SpelunkerEntity;
 import tsuteto.spelunker.eventhandler.*;
 import tsuteto.spelunker.gui.ScreenRendererGameOverlay;
 import tsuteto.spelunker.gui.SpelunkerGuiHandler;
-import tsuteto.spelunker.item.SpelunkerItem;
+import tsuteto.spelunker.init.*;
 import tsuteto.spelunker.levelmap.SpelunkerMapManager;
 import tsuteto.spelunker.network.PacketManager;
 import tsuteto.spelunker.network.SpelunkerClientPacketHandler;
@@ -49,6 +48,7 @@ import tsuteto.spelunker.util.ModLog;
 import tsuteto.spelunker.util.UpdateNotification;
 import tsuteto.spelunker.world.SpelunkerBiomes;
 import tsuteto.spelunker.world.WorldProviderSpelunker;
+import tsuteto.spelunker.world.gen.WorldGenEventHandler;
 
 import java.io.File;
 import java.util.Map;
@@ -60,7 +60,9 @@ import java.util.UUID;
  * @author Tsuteto
  *
  */
-@Mod(modid = SpelunkerMod.modId, useMetadata = true, version = "2.3.4.5-MC1.7.10", acceptedMinecraftVersions = "[1.7.2,1.8)")
+@Mod(modid = SpelunkerMod.modId, useMetadata = true, version = "3.0.0b-MC1.7.10",
+        acceptedMinecraftVersions = "[1.7.2,1.8)",
+        guiFactory = "tsuteto.spelunker.config.SpeConfigGuiFactory")
 public class SpelunkerMod
 {
     public static final String modId = "SpelunkerMod";
@@ -82,11 +84,21 @@ public class SpelunkerMod
     public static final int energyCostAttack = 20;
     public static final float energyCostSprint = 0.2F;
 
+    public static final int bonusEnergyMax = 1000;
+    public static final int bonusSpeLvlClearedBase = 20000;
+    public static final int bonusSpeLvlClearedChkPt = 10000;
+    public static final int bonusSpeCheckPoint = 10000;
+    public static final int bonusAllCleared = 500000;
+
+    public static final int restorationTime = 36000;
+
     public static boolean isBgmMainAvailable = false;
     public static boolean isBgm2xScoreAvailable = false;
     public static boolean isBgmInvincibleAvailable = false;
     public static boolean isBgmSpeedPotionAvailable = false;
     public static boolean isBgmGhostComingAvailable = false;
+    public static boolean isBgmCheckPointAvailable = false;
+    public static boolean isBgmAllCleardAvailable = false;
 
     public static Map<UUID, EntityPlayerMP> deadPlayerStorage = Maps.newHashMap();
 
@@ -94,17 +106,16 @@ public class SpelunkerMod
     public static CreativeTabs tabLevelComponents = new CreativeTabs("spelunker.levelComponents")
     {
         @Override
-        public Item getTabIconItem() { return SpelunkerItem.itemHelmet; }
+        public Item getTabIconItem() { return SpelunkerItems.itemHelmet; }
     };
 
-    private Configuration cfg;
-    private Settings settings = new Settings();
+    private Settings settings;
     public UpdateNotification update = null;
 
     private ScreenRendererGameOverlay renderScreen = new ScreenRendererGameOverlay();
     private SpelunkerSaveHandler saveHandler = null;
-    private SpelunkerSaveHandlerMulti saveHandlerMulti = null;
-    private SpelunkerMultiWorldInfo multiWorldInfo = null;
+    private SpelunkerSaveHandlerWorld saveHandlerWorld = null;
+    private SpelunkerWorldGeneralInfo worldInfo = null;
     private SpelunkerLevelManager levelManager = null;
     private SpelunkerMapManager mapManager = null;
 
@@ -117,22 +128,22 @@ public class SpelunkerMod
         ModInfo.load(metadata);
 
         this.renameConfigFile(event.getSuggestedConfigurationFile());
-        this.cfg = new Configuration(event.getSuggestedConfigurationFile());
-        this.cfg.load();
+        Configuration cfg = new Configuration(event.getSuggestedConfigurationFile());
+        this.settings = new Settings(cfg, event.getSide());
+        UpdateNotification.initialize(metadata);
 
-        settings.load(this.cfg, event.getSide());
-        UpdateNotification.initialize(this.cfg, metadata);
-
-        this.cfg.save();
-
-        SpelunkerItem.load();
+        SpelunkerItems.load();
         SpelunkerBlocks.load();
+        SpelunkerRecipes.load();
 
         hardcoreBonusChest = new ChestGenHooks(ChestGenHooks.BONUS_CHEST,
-                new WeightedRandomChestContent[]{new WeightedRandomChestContent(SpelunkerItem.itemGoldenStatue, 0, 1, 1, 100)}, 100, 100);
+                new WeightedRandomChestContent[]{new WeightedRandomChestContent(SpelunkerItems.itemGoldenStatue, 0, 1, 1, 100)}, 100, 100);
 
         // Register entities
         SpelunkerEntity.register(this, this.settings);
+
+        // Achievements
+        SpeAchievementList.register();
 
         // Update check!
         UpdateNotification.instance().checkUpdate();
@@ -148,6 +159,9 @@ public class SpelunkerMod
         MinecraftForge.EVENT_BUS.register(new EventPlayerInteract());
         MinecraftForge.EVENT_BUS.register(new ItemEventHandler());
         MinecraftForge.EVENT_BUS.register(new BlockEventHandler());
+        MinecraftForge.EVENT_BUS.register(new WorldGenEventHandler());
+        MinecraftForge.EVENT_BUS.register(new WorldEventHandler());
+        FMLCommonHandler.instance().bus().register(this.settings);
         FMLCommonHandler.instance().bus().register(new PlayerEventHandler());
         FMLCommonHandler.instance().bus().register(new ServerTickHandler());
         FMLCommonHandler.instance().bus().register(new ConnectionEventHandler());
@@ -177,7 +191,7 @@ public class SpelunkerMod
         ServerPlayerAPI.register(modId, SpelunkerPlayerMP.class);
 
         // Biome
-        SpelunkerBiomes.register(cfg);
+        SpelunkerBiomes.register();
 
         // Register dimension type
         DimensionManager.registerProviderType(settings.dimTypeId, WorldProviderSpelunker.class, false);
@@ -198,14 +212,19 @@ public class SpelunkerMod
     @Mod.EventHandler
     public void modsLoaded(FMLPostInitializationEvent event)
     {
-        SpelunkerItem.modsLoaded();
-        SpelunkerPotion.register(cfg);
+        SpelunkerItems.modsLoaded();
+        SpelunkerPotion.register();
 
         // Replace absorption effect
         new PotionBonusScore(Potion.field_76444_x.id, false, 16284963).setPotionName("potion.bonusScore");
         new PotionBonusScore(Potion.field_76434_w.id, false, 2445989).setPotionName("potion.bonusScore");
 
-        cfg.save();
+        settings.saveCfg();
+    }
+
+    @Mod.EventHandler
+    public void onFMLServerAboutToStart(FMLServerAboutToStartEvent event)
+    {
     }
 
     @Mod.EventHandler
@@ -214,6 +233,7 @@ public class SpelunkerMod
         event.registerServerCommand(new CommandSpehisc());
         event.registerServerCommand(new CommandSpedeath());
         event.registerServerCommand(new CommandSperank());
+        event.registerServerCommand(new CommandResetGhost());
 
         // Set up SaveHandler for players
         SaveHandler saveHandler = (SaveHandler)event.getServer().worldServerForDimension(0).getSaveHandler();
@@ -223,14 +243,15 @@ public class SpelunkerMod
         this.saveHandler = spelunkerSaveHandler;
 
         // Set up SaveHandler for world
-        SpelunkerSaveHandlerMulti multiSaveHandler = new SpelunkerSaveHandlerMulti(saveHandler.getWorldDirectory());
-        this.saveHandlerMulti = multiSaveHandler;
+        SpelunkerSaveHandlerWorld worldSaveHandler = new SpelunkerSaveHandlerWorld(saveHandler.getWorldDirectory());
+        this.saveHandlerWorld = worldSaveHandler;
 
-        multiWorldInfo = multiSaveHandler.loadData();
-        if (multiWorldInfo == null)
+        worldInfo = worldSaveHandler.loadData();
+        if (worldInfo == null)
         {
-            multiWorldInfo = new SpelunkerMultiWorldInfo();
-            saveHandlerMulti.saveData(multiWorldInfo);
+            worldInfo = new SpelunkerWorldGeneralInfo();
+            saveHandlerWorld.saveData(worldInfo);
+            ModLog.debug("World general info newly generated");
         }
 
         // Set up SpelunkerLevelManager
@@ -255,6 +276,10 @@ public class SpelunkerMod
         levelManager = null;
 
         GhostSpawnHandler.onWorldClosed();
+
+        saveHandler = null;
+        saveHandlerWorld = null;
+        worldInfo = null;
     }
 
     /**
@@ -280,40 +305,60 @@ public class SpelunkerMod
         instance.saveHandler = saveHandler;
     }
 
-    public static SpelunkerSaveHandlerMulti getSaveHandlerMulti()
+    public static SpelunkerSaveHandlerWorld getWorldSaveHandler()
     {
-        return instance.saveHandlerMulti;
+        return instance.saveHandlerWorld;
+    }
+
+    public static SpelunkerWorldGeneralInfo getWorldInfo()
+    {
+        return instance.worldInfo;
+    }
+
+    public static void saveWorldInfo()
+    {
+        instance.saveHandlerWorld.saveData(instance.worldInfo);
+    }
+
+    public static boolean isWorldInitialized()
+    {
+        return instance.worldInfo.isWorldInitialized;
+    }
+
+    public static void setWorldInitialized()
+    {
+        instance.worldInfo.isWorldInitialized = true;
     }
 
     public static SpelunkerGameMode getGamemodeMulti()
     {
-        return instance.multiWorldInfo.getMode();
+        return instance.worldInfo.getMode();
     }
 
     public static int getTotalLivesLeft()
     {
-        return instance.multiWorldInfo.totalLives;
+        return instance.worldInfo.totalLives;
     }
 
     public static void decreaseTotalLivesLeft()
     {
-        instance.multiWorldInfo.totalLives -= 1;
-        instance.saveHandlerMulti.saveData(instance.multiWorldInfo);
+        instance.worldInfo.totalLives -= 1;
+        saveWorldInfo();
     }
 
     public static void increaseTotalLivesLeft(int i)
     {
-        instance.multiWorldInfo.totalLives += i;
-        instance.saveHandlerMulti.saveData(instance.multiWorldInfo);
+        instance.worldInfo.totalLives += i;
+        saveWorldInfo();
     }
 
     public static boolean isGameToBeFinished()
     {
-        return instance.multiWorldInfo.isGameToBeFinished;
+        return instance.worldInfo.isGameToBeFinished;
     }
     public static boolean setGameToBeFinished(boolean flag)
     {
-        return instance.multiWorldInfo.isGameToBeFinished = flag;
+        return instance.worldInfo.isGameToBeFinished = flag;
     }
 
     public ScreenRendererGameOverlay gameScreenRenderer()
@@ -336,11 +381,11 @@ public class SpelunkerMod
      */
     public static boolean isHardcore()
     {
-        return instance.multiWorldInfo.hardcore;
+        return instance.worldInfo.hardcore;
     }
 
     public static File getMapDataDir()
     {
-        return new File(sidedProxy.getMapDataDir(), levelMapFileDir);
+        return sidedProxy.getMapDataDir();
     }
 }

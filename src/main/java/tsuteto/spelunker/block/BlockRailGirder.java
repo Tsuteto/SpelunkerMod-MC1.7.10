@@ -6,7 +6,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockRailGirder extends BlockInsubstantial
 {
-    protected BlockRailGirder(Material p_i45394_1_)
+    public BlockRailGirder(Material p_i45394_1_)
     {
         super(p_i45394_1_);
     }

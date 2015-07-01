@@ -1,14 +1,13 @@
 package tsuteto.spelunker.potion;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.potion.Potion;
-import net.minecraftforge.common.config.Configuration;
+import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.damage.SpelunkerDamageSource;
 import tsuteto.spelunker.util.ModLog;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SpelunkerPotion
 {
@@ -16,25 +15,17 @@ public class SpelunkerPotion
     public static Potion heatStroke;
     public static List<Potion> disabledPotionList = new ArrayList<Potion>();
 
-    public static void register(Configuration conf)
+    public static void register()
     {
-        int id;
-
         try
         {
-
-            id = conf.get("potion", "choked", SpelunkerPotion.assignId()).getInt();
-            choked = getPotionChoked(id);
-
-            id = conf.get("potion", "sunstroke", SpelunkerPotion.assignId()).getInt();
-            heatStroke = getPotionSunstroke(id);
+            choked = getPotionChoked(SpelunkerMod.settings().potionChokedId);
+            heatStroke = getPotionSunstroke(SpelunkerMod.settings().potionSunstrokeId);
         }
         catch (Exception e)
         {
             ModLog.warn(e, e.getLocalizedMessage());
         }
-
-        conf.save();
     }
 
     public static Potion getPotionChoked(int id)

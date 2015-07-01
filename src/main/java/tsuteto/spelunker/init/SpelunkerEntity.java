@@ -1,4 +1,4 @@
-package tsuteto.spelunker.entity;
+package tsuteto.spelunker.init;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
@@ -11,6 +11,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import tsuteto.spelunker.Settings;
 import tsuteto.spelunker.SpelunkerMod;
+import tsuteto.spelunker.entity.*;
 import tsuteto.spelunker.entity.render.*;
 import tsuteto.spelunker.item.ItemEntityPlacer;
 
@@ -85,6 +86,46 @@ public class SpelunkerEntity
                 .register();
 
         // EntityFallingFloor uses EntityFallingBlock in vanilla
+
+        $(EntityWaterLift.class, "waterLift", settings.entityWaterLiftId)
+                .setMotionParams(64, 20, true)
+                .registerToEntityPlacer(0x330099, new ItemEntityPlacer.ISpawnHandler()
+                {
+                    @Override
+                    public Entity spawn(World world, EntityPlayer player, int entityId, double x, double y, double z, int side)
+                    {
+                        EntityWaterLift entity = (EntityWaterLift)EntityList.createEntityByID(entityId, world);
+
+                        if (entity != null)
+                        {
+                            entity.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
+                            if (player != null)
+                            {
+                                entity.rotationYaw = (float) (((MathHelper.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3) - 1) * 90);
+                            }
+
+                            if (!world.getCollidingBoundingBoxes(entity, entity.boundingBox.expand(-0.1D, -0.1D, -0.1D)).isEmpty())
+                            {
+                                return null;
+                            }
+
+                            entity.initPosX = MathHelper.floor_double(x);
+                            entity.initPosY = MathHelper.floor_double(y);
+                            entity.initPosZ = MathHelper.floor_double(z);
+                            entity.distance = 12;
+                        }
+
+                        return entity;
+                    }
+                })
+                .register();
+
+        $(EntitySpelunkart.class, "spelunkart", settings.entitySpelunkartId)
+                .setMotionParams(64, 4, true)
+                .register();
+        $(EntitySpeBoat.class, "speBoat", settings.entitySpeBoatId)
+                .setMotionParams(64, 4, true)
+                .register();
     }
 
     private static EntityRegister $(Class<? extends Entity> entityClass, String name, int id)
@@ -109,6 +150,9 @@ public class SpelunkerEntity
         RenderingRegistry.registerEntityRenderingHandler(EntityDynamitePrimed.class, new RenderDynamitePrimed());
         RenderingRegistry.registerEntityRenderingHandler(EntityGhost.class, new RenderGhost(0.5F));
         // EntityFallingFloor uses RenderFallingBlock in vanilla
+        RenderingRegistry.registerEntityRenderingHandler(EntityWaterLift.class, new RenderWaterLift());
+        RenderingRegistry.registerEntityRenderingHandler(EntitySpelunkart.class, new RenderSpelunkart());
+        RenderingRegistry.registerEntityRenderingHandler(EntitySpeBoat.class, new RenderSpeBoat());
     }
 
     private static class EntityRegister

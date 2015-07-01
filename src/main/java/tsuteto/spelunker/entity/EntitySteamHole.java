@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
@@ -214,7 +215,7 @@ public class EntitySteamHole extends Entity implements IEntityAdditionalSpawnDat
                 @Override
                 public boolean isEntityApplicable(Entity entity)
                 {
-                    return !(entity instanceof EntityGhost);
+                    return entity instanceof EntityLivingBase && !(entity instanceof EntityGhost);
                 }
             });
             for (Object entry : list)

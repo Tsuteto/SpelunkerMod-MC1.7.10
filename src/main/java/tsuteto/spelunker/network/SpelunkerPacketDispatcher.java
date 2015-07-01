@@ -28,6 +28,11 @@ public class SpelunkerPacketDispatcher
     private ByteArrayOutputStream bytesStream;
 	private DataOutputStream dataStream;
 
+    public static SpelunkerPacketDispatcher of(SpelunkerPacketType type)
+    {
+        return new SpelunkerPacketDispatcher(type);
+    }
+
 	public SpelunkerPacketDispatcher(SpelunkerPacketType type)
 	{
         if (type.messageTo == Side.CLIENT)

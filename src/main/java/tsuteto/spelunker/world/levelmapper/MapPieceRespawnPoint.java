@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import tsuteto.spelunker.block.BlockRespawnPoint;
+import tsuteto.spelunker.world.gen.WorldGenSpelunkerLevel;
 
 public class MapPieceRespawnPoint extends MapPieceBlock
 {
@@ -18,7 +19,7 @@ public class MapPieceRespawnPoint extends MapPieceBlock
         return super.putBlock(z, block, new TileEntryBlock.IHandler()
         {
             @Override
-            public void apply(World world, int x, int y, int z, Block block, int meta, TileEntity tileEntity)
+            public void apply(WorldGenSpelunkerLevel gen, World world, int x, int y, int z, Block block, int meta, TileEntity tileEntity)
             {
                 ((BlockRespawnPoint) block).initTileEntity(world, x, y, z);
             }

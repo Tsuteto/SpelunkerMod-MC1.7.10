@@ -2,12 +2,14 @@ package tsuteto.spelunker.network.packet;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.constants.SpelunkerGameMode;
 import tsuteto.spelunker.constants.SpelunkerPacketType;
+import tsuteto.spelunker.gui.TitleController;
 import tsuteto.spelunker.player.SpelunkerHardcoreSP;
 import tsuteto.spelunker.player.SpelunkerNormalSP;
 import tsuteto.spelunker.player.SpelunkerPlayerSP;
@@ -42,6 +44,7 @@ public class ClientPacketHandler extends CommonClientPacketHandler
                 spelunker.spelunkerScore.initScore(data.readInt());
                 spelunker.spelunkerScore.hiscore = data.readInt();
                 spelunker.maxEnergy = data.readInt();
+                spelunker.timeSpawnInv = data.readInt();
                 spelunker.isReady = true;
                 spelunker.isInitializing = false;
                 if (spelunker.hardcore)
@@ -52,10 +55,15 @@ public class ClientPacketHandler extends CommonClientPacketHandler
                 {
                     spelunker.spelunkerExtra = new SpelunkerNormalSP(spelunker);
                 }
+                TitleController.instance().clear();
                 break;
 
             case INIT_FAILED:
                 spelunker.isInitializing = false;
+                break;
+
+            case DIM_CHANGE:
+                TitleController.instance().clear();
                 break;
 
             case ENERGY:
@@ -78,6 +86,10 @@ public class ClientPacketHandler extends CommonClientPacketHandler
             case ENERGY_UP:
                 spelunker.maxEnergy = data.readInt();
                 spelunker.timeLvlupIndicator = 80;
+                break;
+
+            case SPAWN_INV:
+                spelunker.timeSpawnInv = data.readInt();
                 break;
 
             case IN_CAVE_TRUE:
@@ -124,8 +136,75 @@ public class ClientPacketHandler extends CommonClientPacketHandler
                 spelunker.setDifficultyHardcore();
                 break;
 
+            case SPE_CHECKPOINT:
+                {
+                    int mainBonus = data.readInt();
+                    final int energyBonus = data.readInt();
+                    if (mainBonus > 0)
+                    {
+                        TitleController.instance().setTitle(
+                                I18n.format("Spelunker.checkpoint.title"),
+                                I18n.format("Spelunker.bonus.main", mainBonus),
+                                I18n.format("Spelunker.bonus.energy", energyBonus)
+                        );
+                    }
+                    else
+                    {
+                        TitleController.instance().setTitle(
+                                I18n.format("Spelunker.checkpoint.title"));
+                    }
+                }
+
+                if (SpelunkerMod.isBgmCheckPointAvailable)
+                {
+                    ModSound.interruptBgm(SpelunkerBgm.getCheckPoint());
+                }
+                break;
+
+            case SPE_CLEARED:
+                {
+                    int mainBonus = data.readInt();
+                    int energyBonus = data.readInt();
+                    if (mainBonus > 0)
+                    {
+                        TitleController.instance().setTitle(
+                                I18n.format("Spelunker.speCleared.title"),
+                                I18n.format("Spelunker.bonus.main", mainBonus),
+                                I18n.format("Spelunker.bonus.energy", energyBonus)
+                        );
+                    }
+                    else
+                    {
+                        TitleController.instance().setTitle(
+                                I18n.format("Spelunker.speCleared.title"));
+                    }
+                }
+
+                if (SpelunkerMod.isBgmAllCleardAvailable)
+                {
+                    ModSound.interruptBgm(SpelunkerBgm.getAllCleared());
+                }
+                break;
+
             case ALL_CLEARED:
-                ModSound.playBgm(SpelunkerBgm.bgmAllCleared);
+                int mainBonus = data.readInt();
+                if (mainBonus > 0)
+                {
+                    TitleController.instance().setTitle(
+                            I18n.format("Spelunker.allCleared.title"),
+                            I18n.format("Spelunker.bonus.main", mainBonus)
+                    );
+                }
+                else
+                {
+                    TitleController.instance().setTitle(
+                            I18n.format("Spelunker.allCleared.title"));
+                }
+
+                if (SpelunkerMod.isBgmAllCleardAvailable)
+                {
+                    ModSound.interruptBgm(SpelunkerBgm.getAllCleared());
+                }
                 break;
 
             case HOP:

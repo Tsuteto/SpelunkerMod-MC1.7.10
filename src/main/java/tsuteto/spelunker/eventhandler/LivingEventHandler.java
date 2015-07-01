@@ -4,18 +4,26 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityOwnable;
+import net.minecraft.entity.monster.EntityGhast;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import tsuteto.spelunker.SpelunkerMod;
+import tsuteto.spelunker.achievement.AchievementMgr;
 import tsuteto.spelunker.damage.SpelunkerDamageSource;
 import tsuteto.spelunker.entity.BatDroppingsHandler;
+import tsuteto.spelunker.entity.EntityGhost;
+import tsuteto.spelunker.entity.EntityGunBullet;
+import tsuteto.spelunker.init.SpeAchievementList;
+import tsuteto.spelunker.init.SpelunkerItems;
+import tsuteto.spelunker.item.EnumGunMaterial;
 import tsuteto.spelunker.item.ItemHelmet;
-import tsuteto.spelunker.item.SpelunkerItem;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
 
 /**
@@ -54,7 +62,7 @@ public class LivingEventHandler
                 InventoryPlayer var5 = player.inventory;
                 ItemStack var6 = var5.armorItemInSlot(3);
 
-                if (var6 != null && var6.getItem() == SpelunkerItem.itemHelmet)
+                if (var6 != null && var6.getItem() == SpelunkerItems.itemHelmet)
                 {
                     isHelmetLighting = true;
                 }
@@ -63,7 +71,7 @@ public class LivingEventHandler
             {
                 ItemStack var6 = entity.getEquipmentInSlot(1);
 
-                if (var6 != null && var6.getItem() == SpelunkerItem.itemHelmet)
+                if (var6 != null && var6.getItem() == SpelunkerItems.itemHelmet)
                 {
                     isHelmetLighting = true;
                 }
@@ -71,15 +79,26 @@ public class LivingEventHandler
 
             if (isHelmetLighting)
             {
-                ((ItemHelmet)SpelunkerItem.itemHelmet).lightTarget(entity.worldObj, entity);
+                ((ItemHelmet) SpelunkerItems.itemHelmet).lightTarget(entity.worldObj, entity);
             }
             else
             {
-                ((ItemHelmet)SpelunkerItem.itemHelmet).removeLight(entity.worldObj, entity);
+                ((ItemHelmet) SpelunkerItems.itemHelmet).removeLight(entity.worldObj, entity);
             }
         }
+    }
 
-        // Rope Handling
+    @SubscribeEvent
+    public void onLivingAttack(LivingAttackEvent event)
+    {
+        EntityLivingBase living = event.entityLiving;
+        DamageSource source = event.source;
+
+        // Ghost is forced to disappear
+        if (source.getDamageType().equals("mob") && source.getEntity() instanceof EntityGhost)
+        {
+            source.getEntity().setDead();
+        }
     }
 
     @SubscribeEvent
@@ -100,6 +119,21 @@ public class LivingEventHandler
                     if (spelunker != null && spelunker.isHardcore())
                     {
                         spelunker.killInstantly(SpelunkerDamageSource.causeDamageOfPetKilled(living));
+                    }
+                }
+            }
+
+            if (living instanceof EntityGhost || living instanceof EntityGhast)
+            {
+                Entity shooter = event.source.getEntity();
+                Entity bullet = event.source.getSourceOfDamage();
+                if (bullet instanceof EntityGunBullet
+                        && ((EntityGunBullet) bullet).getGunMaterial() == EnumGunMaterial.ORIGINAL)
+                {
+                    ItemStack helmet = ((EntityPlayer) shooter).getCurrentArmor(3);
+                    if (helmet != null && helmet.getItem() == SpelunkerItems.itemHelmet)
+                    {
+                        AchievementMgr.achieve((EntityPlayer) shooter, SpeAchievementList.Key.mcSpelunker);
                     }
                 }
             }

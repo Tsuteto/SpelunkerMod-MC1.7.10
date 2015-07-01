@@ -8,7 +8,7 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import tsuteto.spelunker.block.SpelunkerBlocks;
+import tsuteto.spelunker.init.SpelunkerBlocks;
 
 public class EntityStillBat extends EntityAmbientCreature
 {
@@ -27,6 +27,12 @@ public class EntityStillBat extends EntityAmbientCreature
     {
         super.entityInit();
         this.dataWatcher.addObject(16, new Byte((byte)0));
+    }
+
+    @Override
+    protected boolean canDespawn()
+    {
+        return false;
     }
 
     protected float getSoundVolume()
@@ -111,10 +117,9 @@ public class EntityStillBat extends EntityAmbientCreature
     }
 
     @Override
-    public void onDeath(DamageSource p_70645_1_)
+    public void setDead()
     {
-        super.onDeath(p_70645_1_);
-
+        super.setDead();
         if (!this.worldObj.isRemote)
         {
             this.worldObj.scheduleBlockUpdate(homePos.posX, homePos.posY, homePos.posZ, SpelunkerBlocks.blockBatSpawner, 100);
@@ -155,6 +160,10 @@ public class EntityStillBat extends EntityAmbientCreature
     public boolean attackEntityFrom(DamageSource p_70097_1_, float p_70097_2_)
     {
         if (this.isEntityInvulnerable())
+        {
+            return false;
+        }
+        else if (p_70097_1_.getSourceOfDamage() instanceof EntityGunBullet)
         {
             return false;
         }

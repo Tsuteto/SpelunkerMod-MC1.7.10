@@ -21,7 +21,7 @@ public class BlockBreakable extends BlockWall
 
     protected IIcon transparent;
 
-    protected BlockBreakable(Material p_i45394_1_)
+    public BlockBreakable(Material p_i45394_1_)
     {
         super(p_i45394_1_);
     }
@@ -62,7 +62,7 @@ public class BlockBreakable extends BlockWall
         // Place a transparent block after explosion
         int meta = world.getBlockMetadata(x, y, z);
         world.setBlock(x, y, z, this, META_DESTROYED | meta, 3);
-        world.scheduleBlockUpdate(x, y, z, this, 12000);
+        world.scheduleBlockUpdate(x, y, z, this, SpelunkerMod.restorationTime);
     }
 
     public void registerBlockIcons(IIconRegister p_149651_1_)

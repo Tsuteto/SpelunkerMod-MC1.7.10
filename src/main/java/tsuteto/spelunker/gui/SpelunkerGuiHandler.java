@@ -17,14 +17,16 @@ import java.util.List;
 
 public class SpelunkerGuiHandler implements IGuiHandler
 {
-    public static final int GUIID_SPELUNKER_PORTAL = 0;
-    public static final int GUIID_LEVEL_BUILDER = 1;
+    public static final int GUIID_MAP_SELECTOR = 0;
+    public static final int GUIID_LEAVE_SPE_WORLD = 1;
+    public static final int GUIID_LEVEL_BUILDER = 2;
 
     private HashMap<Integer, GuiEntry> guiRegistry = Maps.newHashMap();
 
     public SpelunkerGuiHandler()
     {
-        this.registerGuiEntry(createEntry(GUIID_SPELUNKER_PORTAL).withName("MapSelectorPortal", "SpelunkerPortal", "SpelunkerPortal"));
+        this.registerGuiEntry(createEntry(GUIID_MAP_SELECTOR).withName("MapSelectorPortal", "SpelunkerPortalStage", "SpelunkerPortal"));
+        this.registerGuiEntry(createEntry(GUIID_LEAVE_SPE_WORLD).withName("LeaveSpeWorld", "SpelunkerPortalStage", "SpelunkerPortal"));
         this.registerGuiEntry(createEntry(GUIID_LEVEL_BUILDER).withName("MapSelectorBuilder", null, "LevelBuilder").setCoord());
     }
 

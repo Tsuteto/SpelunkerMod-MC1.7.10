@@ -34,7 +34,7 @@ public class EventPlayerInteract
         {
             EntityPlayer player = event.entityPlayer;
             ItemStack equipped = player.getCurrentEquippedItem();
-            if (!player.worldObj.isRemote && ((SpelunkerPlayerMP)spelunker).getTimeSpawnInv())
+            if (!player.worldObj.isRemote && ((SpelunkerPlayerMP)spelunker).isWithinSpawnTimeInv())
             {
                 event.setCanceled(true);
             }

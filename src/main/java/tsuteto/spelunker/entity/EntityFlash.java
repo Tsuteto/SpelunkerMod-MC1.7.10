@@ -12,7 +12,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import tsuteto.spelunker.block.BlockBatSpawner;
-import tsuteto.spelunker.block.SpelunkerBlocks;
+import tsuteto.spelunker.init.SpelunkerBlocks;
 
 import java.util.List;
 

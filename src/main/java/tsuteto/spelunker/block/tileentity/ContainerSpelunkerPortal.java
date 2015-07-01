@@ -4,19 +4,20 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.common.DimensionManager;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.block.BlockSpelunkerPortal;
-import tsuteto.spelunker.block.SpelunkerBlocks;
 import tsuteto.spelunker.dimension.DimensionRegenerator;
+import tsuteto.spelunker.dimension.SpelunkerDimensionTeleportation;
 import tsuteto.spelunker.levelmap.SpelunkerMapInfo;
 
 public class ContainerSpelunkerPortal extends ContainerMapSelectorBase
 {
-    protected final TileEntitySpelunkerPortal spelunkerPortal;
+    protected final TileEntitySpelunkerPortalStage spelunkerPortal;
 
-    public ContainerSpelunkerPortal(InventoryPlayer invPlayer, TileEntitySpelunkerPortal spelunkerPortal)
+    public ContainerSpelunkerPortal(InventoryPlayer invPlayer, TileEntitySpelunkerPortalStage spelunkerPortal)
     {
         this.spelunkerPortal = spelunkerPortal;
     }
@@ -25,6 +26,16 @@ public class ContainerSpelunkerPortal extends ContainerMapSelectorBase
     public boolean canInteractWith(EntityPlayer p_75145_1_)
     {
         return this.spelunkerPortal.isUseableByPlayer(p_75145_1_);
+    }
+
+    @Override
+    public void onGuiControl(EntityPlayer player, int eventId, ByteBuf buffer)
+    {
+        super.onGuiControl(player, eventId, buffer);
+        if (eventId == 1)
+        {
+            onLeaveSpeWorld(player, buffer);
+        }
     }
 
     public void onMapSelected(EntityPlayer player, ByteBuf buffer)
@@ -54,7 +65,7 @@ public class ContainerSpelunkerPortal extends ContainerMapSelectorBase
         }
 
         // Teleport to the level
-        ((BlockSpelunkerPortal) SpelunkerBlocks.blockSpelunkerPortal).teleportPlayerToLevel(
+        BlockSpelunkerPortal.teleportPlayerToLevel(
                 spelunkerPortal.getWorldObj(), spelunkerPortal.xCoord, spelunkerPortal.yCoord, spelunkerPortal.zCoord, player, spelunkerPortal);
     }
 
@@ -73,5 +84,11 @@ public class ContainerSpelunkerPortal extends ContainerMapSelectorBase
                 }
             }
         }
+    }
+
+    private void onLeaveSpeWorld(EntityPlayer player, ByteBuf buffer)
+    {
+        // Teleport back to the Overworld
+        SpelunkerDimensionTeleportation.transferPlayerToDimension((EntityPlayerMP) player, 0);
     }
 }

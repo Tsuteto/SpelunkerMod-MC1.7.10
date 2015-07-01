@@ -1,6 +1,7 @@
 package tsuteto.spelunker.sidedproxy;
 
 import api.player.server.IServerPlayerAPI;
+import cpw.mods.fml.server.FMLServerHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import tsuteto.spelunker.SpelunkerMod;
@@ -46,6 +47,6 @@ public class ServerProxy implements ISidedProxy
     @Override
     public File getMapDataDir()
     {
-        return new File(".");
+        return FMLServerHandler.instance().getServer().getFile(SpelunkerMod.levelMapFileDir);
     }
 }

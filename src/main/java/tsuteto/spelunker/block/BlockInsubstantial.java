@@ -2,8 +2,10 @@ package tsuteto.spelunker.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
+import tsuteto.spelunker.SpelunkerMod;
 
 public class BlockInsubstantial extends Block
 {
@@ -28,5 +30,11 @@ public class BlockInsubstantial extends Block
     public boolean isOpaqueCube()
     {
         return false;
+    }
+
+    @Override
+    public void registerBlockIcons(IIconRegister p_149651_1_)
+    {
+        this.blockIcon = p_149651_1_.registerIcon(SpelunkerMod.resourceDomain + "transparent");
     }
 }

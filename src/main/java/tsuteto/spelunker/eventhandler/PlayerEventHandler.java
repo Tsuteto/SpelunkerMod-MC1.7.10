@@ -7,16 +7,21 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldProvider;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import tsuteto.spelunker.SpelunkerMod;
+import tsuteto.spelunker.achievement.AchievementMgr;
 import tsuteto.spelunker.constants.SpelunkerPacketType;
 import tsuteto.spelunker.damage.SpelunkerDamageSource;
+import tsuteto.spelunker.data.SpelunkerWorldPlayerInfo;
 import tsuteto.spelunker.dimension.SpelunkerLevelManagerClient;
-import tsuteto.spelunker.item.SpelunkerItem;
+import tsuteto.spelunker.init.SpeAchievementList;
+import tsuteto.spelunker.init.SpelunkerItems;
+import tsuteto.spelunker.item.SpelunkerWorldItem;
 import tsuteto.spelunker.network.SpelunkerPacketDispatcher;
 import tsuteto.spelunker.player.ISpelunkerPlayer;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
@@ -50,6 +55,16 @@ public class PlayerEventHandler
                 }
             }
         }
+
+        AchievementMgr.achieveSmeltingItem(item, player);
+    }
+
+    @SubscribeEvent
+    public void onCrafting(PlayerEvent.ItemCraftedEvent event)
+    {
+        EntityPlayer player = event.player;
+        ItemStack itemStack = event.crafting;
+        AchievementMgr.achieveCraftingItem(itemStack, player);
     }
 
     @SubscribeEvent
@@ -81,20 +96,40 @@ public class PlayerEventHandler
     @SubscribeEvent
     public void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event)
     {
-        WorldProvider worldProvider1 = DimensionManager.getProvider(event.fromDim);
-        WorldProvider worldProvider2 = DimensionManager.getProvider(event.toDim);
+        WorldProvider worldProviderFrom = DimensionManager.getProvider(event.fromDim);
+        WorldProvider worldProviderTo = DimensionManager.getProvider(event.toDim);
 
-        // Remove gate keys from player's inventory
-        if (worldProvider1 instanceof WorldProviderSpelunker || worldProvider2 instanceof WorldProviderSpelunker)
+        if (worldProviderFrom instanceof WorldProviderSpelunker || worldProviderTo instanceof WorldProviderSpelunker)
         {
-            InventoryPlayer inventory = event.player.inventory;
-            for (int i = 0; i < inventory.mainInventory.length; i++)
+            if (!event.player.capabilities.isCreativeMode)
             {
-                if (inventory.mainInventory[i] != null && inventory.mainInventory[i].getItem() == SpelunkerItem.itemGateKey)
+                // Remove spelunker world items from player's inventory
+                InventoryPlayer inventory = event.player.inventory;
+                for (int i = 0; i < inventory.mainInventory.length; i++)
                 {
-                    inventory.mainInventory[i] = null;
+                    if (inventory.mainInventory[i] != null && inventory.mainInventory[i].getItem() instanceof SpelunkerWorldItem)
+                    {
+                        inventory.mainInventory[i] = null;
+                    }
+                }
+
+                // Give a blaster when entering
+                if (worldProviderTo instanceof WorldProviderSpelunker)
+                {
+                    event.player.inventory.addItemStackToInventory(new ItemStack(SpelunkerItems.itemGunSpeWorld));
+                    AchievementMgr.achieve(event.player, SpeAchievementList.Key.speWorld);
                 }
             }
+
+            // Reset flag
+            EntityPlayer player = event.player;
+            SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(player);
+            SpelunkerWorldPlayerInfo worldInfo = spelunker.getWorldInfo();
+            worldInfo.resetCheckPoints();
+            worldInfo.setSpeLevelCleared(false);
+            spelunker.saveSpelunker();
+
+            SpelunkerPacketDispatcher.of(SpelunkerPacketType.DIM_CHANGE);
         }
     }
 
@@ -132,7 +167,7 @@ public class PlayerEventHandler
         if (spelunker != null && spelunker.isHardcore())
         {
             Item item = event.original.getItem();
-            if (item != null && item.isDamageable())
+            if (item != null && item.isDamageable() && !(item instanceof ItemArmor))
             {
                 EntityPlayer player = event.entityPlayer;
                 player.attackEntityFrom(SpelunkerDamageSource.itemDestroy, 1.0f);

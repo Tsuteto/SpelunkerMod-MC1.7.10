@@ -4,8 +4,11 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import tsuteto.spelunker.achievement.AchievementMgr;
+import tsuteto.spelunker.init.SpeAchievementList;
 
 public class EntityDynamitePrimed extends Entity
 {
@@ -73,6 +76,11 @@ public class EntityDynamitePrimed extends Entity
             if (!this.worldObj.isRemote)
             {
                 this.explode();
+
+                if (this.placedBy instanceof EntityPlayer)
+                {
+                    AchievementMgr.achieve((EntityPlayer)placedBy, SpeAchievementList.Key.bomberMan);
+                }
             }
         }
         else

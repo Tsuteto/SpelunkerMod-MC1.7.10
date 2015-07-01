@@ -16,6 +16,12 @@ Spelunker.wrongPotionId3=I:choked=%s   I:sunstroke=%s
 
 Spelunker.spehisc=%1$s's high score: %2$d
 
+Spelunker.checkpoint.title=§lCheck Point
+Spelunker.speCleared.title=§lLevel Cleared!
+Spelunker.allCleared.title=§lDragon Defeated!
+Spelunker.bonus.main=BONUS: %s
+Spelunker.bonus.energy=ENERGY: %s
+
 Spelunker.update.server=SpelunkerMod updated to %1$s, available at %2$s
 Spelunker.update.client=§eSpelunkerMod§r updated to §a%1$s§r! %2$s
 Spelunker.update.link=§nDownload here§r
@@ -38,6 +44,8 @@ item.spelunker:goldenStatueF.desc=Just a decoration
 item.spelunker:woodenGun.name=Air Blaster
 item.spelunker:steelGun.name=Machine Blaster
 item.spelunker:spelunkerGun.name=Spelunker's Blaster
+item.spelunker:spelunkerGun.org.info=Original
+item.spelunker:spelunkerGun.sw.info=Designed for Spelunker world
 item.spelunker:energy.name=Energy
 item.spelunker:speedPotion.name=Red Potion
 item.spelunker:dollarBag.name=Sack of Money
@@ -59,6 +67,112 @@ entity.flashBullet.name=Luminary
 entity.flash.name=Flash
 entity.ghost.name=Ghost
 
+# achievements
+achievement.spelunker:death=My first mistake
+achievement.spelunker:death.desc=Just missed
+achievement.spelunker:deaths50=Keep fighting!
+achievement.spelunker:deaths50.desc=The 50th mistake
+achievement.spelunker:deaths100=Never give up!
+achievement.spelunker:deaths100.desc=The 100th mistake
+achievement.spelunker:deaths200=Fortitude!
+achievement.spelunker:deaths200.desc=The 200th mistake
+achievement.spelunker:deaths500=Failure teaches success
+achievement.spelunker:deaths500.desc=The 500th mistake
+achievement.spelunker:deaths1000=Mistake addict
+achievement.spelunker:deaths1000.desc=The 1000th mistake
+achievement.spelunker:deaths2000=Mistake leader
+achievement.spelunker:deaths2000.desc=The 2000th mistake
+achievement.spelunker:deaths3000=Mistake brave
+achievement.spelunker:deaths3000.desc=The 3000th mistake
+achievement.spelunker:deaths4000=Mistake master
+achievement.spelunker:deaths4000.desc=The 4000th mistake
+achievement.spelunker:deaths5000=Mistake legend
+achievement.spelunker:deaths5000.desc=The 5000th mistake
+achievement.spelunker:deaths10000=Miss. Spelunker?
+achievement.spelunker:deaths10000.desc=The 10000th mistake
+achievement.spelunker:deaths20000=Too many mistakes
+achievement.spelunker:deaths20000.desc=The 20000th mistake
+achievement.spelunker:deaths30000=How far will you go...?
+achievement.spelunker:deaths30000.desc=The 30000th mistake
+achievement.spelunker:deaths40000=Don't you feel pain?
+achievement.spelunker:deaths40000.desc=The 40000th mistake
+achievement.spelunker:deaths50000=Death sound goes around
+achievement.spelunker:deaths50000.desc=The 50000th mistake
+achievement.spelunker:deaths100000=I'm beaten.
+achievement.spelunker:deaths100000.desc=The 100000th mistake
+achievement.spelunker:deaths1m=Mistake Millionaire!
+achievement.spelunker:deaths1m.desc=The millionth mistake
+
+achievement.spelunker:scored=My first score
+achievement.spelunker:scored.desc=Get score by obtaining items or killing enemies
+achievement.spelunker:score5000=Spelunker beginner
+achievement.spelunker:score5000.desc=Get score 5,000 pts.
+achievement.spelunker:score10000=Allowance earner
+achievement.spelunker:score10000.desc=Score 10,000 pts.
+achievement.spelunker:score50000=The high score
+achievement.spelunker:score50000.desc=Score 50,000 pts.
+achievement.spelunker:score100000=Breadwinner
+achievement.spelunker:score100000.desc=Score 100,000 pts.
+achievement.spelunker:score200000=Score trial player
+achievement.spelunker:score200000.desc=Score 200,000 pts.
+achievement.spelunker:score300000=Treasure hunter
+achievement.spelunker:score300000.desc=Score 300,000 pts.
+achievement.spelunker:score400000=Spelunker pro.
+achievement.spelunker:score400000.desc=Score 400,000 pts.
+achievement.spelunker:score500000=Ranker Spelunker
+achievement.spelunker:score500000.desc=Score 500,000 pts.
+achievement.spelunker:score1m=Millionaire!
+achievement.spelunker:score1m.desc=Score a million pts.
+achievement.spelunker:score2m=Super Spelunker
+achievement.spelunker:score2m.desc=Score 2 million pts.
+achievement.spelunker:score3m=Incredible Spelunker
+achievement.spelunker:score3m.desc=Score 3 million pts.
+achievement.spelunker:score4m=You ain't Spelunker now?
+achievement.spelunker:score4m.desc=Score 4 million pts.
+achievement.spelunker:score5m=Are you a caver!?
+achievement.spelunker:score5m.desc=Score 5 million pts.
+achievement.spelunker:scoreHalf=Turning point
+achievement.spelunker:scoreHalf.desc=Score 8,388,608 pts.
+achievement.spelunker:score10m=No, a Spelunker master!
+achievement.spelunker:score10m.desc=Score 10 million pts.
+achievement.spelunker:score1cycled=The 1st lap of score!
+achievement.spelunker:score1cycled.desc=The score laps at 16,777,216 pts.
+achievement.spelunker:score2cycled=The 2nd lap of score!!
+achievement.spelunker:score2cycled.desc=The score laps twice (33,554,432 pts.)
+achievement.spelunker:score3cycled=Second brings another
+achievement.spelunker:score3cycled.desc=The score laps 3 times (50,331,648 pts.)
+achievement.spelunker:score4cycled=Score would rather lap
+achievement.spelunker:score4cycled.desc=The score laps 4 times (67,108,864 pts.)
+achievement.spelunker:score5cycled=Score turns the world
+achievement.spelunker:score5cycled.desc=The score laps 5 times (83,886,080 pts.)
+achievement.spelunker:score100m=Multi-Millionaire!
+achievement.spelunker:score100m.desc=Score 100 million pts.
+achievement.spelunker:score6cycled=I'm beaten
+achievement.spelunker:score6cycled.desc=The score laps 6 times (100,663,296 pts.)
+
+achievement.spelunker:speWorld=Go to Spelunker World
+achievement.spelunker:speWorld.desc=Right click on a Spelunker statue near the respawn point
+achievement.spelunker:speWorldCleared=Cleared! Congrats!
+achievement.spelunker:speWorldCleared.desc=Complete the Spelunker world
+
+achievement.spelunker:airBlaster=Air gun
+achievement.spelunker:airBlaster.desc=Craft an air blaster
+achievement.spelunker:machineBlaster=Machine gun
+achievement.spelunker:machineBlaster.desc=Craft a machine blaster
+achievement.spelunker:speBlaster=Spelunker blaster
+achievement.spelunker:speBlaster.desc=Craft a Spelunker blaster
+
+achievement.spelunker:ghost=Ghost Buster
+achievement.spelunker:ghost.desc=Kill ghost with a blaster
+achievement.spelunker:bomberMan=Bomber Man
+achievement.spelunker:bomberMan.desc=Detonate a dynamite
+achievement.spelunker:mcSpelunker=Spelunkraft
+achievement.spelunker:mcSpelunker.desc=Put Spelunker helmet and blaster and kill Ghast or Ghost. (Expect Spelunker world)
+achievement.spelunker:defeatDragon=Spelunker beat Minecraft
+achievement.spelunker:defeatDragon.desc=Defeat Enderdragon
+achievement.spelunker:defeatWither=Wither bowed to Spelunker
+achievement.spelunker:defeatWither.desc=Summon Wither and defeat it
+
 #
 # Spelunker Level Components
 #
@@ -66,9 +180,11 @@ itemGroup.spelunker.levelComponents=Spelunker Level Components (WIP)
 
 tile.spelunker:rope.name=Rope
 tile.spelunker:liftLauncher.name=Lift Launcher
-tile.spelunker:spelunkerPortal.name=Spelunker World Portal
-tile.spelunker:spelunkerPortal.denied.on=Only owner can modify Spelunker Portal. Owner: %s
-tile.spelunker:spelunkerPortal.denied.off=Only owner can modify Spelunker Portal. Owner: someone offline
+tile.spelunker:spelunkerPortal.name=Spelunker World Portal (Custom)
+tile.spelunker:spelunkerPortal.denied=Only owner can modify Spelunker Portal. Owner: %s
+tile.spelunker:spelunkerPortal.denied.unknown=Only owner can modify Spelunker Portal. Owner: someone offline
+tile.spelunker:spelunkerPortal.denied.inventory=Empty your inventory to enter Spelunker World.
+tile.spelunker:spelunkerPortal2.name=Spelunker World Portal (Survival)
 tile.spelunker:startPoint.name=Start Point (For internal use)
 tile.spelunker:startPoint.desc=Don't use this! You can't remove it
 tile.spelunker:respawnGate.name=Respawn Gate (For internal use)
@@ -97,13 +213,16 @@ tile.spelunker:bumpyBlock.name=Bumpy Block
 tile.spelunker:rock.name=Rock Block
 tile.spelunker:breakableWall.name=Breakable Wall Block
 tile.spelunker:hiddenDiamond.name=Wall Block with Hidden Diamond
-tile.spelunker:itemBox.name=Item Box
+tile.spelunker:itemBox.normal.name=Item Box
+tile.spelunker:itemBox.hidden.name=Hidden Item Box
 tile.spelunker:platform.name=Platform
 tile.spelunker:rail.name=Spelunker Rail
 tile.spelunker:railGirder.name=Rail Girder
 tile.spelunker:light.name=Light Block (For internal use)
 tile.spelunker:light.desc=Don't use this! You can't remove it
 tile.spelunker:batSpawner.name=Bat Spawner
+tile.spelunker:ladder.name=Spelunker Ladder
+tile.spelunker:pyramid.name=Pyramid Block
 
 item.spelunker:levelBuilder.name=Level Builder
 item.spelunker:levelBuilder.desc.level=§a%s§r
@@ -133,17 +252,33 @@ item.spelunker:spelunkerPortal.dimId=For the dimension %s
 item.spelunker:spelunkerPortal.level=§a%s§r
 item.spelunker:dropItem.desc=For Item Box
 item.spelunker:mapPieceGuide.name=Spelunker Level Creation Guide
+item.spelunker:hispPlacer.name=Hidden Item Trigger Placer
+item.spelunker:hispPlacer.info.na=Hidden item box: Not set
+item.spelunker:hispPlacer.info.coord=Hidden item box: X=%s, Y=%s, Z=%s
+item.spelunker:hispPlacer.desc.1=Right click on a hidden
+item.spelunker:hispPlacer.desc.2=item box to keep
+item.spelunker:hispPlacer.desc.3=Right click to put a spawn
+item.spelunker:hispPlacer.desc.4=trigger for the hidden item
+item.spelunker:speBoat.name=Spelunker Boat
+item.spelunker:spelunkart.name=Spelunkart
 
 entity.elevator.name=Elevator
 entity.lift.name=Lift
 entity.steamHole.name=Steam Hole
 entity.peddle.name=Peddle
 entity.flameHole.name=Flame Hole
+entity.waterLift.name=Fountain Lift
+entity.spelunkart.name=Spelunkart
+entity.speBoat.name=Spelunker Boat
 
 Spelunker.mapSelect=Spelunker Level Map Select
 Spelunker.mapSelect.switchMap=Switch Map
 Spelunker.mapSelect.switchQuestion=Are you sure you want to switch the map to '%s'?
 Spelunker.mapSelect.switchWarning=Once switched, you cannot undo.
+
+Spelunker.leaveSpeWorld.question=Do you want to leave the Spelunker World?
+Spelunker.leaveSpeWorld.warning=Once you leave, you will start over again.
+Spelunker.leaveSpeWorld.leave=Leave
 
 Spelunker.mapPiece.subject=§nColor Legend of Level Map§r
 Spelunker.mapPiece.startPoint=Start point (Only one placed)
@@ -157,6 +292,10 @@ Spelunker.mapPiece.liftUp=Lift (up)
 Spelunker.mapPiece.liftDown=Lift (down)
 Spelunker.mapPiece.rope=Rope block
 Spelunker.mapPiece.bumpy=Bumpy block
+Spelunker.mapPiece.water=Water
+Spelunker.mapPiece.waterfall=Waterfall
+Spelunker.mapPiece.waterLift=Fountain lift (Just under the path)
+Spelunker.mapPiece.waterLiftPath=Fountain lift path (Vertical straight only)
 Spelunker.mapPiece.fallingFloor=Falling floor block
 Spelunker.mapPiece.rock=Breakable Rock block
 Spelunker.mapPiece.wallBreakable=Breakable wall block
@@ -187,6 +326,23 @@ Spelunker.mapPiece.dollar=Item box: dollar bag
 Spelunker.mapPiece.miracle=Item box: miracle
 Spelunker.mapPiece.gateKeyBlue=Item box: gate key (blue)
 Spelunker.mapPiece.gateKeyRed=Item box: gate key (red)
+Spelunker.mapPiece.boat=Item box: boat
+Spelunker.mapPiece.itemSpawnPoint=Spawn trigger for hidden item #%1$s
+Spelunker.mapPiece.hiddenItem=Hidden item box #%1$s
+Spelunker.mapPiece.hiddenItemPyramid=Hidden item box #%1$s before a pyramid
+Spelunker.mapPiece.checkpoint=Check Point
+Spelunker.mapPiece.cpStatue=Check point statue (Left lower corner)
+Spelunker.mapPiece.pyramid1=Pyramid 1st floor
+Spelunker.mapPiece.pyramid1w=Pyramid 1st floor edge
+Spelunker.mapPiece.pyramid1e=Pyramid 1st floor entrance
+Spelunker.mapPiece.pyramid2=Pyramid 2nd floor
+Spelunker.mapPiece.pyramid2w=Pyramid 2nd floor edge
+Spelunker.mapPiece.pyramid2e=Pyramid 2nd floor entrance
+Spelunker.mapPiece.pyramid2g=Pyramid 2nd floor goal
+Spelunker.mapPiece.pyramid3=Pyramid 3rd floor
+Spelunker.mapPiece.pyramidRoom=Pyramid Room
+
+Spelunker.ropeHelp=%1$s to climb, %2$s to descend, %1$s twice to leap
 
 #
 # moody death cause
@@ -297,3 +453,57 @@ spe.nor.death.attack.worthyItemDropped=%1$s was slain by a curse of golden Spelu
 spe.nor.death.attack.glass=%1$s hurt with broken glass
 spe.nor.death.attack.mycelium=%1$s infected with mycelium
 spe.nor.death.attack.web=%1$s got stuck in a cobweb
+
+#
+# Options
+#
+Spelunker.options.title=Spelunker Mod Settings
+
+Spelunker.options.category.game=Game
+Spelunker.options.category.game.tooltip=Options effecting to the game
+Spelunker.options.category.game_start=Game Start
+Spelunker.options.category.game_start.tooltip=Options when the game starts
+Spelunker.options.category.display=Display
+Spelunker.options.category.display.tooltip=Related to game screen rendering
+Spelunker.options.category.server=Server Side
+Spelunker.options.category.server.tooltip=For server side, but also effective on single player
+Spelunker.options.category.levelbuilding=Level Building
+Spelunker.options.category.levelbuilding.tooltip=Related to Spelunker World generating
+Spelunker.options.category.entity=Entity
+Spelunker.options.category.entity.tooltip=Entity IDs. -1 for auto allocation
+Spelunker.options.category.biome=Biome
+Spelunker.options.category.biome.tooltip=Biome IDs. -1 for re-allocation at restart
+Spelunker.options.category.potion=Potion
+Spelunker.options.category.potion.tooltip=Potion IDs. -1 for re-allocation at restart
+Spelunker.options.category.misc=Misc.
+
+Spelunker.options.fullHP=10 Hearts of HP
+Spelunker.options.fullHP.tooltip=If true, the Spelunker's maximum HP becomes 10 hearts. For people who can't bare this severe Spelunker difficulty
+Spelunker.options.forceDeath=Force Death
+Spelunker.options.forceDeath.tooltip=If true, the Spelunker is forced to die when damaged. This option is for the mods which modify the health system not to kill him by a single attack, such as TFC and DQM.
+Spelunker.options.moodyDeathCause=Moody Death Cause
+Spelunker.options.moodyDeathCause.tooltip=If true, death cause of the Spelunker becomes Spelunker mood. Or else it remains Minecraft.
+Spelunker.options.cursedWords=Cursed Words
+Spelunker.options.cursedWords.tooltip=For hardcore. Partial matching, non-case-sensitive, ignoring space, quotations and commas. Blank to disable
+Spelunker.options.goldenSpelunkers=# of Golden Spelunker
+Spelunker.options.goldenSpelunkers.tooltip=For hardcore. How many Golden Spelunker (Fake) do players have?
+Spelunker.options.goldenSpelunkerRecipe=Golden Spelunker's Recipe
+Spelunker.options.goldenSpelunkerRecipe.tooltip=If true, Golden Spelunker (Fake)'s recipe is enabled
+Spelunker.options.initialLives=Initial Lives
+Spelunker.options.initialLives.tooltip=For Score Trial. How many lives will the Spelunker have when the game starts
+Spelunker.options.deaths=Deaths
+Spelunker.options.deaths.tooltip=Whether the death counter shows on the game screen
+Spelunker.options.score=Score
+Spelunker.options.score.tooltip=Whether the score shows on the game screen
+Spelunker.options.helmetLightIntervalCl=Helmet Light Interval
+Spelunker.options.helmetLightIntervalCl.tooltip=Ticks of update interval for the Spelunker helmet's light on client side
+Spelunker.options.playerStatusInPublic=Player Status in Public
+Spelunker.options.playerStatusInPublic.tooltip=Whether the commands of Spelunker mod such as /sperank and /spehisc shows all player's status to everyone.
+Spelunker.options.helmetLightIntervalSv=Helmet Light Interval
+Spelunker.options.helmetLightIntervalSv.tooltip=Ticks of update interval for the Spelunker helmet's light on server side. This is effective on single player
+Spelunker.options.dimensionTypeId=Dimension Type ID
+Spelunker.options.dimensionTypeId.tooltip=Dimension Type ID for Spelunker World
+Spelunker.options.updateCheck=Update Check
+Spelunker.options.updateCheck.tooltip=Enable update check of this mod
+Spelunker.options.restoreSampleMap=Restore Sample Maps
+Spelunker.options.restoreSampleMap.tooltip=If true, sample map files for Spelunker World will be restored once at the next start-up and the flag will be back to false.

@@ -1,10 +1,12 @@
 package tsuteto.spelunker.block;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,17 +15,26 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.block.tileentity.TileEntityRespawnPoint;
+import tsuteto.spelunker.init.SpelunkerBlocks;
 import tsuteto.spelunker.util.ModLog;
 import tsuteto.spelunker.util.PlayerUtils;
 
 public class BlockRespawnPoint extends BlockContainer
 {
+    @SidedProxy(
+            serverSide = "tsuteto.spelunker.block.BlockRespawnPoint$CommonProxy",
+            clientSide = "tsuteto.spelunker.block.BlockRespawnPoint$ClientProxy")
+    private static CommonProxy proxy;
+
     public BlockRespawnPoint(Material p_i45394_1_)
     {
         super(p_i45394_1_);
+        this.setBlockBounds(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
     }
 
     @Override
@@ -159,14 +170,39 @@ public class BlockRespawnPoint extends BlockContainer
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getSelectedBoundingBoxFromPool(World p_149633_1_, int p_149633_2_, int p_149633_3_, int p_149633_4_)
+    public void setBlockBoundsBasedOnState(IBlockAccess p_149719_1_, int p_149719_2_, int p_149719_3_, int p_149719_4_)
     {
-        Block block = p_149633_1_.getBlock(p_149633_2_, p_149633_3_, p_149633_4_);
-        if (block != SpelunkerBlocks.blockItemBox)
+        proxy.setBlockBounds(this);
+        super.setBlockBoundsBasedOnState(p_149719_1_, p_149719_2_, p_149719_3_, p_149719_4_);
+    }
+
+    @Override
+    public void registerBlockIcons(IIconRegister p_149651_1_)
+    {
+        this.blockIcon = p_149651_1_.registerIcon(SpelunkerMod.resourceDomain + "transparent");
+    }
+
+    public static class CommonProxy
+    {
+        public void setBlockBounds(BlockRespawnPoint block) {}
+    }
+
+    public static class ClientProxy extends CommonProxy
+    {
+        public void setBlockBounds(BlockRespawnPoint block)
         {
-            this.setBlockBounds(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
+            if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+            {
+                EntityPlayer player = cpw.mods.fml.client.FMLClientHandler.instance().getClientPlayerEntity();
+                if (!player.capabilities.isCreativeMode)
+                {
+                    block.setBlockBounds(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
+                }
+                else
+                {
+                    block.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+                }
+            }
         }
-        return super.getSelectedBoundingBoxFromPool(p_149633_1_, p_149633_2_, p_149633_3_, p_149633_4_);
     }
 }

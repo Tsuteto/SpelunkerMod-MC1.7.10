@@ -10,6 +10,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.entity.EntityFallingFloor;
+import tsuteto.spelunker.init.SpelunkerBlocks;
 
 import java.util.EnumSet;
 import java.util.Random;
@@ -22,7 +23,7 @@ public class BlockFallingFloor extends BlockWall
     private IIcon iconTransparent;
 //    private IIcon iconHighlighted;
 
-    protected BlockFallingFloor()
+    public BlockFallingFloor()
     {
         super(Material.rock);
     }

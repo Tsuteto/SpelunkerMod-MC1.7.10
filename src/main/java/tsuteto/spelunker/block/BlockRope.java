@@ -25,7 +25,7 @@ public class BlockRope extends Block
     public static int renderIdRope = RenderingRegistry.getNextAvailableRenderId();
     private IIcon iconTip;
 
-    protected BlockRope()
+    public BlockRope()
     {
         super(Material.circuits);
         this.setStepSound(soundTypeCloth);

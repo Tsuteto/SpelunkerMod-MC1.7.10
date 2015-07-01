@@ -14,7 +14,7 @@ public class BlockWall extends Block
 {
     private IIcon[] icons;
 
-    protected BlockWall(Material p_i45394_1_)
+    public BlockWall(Material p_i45394_1_)
     {
         super(p_i45394_1_);
     }

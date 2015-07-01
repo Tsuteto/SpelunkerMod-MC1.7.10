@@ -4,14 +4,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.constants.SpelunkerGameMode;
 
-public class SpelunkerMultiWorldInfo
+public class SpelunkerWorldGeneralInfo
 {
+    public boolean isWorldInitialized = false;
     private String multiMode;
     public boolean hardcore;
     public int totalLives;
     public boolean isGameToBeFinished = false;
 
-    public SpelunkerMultiWorldInfo()
+    public SpelunkerWorldGeneralInfo()
     {
         multiMode = SpelunkerMod.settings().gameMode.toString();
         hardcore = SpelunkerMod.settings().hardcore;
@@ -19,8 +20,9 @@ public class SpelunkerMultiWorldInfo
         isGameToBeFinished = totalLives <= 0;
     }
 
-    public SpelunkerMultiWorldInfo(NBTTagCompound nbttagcompound)
+    public SpelunkerWorldGeneralInfo(NBTTagCompound nbttagcompound)
     {
+        isWorldInitialized = nbttagcompound.getBoolean("initw");
         multiMode = nbttagcompound.getString("mode");
         hardcore = nbttagcompound.getBoolean("hc");
         totalLives = nbttagcompound.getInteger("lives");
@@ -41,6 +43,7 @@ public class SpelunkerMultiWorldInfo
 
     private void updateTagCompound(NBTTagCompound nbttagcompound)
     {
+        nbttagcompound.setBoolean("initw", isWorldInitialized);
         nbttagcompound.setString("mode", multiMode);
         nbttagcompound.setBoolean("hc", hardcore);
         nbttagcompound.setInteger("lives", totalLives);

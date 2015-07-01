@@ -8,7 +8,7 @@ import net.minecraft.world.IBlockAccess;
 public class BlockRock extends BlockBreakable
 {
 
-    protected BlockRock(Material p_i45394_1_)
+    public BlockRock(Material p_i45394_1_)
     {
         super(p_i45394_1_);
     }

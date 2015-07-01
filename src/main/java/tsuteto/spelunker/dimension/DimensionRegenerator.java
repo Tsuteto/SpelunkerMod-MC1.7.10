@@ -9,6 +9,7 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
 import org.apache.commons.io.FileUtils;
+import tsuteto.spelunker.util.ModLog;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +18,8 @@ public class DimensionRegenerator
 {
     public static boolean regenerateDimension(int dimId)
     {
+        ModLog.info("Regenerating Spelunker world in dimension %d", dimId);
+
         MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
         WorldServer world = server.worldServerForDimension(dimId);
         File dir = new File(DimensionManager.getCurrentSaveRootDirectory(), world.provider.getSaveFolder());

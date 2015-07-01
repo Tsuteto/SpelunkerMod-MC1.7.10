@@ -8,6 +8,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import tsuteto.spelunker.constants.SpelunkerDifficulty;
 import tsuteto.spelunker.entity.EntitySpelunkerItem;
+import tsuteto.spelunker.init.SpelunkerItems;
 import tsuteto.spelunker.item.SpelunkerItem;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
 import tsuteto.spelunker.player.SpelunkerPlayerSP;
@@ -31,9 +32,9 @@ public class ItemSpawnHandler
         // Item animation
         if (worldtime % 2 == 0)
         {
-            ((SpelunkerItem)SpelunkerItem.itemEnergy).animate();
-            ((SpelunkerItem)SpelunkerItem.itemInvincible).animate();
-            ((SpelunkerItem)SpelunkerItem.itemMiracle).animate();
+            ((SpelunkerItem) SpelunkerItems.itemEnergy).animate();
+            ((SpelunkerItem) SpelunkerItems.itemInvincible).animate();
+            ((SpelunkerItem) SpelunkerItems.itemMiracle).animate();
         }
     }
 
@@ -94,7 +95,7 @@ public class ItemSpawnHandler
 
             if (rand.nextDouble() < difficulty.chanceOfEnergy && isDarkPlace)
             {
-                item = new ItemStack(SpelunkerItem.itemEnergy);
+                item = new ItemStack(SpelunkerItems.itemEnergy);
                 // System.out.println("Spawned Energy");
             }
             else

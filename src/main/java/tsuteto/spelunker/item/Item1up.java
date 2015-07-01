@@ -1,5 +1,6 @@
 package tsuteto.spelunker.item;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import tsuteto.spelunker.constants.SpelunkerDifficulty;
 import tsuteto.spelunker.constants.SpelunkerGameMode;
@@ -8,7 +9,7 @@ import tsuteto.spelunker.player.SpelunkerPlayerMP;
 public class Item1up extends SpelunkerItem
 {
     @Override
-    public void giveEffect(World world, SpelunkerPlayerMP spelunker)
+    public void giveEffect(ItemStack itemStack, World world, SpelunkerPlayerMP spelunker)
     {
         if (spelunker.gameMode == SpelunkerGameMode.Arcade)
         {

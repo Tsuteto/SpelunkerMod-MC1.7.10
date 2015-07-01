@@ -12,6 +12,7 @@ public enum SpelunkerPacketType {
 	INIT(Side.SERVER),
     INIT_SUCCEEDED(Side.CLIENT),
 	INIT_FAILED(Side.CLIENT),
+    DIM_CHANGE(Side.CLIENT),
 
 	ENERGY(Side.CLIENT),
 	LIVES(Side.CLIENT),
@@ -19,6 +20,7 @@ public enum SpelunkerPacketType {
 	SCORE(Side.CLIENT),
 	ENERGY_DEC(Side.SERVER),
 	ENERGY_UP(Side.CLIENT),
+    SPAWN_INV(Side.CLIENT),
 
 	IN_CAVE_FALSE(Side.CLIENT),
 	IN_CAVE_TRUE(Side.CLIENT),
@@ -36,6 +38,8 @@ public enum SpelunkerPacketType {
     GHOST_GONE(Side.CLIENT),
 
     GAMEOVER(Side.CLIENT),
+    SPE_CHECKPOINT(Side.CLIENT),
+    SPE_CLEARED(Side.CLIENT),
     ALL_CLEARED(Side.CLIENT),
 
     CHOKED(Side.SERVER),

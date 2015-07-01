@@ -2,19 +2,16 @@ package tsuteto.spelunker.item;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import tsuteto.spelunker.block.BlockLockedGate;
-import tsuteto.spelunker.block.SpelunkerBlocks;
 import tsuteto.spelunker.block.tileentity.TileEntityLockedGate;
+import tsuteto.spelunker.init.SpelunkerBlocks;
 
-import java.util.List;
-
-public class ItemGateKey extends Item
+public class ItemGateKey extends Item implements SpelunkerWorldItem
 {
     public ItemGateKey()
     {
@@ -48,15 +45,6 @@ public class ItemGateKey extends Item
     {
         int dmg = p_82790_1_.getItemDamage();
         return ItemDye.field_150922_c[BlockColored.func_150032_b(dmg)];
-    }
-
-    @Override
-    public void getSubItems(Item p_150895_1_, CreativeTabs p_150895_2_, List p_150895_3_)
-    {
-        for (int i = 0; i < 16; i++)
-        {
-            p_150895_3_.add(new ItemStack(this, 1, i));
-        }
     }
 
     public String getUnlocalizedName(ItemStack p_77667_1_)

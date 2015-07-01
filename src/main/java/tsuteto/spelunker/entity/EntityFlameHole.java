@@ -11,7 +11,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import tsuteto.spelunker.block.SpelunkerBlocks;
+import tsuteto.spelunker.init.SpelunkerBlocks;
 import tsuteto.spelunker.item.ItemEntityPlacer;
 
 import java.util.List;

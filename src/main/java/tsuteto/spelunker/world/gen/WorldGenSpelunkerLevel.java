@@ -5,8 +5,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import tsuteto.spelunker.SpelunkerMod;
-import tsuteto.spelunker.block.SpelunkerBlocks;
 import tsuteto.spelunker.dimension.SpelunkerLevelInfo;
+import tsuteto.spelunker.init.SpelunkerBlocks;
+import tsuteto.spelunker.world.levelmapper.HiddenItemMapper;
 import tsuteto.spelunker.world.levelmapper.MapPiece;
 import tsuteto.spelunker.world.levelmapper.MapPieces;
 import tsuteto.spelunker.world.levelmapper.SpelunkerLevelMapper;
@@ -15,6 +16,9 @@ import java.util.Random;
 
 public class WorldGenSpelunkerLevel extends WorldGenerator
 {
+    public HiddenItemMapper hiddenItemMapper = new HiddenItemMapper();
+    public int checkpointCounter = 0;
+
     public WorldGenSpelunkerLevel() {}
 
     public WorldGenSpelunkerLevel(boolean p_i2013_1_)
@@ -42,11 +46,14 @@ public class WorldGenSpelunkerLevel extends WorldGenerator
         {
             for (int j = 0; j < h; j++)
             {
-                int x = w + ox - i;
-                int y = h + oy - j;
+                int x = w - 1 + ox - i;
+                int y = h - 1 + oy - j;
 
                 // Background wall
-                this.setBlockAndNotifyAdequately(world, x, y, oz + 3, SpelunkerBlocks.blockWall, 0);
+                for (int k = 3; k < 7; k++)
+                {
+                    this.setBlockAndNotifyAdequately(world, x, y, k + oz, SpelunkerBlocks.blockWall, 0);
+                }
 
                 // Keep room
                 for (int k = 0; k < 3; k++)
@@ -61,13 +68,13 @@ public class WorldGenSpelunkerLevel extends WorldGenerator
             for (int j = 0; j < h; j++)
             {
                 MapPiece piece = mapper.getMapPiece(i, j);
-                int x = w + ox - i;
-                int y = h + oy - j;
+                int x = w - 1 + ox - i;
+                int y = h - 1 + oy - j;
 
                 // Generate pieces
                 if (piece != null)
                 {
-                    piece.place(this, world, x, y, oz);
+                    piece.place(this, world, x, y, oz, mapper, i, j);
                 }
 
                 if (piece != MapPieces.wall)

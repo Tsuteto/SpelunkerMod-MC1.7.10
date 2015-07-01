@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class EntityLift extends Entity implements IEntityAdditionalSpawnData
+public class EntityLift extends Entity implements IEntityAdditionalSpawnData, IEntityPlatform
 {
     public static final double moveSpeed = 0.06D;
     @SideOnly(Side.CLIENT)
@@ -175,7 +175,7 @@ public class EntityLift extends Entity implements IEntityAdditionalSpawnData
 
         this.moveEntity(this.motionX, this.motionY, this.motionZ);
 
-        if (this.ticksExisted > 300)
+        if (this.ticksExisted > 600)
         {
             this.setDead();
         }

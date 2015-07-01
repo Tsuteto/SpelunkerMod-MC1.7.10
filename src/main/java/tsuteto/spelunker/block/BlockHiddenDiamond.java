@@ -14,7 +14,7 @@ import java.util.Random;
 
 public class BlockHiddenDiamond extends BlockBreakable
 {
-    protected BlockHiddenDiamond(Material p_i45394_1_)
+    public BlockHiddenDiamond(Material p_i45394_1_)
     {
         super(p_i45394_1_);
     }
@@ -42,7 +42,7 @@ public class BlockHiddenDiamond extends BlockBreakable
                 if (spelunker != null)
                 {
                     spelunker.addSpelunkerScore(10000);
-                    exploder.playSound("spelunker:diamond", 1.0f, 1.0f);
+                    world.playSoundAtEntity(exploder, "spelunker:diamond", 1.0f, 1.0f);
                 }
             }
             this.dropBlockAsItemWithChance(world, i, j, k, world.getBlockMetadata(i, j, k), 1.0F, 0);

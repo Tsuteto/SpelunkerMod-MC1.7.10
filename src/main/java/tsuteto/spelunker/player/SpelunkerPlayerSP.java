@@ -11,6 +11,8 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.particle.EntityFireworkSparkFX;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -50,6 +52,7 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
     public int gunDamageCount = 0;
     public int energyAlertTime;
     public int particlesChecked = 0;
+    public int timeSpawnInv = 0;
 
     public ScoreManager spelunkerScore = new ScoreManager();
     public ISpelunkerExtraSP spelunkerExtra = new SpelunkerExtraBlankSP();
@@ -77,6 +80,7 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
 
     // For rope action
     public boolean isGrabbingRope = false;
+    private boolean prevGrabbingRope = false;
     public int ropeJumpToggleTimer = 0;
     public boolean prevJumpping = false;
     public boolean isRopeJumpping = false;
@@ -131,7 +135,7 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
             player.motionZ = 0D;
         }
 
-        if (!isReady || player.ticksExisted <= 60)
+        if (!isReady || timeSpawnInv > 0)
         {
             mc.playerController.resetBlockRemoving();
         }
@@ -183,6 +187,11 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
             }
         }
 
+        if (timeSpawnInv > 0)
+        {
+            timeSpawnInv--;
+        }
+
         /*
          * BGM Control
          */
@@ -194,17 +203,17 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
                 {
                     if (is2xScore())
                     {
-                        ModSound.interruptBgm(SpelunkerBgm.bgm2xScore);
+                        ModSound.interruptBgm(SpelunkerBgm.get2xScore());
                     }
                     else
                     {
-                        ModSound.stopBgm(SpelunkerBgm.bgm2xScore);
+                        ModSound.stopBgm(SpelunkerBgm.resLoc2xScore);
                     }
                 }
                 else if (is2xScore()
-                        && (ModSound.getBgmNowPlaying() == null || ModSound.getBgmNowPlaying() == SpelunkerBgm.bgmMain))
+                        && (ModSound.getBgmNowPlaying() == null || ModSound.bgmPlayingEquals(SpelunkerBgm.resLocMain)))
                 {
-                    ModSound.interruptBgm(SpelunkerBgm.bgm2xScore);
+                    ModSound.interruptBgm(SpelunkerBgm.get2xScore());
                 }
             }
 
@@ -214,17 +223,17 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
                 {
                     if (isInvincible())
                     {
-                        ModSound.interruptBgm(SpelunkerBgm.bgmInvincible);
+                        ModSound.interruptBgm(SpelunkerBgm.getInvincible());
                     }
                     else
                     {
-                        ModSound.stopBgm(SpelunkerBgm.bgmInvincible);
+                        ModSound.stopBgm(SpelunkerBgm.resLocInvincible);
                     }
                 }
                 else if (isInvincible()
-                        && (ModSound.getBgmNowPlaying() == null || ModSound.getBgmNowPlaying() == SpelunkerBgm.bgmMain))
+                        && (ModSound.getBgmNowPlaying() == null || ModSound.bgmPlayingEquals(SpelunkerBgm.resLocMain)))
                 {
-                    ModSound.interruptBgm(SpelunkerBgm.bgmInvincible);
+                    ModSound.interruptBgm(SpelunkerBgm.getInvincible());
                 }
             }
 
@@ -234,37 +243,38 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
                 {
                     if (isSpeedPotion())
                     {
-                        ModSound.interruptBgm(SpelunkerBgm.bgmSpeedPotion);
+                        ModSound.interruptBgm(SpelunkerBgm.getSpeedPotion());
                     }
                     else
                     {
-                        ModSound.stopBgm(SpelunkerBgm.bgmSpeedPotion);
+                        ModSound.stopBgm(SpelunkerBgm.resLocSpeedPotion);
                     }
                 }
                 else if (isSpeedPotion()
-                        && (ModSound.getBgmNowPlaying() == null || ModSound.getBgmNowPlaying() == SpelunkerBgm.bgmMain))
+                        && (ModSound.getBgmNowPlaying() == null || ModSound.bgmPlayingEquals(SpelunkerBgm.resLocMain)))
                 {
-                    ModSound.interruptBgm(SpelunkerBgm.bgmSpeedPotion);
+                    ModSound.interruptBgm(SpelunkerBgm.getSpeedPotion());
                 }
             }
 
             if (SpelunkerMod.isBgmGhostComingAvailable)
             {
-                if (statGhostComing.checkVal(isGhostComing()))
+                if (statGhostComing.checkVal(isGhostComing())
+                        && (ModSound.getBgmNowPlaying() == null || !ModSound.bgmPlayingEquals(SpelunkerBgm.resLocCheckPoint)))
                 {
                     if (isGhostComing())
                     {
-                        ModSound.interruptBgm(SpelunkerBgm.bgmGhostComing);
+                        ModSound.interruptBgm(SpelunkerBgm.getGhostComing());
                     }
                     else
                     {
-                        ModSound.stopBgm(SpelunkerBgm.bgmGhostComing);
+                        ModSound.stopBgm(SpelunkerBgm.resLocGhostComing);
                     }
                 }
                 else if (isGhostComing()
-                        && (ModSound.getBgmNowPlaying() == null || ModSound.getBgmNowPlaying() == SpelunkerBgm.bgmMain))
+                        && (ModSound.getBgmNowPlaying() == null || ModSound.bgmPlayingEquals(SpelunkerBgm.resLocMain)))
                 {
-                    ModSound.interruptBgm(SpelunkerBgm.bgmGhostComing);
+                    ModSound.interruptBgm(SpelunkerBgm.getGhostComing());
                 }
             }
 
@@ -272,11 +282,12 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
             {
                 if (statInCave.checkVal(isUsingEnergy()) && !isUsingEnergy())
                 {
-                    ModSound.stopBgm(SpelunkerBgm.bgmMain);
+                    ModSound.stopBgm(SpelunkerBgm.resLocMain);
                 }
-                if (isUsingEnergy() && ModSound.getBgmNowPlaying() == null)
+                if (this.isUsingEnergy && ModSound.getBgmNowPlaying() == null)
                 {
-                    ModSound.playBgm(SpelunkerBgm.bgmMain);
+                    ModSound bgm = SpelunkerBgm.getMain();
+                    ModSound.playBgm(bgm);
                 }
             }
         }
@@ -370,11 +381,22 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
                 ropeJumpToggleTimer--;
             }
             prevJumpping = player.movementInput.jump;
+
+            if (!prevGrabbingRope)
+            {
+                GameSettings gamesettings = mc.gameSettings;
+                String sneakKey = GameSettings.getKeyDisplayString(gamesettings.keyBindSneak.getKeyCode());
+                String jumpKey = GameSettings.getKeyDisplayString(gamesettings.keyBindJump.getKeyCode());
+                mc.ingameGUI.func_110326_a(I18n.format("Spelunker.ropeHelp", jumpKey, sneakKey), false);
+
+            }
+            prevGrabbingRope = true;
             isGrabbingRope = false;
         }
         else
         {
             isRopeJumpping = false;
+            prevGrabbingRope = false;
         }
 
 

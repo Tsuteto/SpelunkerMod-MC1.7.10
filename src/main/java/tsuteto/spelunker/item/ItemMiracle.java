@@ -1,39 +1,47 @@
 package tsuteto.spelunker.item;
 
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import tsuteto.spelunker.constants.SpelunkerDifficulty;
+import tsuteto.spelunker.init.SpelunkerItems;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
 
 public class ItemMiracle extends ItemAnimation
 {
     @Override
-    public void giveEffect(World world, SpelunkerPlayerMP spelunker)
+    public void giveEffect(ItemStack itemStack, World world, SpelunkerPlayerMP spelunker)
     {
         int tick = (int) (world.getTotalWorldTime() & 7);
         // System.out.println("Got Miracle: " + tick);
+        Item item = null;
 
         switch (tick)
         {
         case 0:
         case 7:
-            ((SpelunkerItem)SpelunkerItem.item1up).giveEffect(world, spelunker);
+            item = SpelunkerItems.item1up;
             break;
         case 1:
-            ((SpelunkerItem)SpelunkerItem.itemFlashDrop).giveEffect(world, spelunker);
+            item = SpelunkerItems.itemFlashDrop;
             break;
         case 2:
         case 3:
-            ((SpelunkerItem)SpelunkerItem.itemEnergy).giveEffect(world, spelunker);
+            item = SpelunkerItems.itemEnergy;
             break;
         case 4:
-            ((SpelunkerItem)SpelunkerItem.itemDynamiteDrop).giveEffect(world, spelunker);
+            item = SpelunkerItems.itemDynamiteDrop;
             break;
         case 5:
-            ((SpelunkerItem)SpelunkerItem.itemCoin).giveEffect(world, spelunker);
+            item = SpelunkerItems.itemCoin;
             break;
         case 6:
-            ((SpelunkerItem)SpelunkerItem.itemDollar).giveEffect(world, spelunker);
+            item = SpelunkerItems.itemDollar;
             break;
+        }
+        if (item != null)
+        {
+            ((SpelunkerItem) item).giveEffect(new ItemStack(item), world, spelunker);
         }
     }
 

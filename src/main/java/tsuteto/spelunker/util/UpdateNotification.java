@@ -16,8 +16,8 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChatStyle;
-import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.Level;
+import tsuteto.spelunker.SpelunkerMod;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,11 +40,11 @@ public class UpdateNotification
     private boolean isCompleted = false;
     private ModMetadata metadata;
 
-    public static void initialize(Configuration conf, ModMetadata metadata)
+    public static void initialize(ModMetadata metadata)
     {
         instance.container = Loader.instance().activeModContainer();
         instance.metadata = metadata;
-        instance.isEnabled = conf.get("general", "updateCheck", instance.isEnabled).getBoolean(true);
+        instance.isEnabled = SpelunkerMod.settings().updateCheck;
 
         if (instance.isEnabled)
         {

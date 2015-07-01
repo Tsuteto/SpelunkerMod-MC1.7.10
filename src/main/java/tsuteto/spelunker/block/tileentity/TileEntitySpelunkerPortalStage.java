@@ -17,11 +17,12 @@ import tsuteto.spelunker.util.ModLog;
 
 import java.util.UUID;
 
-public class TileEntitySpelunkerPortal extends TileEntity implements IInventory
+public class TileEntitySpelunkerPortalStage extends TileEntity implements IInventory
 {
     public SpelunkerLevelInfo levelInfo = null;
     private int dimId;
     public String owner;
+    public String ownerName;
 
     public void registerLevel(int dimId, SpelunkerMapInfo mapInfo)
     {
@@ -46,6 +47,10 @@ public class TileEntitySpelunkerPortal extends TileEntity implements IInventory
         {
             this.owner = p_145839_1_.getString("OwnerUUID");
         }
+        if (p_145839_1_.hasKey("OwnerName"))
+        {
+            this.ownerName = p_145839_1_.getString("OwnerName");
+        }
     }
 
     @Override
@@ -59,6 +64,10 @@ public class TileEntitySpelunkerPortal extends TileEntity implements IInventory
         if (this.owner != null)
         {
             p_145841_1_.setString("OwnerUUID", this.owner);
+            if (this.ownerName != null && !this.ownerName.isEmpty())
+            {
+                p_145841_1_.setString("OwnerName", this.ownerName);
+            }
         }
     }
 
@@ -90,6 +99,13 @@ public class TileEntitySpelunkerPortal extends TileEntity implements IInventory
             this.markDirty();
             return true;
         }
+    }
+
+    public void setOwner(EntityPlayer player)
+    {
+        this.owner = player.getUniqueID().toString();
+        this.ownerName = player.getCommandSenderName();
+
     }
 
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)

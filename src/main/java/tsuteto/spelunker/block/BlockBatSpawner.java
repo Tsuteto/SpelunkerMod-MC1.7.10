@@ -21,7 +21,7 @@ public class BlockBatSpawner extends BlockInsubstantial
 {
     public static final int MAX_BAT_SPAWN = 2;
 
-    protected BlockBatSpawner(Material p_i45394_1_)
+    public BlockBatSpawner(Material p_i45394_1_)
     {
         super(p_i45394_1_);
     }
@@ -47,6 +47,7 @@ public class BlockBatSpawner extends BlockInsubstantial
             {
                 // Spawn bats to the max if there's no flash that can be seen
                 this.spawnBats(world, x, y, z);
+                world.scheduleBlockUpdate(x, y, z, this, 200);
             }
             else
             {

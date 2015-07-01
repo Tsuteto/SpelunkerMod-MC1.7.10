@@ -8,16 +8,16 @@ import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import tsuteto.spelunker.block.tileentity.ContainerSpelunkerPortal;
-import tsuteto.spelunker.block.tileentity.TileEntitySpelunkerPortal;
+import tsuteto.spelunker.block.tileentity.TileEntitySpelunkerPortalStage;
 import tsuteto.spelunker.network.PacketDispatcher;
 import tsuteto.spelunker.network.packet.PacketGuiControl;
 
 public class GuiMapSelectorPortal extends GuiMapSelectorBase<ContainerSpelunkerPortal> implements GuiYesNoCallback
 {
-    private TileEntitySpelunkerPortal spelunkerPortal;
+    private TileEntitySpelunkerPortalStage spelunkerPortal;
     private boolean isRegeneration = false;
 
-    public GuiMapSelectorPortal(InventoryPlayer invPlayer, TileEntitySpelunkerPortal spelunkerPortal)
+    public GuiMapSelectorPortal(InventoryPlayer invPlayer, TileEntitySpelunkerPortalStage spelunkerPortal)
     {
         super(new ContainerSpelunkerPortal(invPlayer, spelunkerPortal));
         this.spelunkerPortal = spelunkerPortal;

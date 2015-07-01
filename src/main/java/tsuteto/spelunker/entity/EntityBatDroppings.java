@@ -7,8 +7,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import tsuteto.spelunker.block.SpelunkerBlocks;
 import tsuteto.spelunker.damage.SpelunkerDamageSource;
+import tsuteto.spelunker.init.SpelunkerBlocks;
 
 import java.util.List;
 
@@ -59,6 +59,11 @@ public class EntityBatDroppings extends EntityThrowable
                 this.setDead();
             }
         }
+
+        if (this.motionY < -0.3F)
+        {
+            this.motionY = -0.3F;
+        }
     }
 
     /**
@@ -67,20 +72,21 @@ public class EntityBatDroppings extends EntityThrowable
     @Override
     protected void onImpact(MovingObjectPosition par1MovingObjectPosition)
     {
-        if (par1MovingObjectPosition.entityHit != null)
-        {
-            if (par1MovingObjectPosition.entityHit instanceof EntityPlayer)
-            {
-                par1MovingObjectPosition.entityHit.attackEntityFrom(SpelunkerDamageSource.droppings, 1);
-            }
-        }
-
-        if (!this.worldObj.isRemote && par1MovingObjectPosition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
+        if (par1MovingObjectPosition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
         {
             Block block = this.worldObj.getBlock(par1MovingObjectPosition.blockX, par1MovingObjectPosition.blockY, par1MovingObjectPosition.blockZ);
             if (block != SpelunkerBlocks.blockBatSpawner)
             {
                 this.setDead();
+                return;
+            }
+        }
+
+        if (par1MovingObjectPosition.entityHit != null)
+        {
+            if (par1MovingObjectPosition.entityHit instanceof EntityPlayer)
+            {
+                par1MovingObjectPosition.entityHit.attackEntityFrom(SpelunkerDamageSource.droppings, 1);
             }
         }
     }

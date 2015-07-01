@@ -3,6 +3,7 @@ package tsuteto.spelunker.eventhandler;
 import com.google.common.collect.Lists;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import tsuteto.spelunker.constants.SpelunkerDifficulty;
 import tsuteto.spelunker.constants.SpelunkerPacketType;
 import tsuteto.spelunker.entity.EntityGhost;
@@ -27,6 +28,19 @@ public abstract class GhostSpawnHandler
         else
         {
             return new GhostSpawnHandlerNormalWorld(spelunker, rand);
+        }
+    }
+
+    public static void resetGhostList(World world)
+    {
+        ghostList.clear();
+
+        for (Object obj : world.getLoadedEntityList())
+        {
+            if (obj instanceof EntityGhost)
+            {
+                ghostList.add((EntityGhost)obj);
+            }
         }
     }
 

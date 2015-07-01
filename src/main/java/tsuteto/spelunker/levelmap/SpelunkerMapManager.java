@@ -13,6 +13,7 @@ import java.util.Map;
 
 public class SpelunkerMapManager
 {
+    public static final SpelunkerMapInfo SPELUNKER_MAP = new SpelunkerMapInfo(MapSource.RESOURCE, "SpelunkerMap.png", "Famicom Spelunker Map");
     public static final String[] SAMPLE_FILES = new String[]{"Sample Map.png"};
 
     private Map<String, SpelunkerMapInfo> fileNameToInfoMapping = Maps.newHashMap();
@@ -41,15 +42,12 @@ public class SpelunkerMapManager
             installer.addResource("/assets/spelunker/leveldata/samples/" + filename, filename);
         }
         installer.install();
+        SpelunkerMod.settings().onSampleMapsInstalled();
     }
 
     private void registerResourceMaps()
     {
-        SpelunkerMapInfo info = new SpelunkerMapInfo();
-        info.fileName = "SpelunkerMap.png";
-        info.mapName = "Famicom Spelunker Map (Half)";
-        info.source = MapSource.RESOURCE;
-        this.addMap(info);
+        this.addMap(SPELUNKER_MAP);
     }
 
     private void registerUserMaps(File mapDir)
@@ -73,10 +71,7 @@ public class SpelunkerMapManager
 
         for (File file : files)
         {
-            SpelunkerMapInfo info = new SpelunkerMapInfo();
-            info.fileName = file.getName();
-            info.mapName = Utils.removeFileExtension(file.getName());
-            info.source = MapSource.USER;
+            SpelunkerMapInfo info = new SpelunkerMapInfo(MapSource.USER, file.getName(), Utils.removeFileExtension(file.getName()));
             this.addMap(info);
         }
     }

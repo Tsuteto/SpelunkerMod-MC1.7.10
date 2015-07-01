@@ -12,7 +12,7 @@ import tsuteto.spelunker.player.SpelunkerPlayerMP;
 public class ItemSpeedPotion extends SpelunkerItem
 {
     @Override
-    public void giveEffect(World world, SpelunkerPlayerMP spelunker)
+    public void giveEffect(ItemStack itemStack, World world, SpelunkerPlayerMP spelunker)
     {
         spelunker.player().addPotionEffect(new PotionEffect(Potion.moveSpeed.getId(), 600, 3));
         spelunker.setSpeedPotion(30 * 20);

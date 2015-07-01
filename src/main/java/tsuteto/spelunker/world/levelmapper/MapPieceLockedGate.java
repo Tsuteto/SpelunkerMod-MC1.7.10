@@ -3,8 +3,9 @@ package tsuteto.spelunker.world.levelmapper;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import tsuteto.spelunker.block.SpelunkerBlocks;
 import tsuteto.spelunker.block.tileentity.TileEntityLockedGate;
+import tsuteto.spelunker.init.SpelunkerBlocks;
+import tsuteto.spelunker.world.gen.WorldGenSpelunkerLevel;
 
 public class MapPieceLockedGate extends MapPieceBlock
 {
@@ -14,7 +15,7 @@ public class MapPieceLockedGate extends MapPieceBlock
         this.fillBlock(SpelunkerBlocks.blockLockedGate, side, new TileEntryBlock.IHandler()
         {
             @Override
-            public void apply(World world, int x, int y, int z, Block block, int meta, TileEntity tileEntity)
+            public void apply(WorldGenSpelunkerLevel gen, World world, int x, int y, int z, Block block, int meta, TileEntity tileEntity)
             {
                 ((TileEntityLockedGate)tileEntity).colorId = gateColor;
             }

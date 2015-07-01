@@ -36,6 +36,9 @@ public class ScreenRenderer
 
         if (!spelunker.isReady) return;
 
+        // TITLE
+        TitleController.instance().renderTitle(mc);
+
         ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
         int guiW = scaledresolution.getScaledWidth();
         int guiH = scaledresolution.getScaledHeight();

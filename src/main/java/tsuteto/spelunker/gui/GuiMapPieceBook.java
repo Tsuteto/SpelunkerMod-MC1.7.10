@@ -10,7 +10,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
-import tsuteto.spelunker.world.levelmapper.MapPiece;
 import tsuteto.spelunker.world.levelmapper.MapPieces;
 
 public class GuiMapPieceBook extends GuiScreen
@@ -113,21 +112,21 @@ public class GuiMapPieceBook extends GuiScreen
         boolean originalUnicodeFlag = this.fontRendererObj.getUnicodeFlag();
         for (int i = this.currPage * COLS; i < (this.currPage + 1) * COLS && i < MapPieces.mapPieceList.size(); i++)
         {
-            MapPiece entry = MapPieces.mapPieceList.get(i);
+            MapPieces.MapPieceEntry entry = MapPieces.mapPieceList.get(i);
             int colX = k + 20;
             int colY = b0 + 32 + i % COLS * COL_HEIGHT;
             // Color
             drawRect(colX, colY, colX + 20, colY + 6, 0xff000000);
-            drawRect(colX + 1, colY + 1, colX + 20 - 1, colY + 6 - 1, entry.getColor());
+            drawRect(colX + 1, colY + 1, colX + 20 - 1, colY + 6 - 1, entry.color | 0xff000000);
             // Color code
             this.fontRendererObj.setUnicodeFlag(false);
             GL11.glPushMatrix();
             GL11.glScalef(0.5F, 0.5F, 1.0F);
-            this.fontRendererObj.drawString(String.format("#%06X", entry.getColor() & 0xffffff), colX * 2, (colY + 7) * 2, 0x000000);
+            this.fontRendererObj.drawString(String.format("#%06X", entry.color & 0xffffff), colX * 2, (colY + 7) * 2, 0x000000);
             GL11.glPopMatrix();
             this.fontRendererObj.setUnicodeFlag(originalUnicodeFlag);
             // Description
-            this.fontRendererObj.drawString(I18n.format("Spelunker.mapPiece." + entry.getName()), colX + 24, colY + 1, 0x000000);
+            this.fontRendererObj.drawString(entry.mapPiece.getLocalizedName(entry.color), colX + 24, colY + 1, 0x000000);
         }
 
         this.fontRendererObj.setUnicodeFlag(originalUnicodeFlag);

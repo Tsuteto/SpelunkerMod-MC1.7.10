@@ -3,15 +3,14 @@ package tsuteto.spelunker.block;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class BlockInvisible extends BlockInsubstantial
 {
-//    private String itemIconName;
-
-    protected BlockInvisible(Material p_i45394_1_)
+    public BlockInvisible(Material p_i45394_1_)
     {
         super(p_i45394_1_);
     }
@@ -45,16 +44,6 @@ public class BlockInvisible extends BlockInsubstantial
         return -1;
     }
 
-//    @Override
-//    public String getItemIconName()
-//    {
-//        return itemIconName;
-//    }
-//
-//    public void setItemIconName(String itemIconName)
-//    {
-//        this.itemIconName = itemIconName;
-//    }
-
-
+    @Override
+    public void registerBlockIcons(IIconRegister p_149651_1_) {}
 }

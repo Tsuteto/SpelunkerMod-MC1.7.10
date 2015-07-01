@@ -5,6 +5,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.client.Minecraft;
 import tsuteto.spelunker.SpelunkerMod;
+import tsuteto.spelunker.gui.TitleController;
 import tsuteto.spelunker.player.SpelunkerPlayerSP;
 import tsuteto.spelunker.sound.ModSound;
 
@@ -51,6 +52,7 @@ public class ClientTickHandler
                     ModSound.updateBgmNowPlaying();
                 }
                 ItemSpawnHandler.onClientTick(mc, spelunker, worldtime);
+                TitleController.instance().onGameTick();
             }
         }
     }

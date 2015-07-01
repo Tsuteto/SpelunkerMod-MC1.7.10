@@ -27,27 +27,27 @@ public class BlockLockedGateRenderer implements ISimpleBlockRenderingHandler
 
         tessellator.startDrawingQuads();
         tessellator.setNormal(0.0F, -1.0F, 0.0F);
-        renderer.renderFaceYNeg(block, 0.0D, 0.0D, 0.0D, renderer.getBlockIconFromSide(block, 1));
+        renderer.renderFaceYNeg(block, 0.0D, 0.0D, 0.0D, renderer.getBlockIconFromSideAndMetadata(block, 2, 0));
         tessellator.draw();
         tessellator.startDrawingQuads();
         tessellator.setNormal(0.0F, 1.0F, 0.0F);
-        renderer.renderFaceYPos(block, 0.0D, 0.0D, 0.0D, renderer.getBlockIconFromSide(block, 1));
+        renderer.renderFaceYPos(block, 0.0D, 0.0D, 0.0D, renderer.getBlockIconFromSideAndMetadata(block, 2, 1));
         tessellator.draw();
         tessellator.startDrawingQuads();
         tessellator.setNormal(0.0F, 0.0F, -1.0F);
-        renderer.renderFaceZNeg(block, 0.0D, 0.0D, 0.0D, renderer.getBlockIconFromSide(block, 0));
+        renderer.renderFaceZNeg(block, 0.0D, 0.0D, 0.0D, renderer.getBlockIconFromSideAndMetadata(block, 2, 2));
         tessellator.draw();
         tessellator.startDrawingQuads();
         tessellator.setNormal(0.0F, 0.0F, 1.0F);
-        renderer.renderFaceZPos(block, 0.0D, 0.0D, 0.0D, renderer.getBlockIconFromSide(block, 0));
+        renderer.renderFaceZPos(block, 0.0D, 0.0D, 0.0D, renderer.getBlockIconFromSideAndMetadata(block, 2, 3));
         tessellator.draw();
         tessellator.startDrawingQuads();
         tessellator.setNormal(-1.0F, 0.0F, 0.0F);
-        renderer.renderFaceXNeg(block, 0.0D, 0.0D, 0.0D, renderer.getBlockIconFromSide(block, 1));
+        renderer.renderFaceXNeg(block, 0.0D, 0.0D, 0.0D, renderer.getBlockIconFromSideAndMetadata(block, 2, 4));
         tessellator.draw();
         tessellator.startDrawingQuads();
         tessellator.setNormal(1.0F, 0.0F, 0.0F);
-        renderer.renderFaceXPos(block, 0.0D, 0.0D, 0.0D, renderer.getBlockIconFromSide(block, 1));
+        renderer.renderFaceXPos(block, 0.0D, 0.0D, 0.0D, renderer.getBlockIconFromSideAndMetadata(block, 2, 5));
         tessellator.draw();
 
         int j = ((BlockLockedGate)block).getRenderColorOverlay(metadata);
@@ -64,6 +64,14 @@ public class BlockLockedGateRenderer implements ISimpleBlockRenderingHandler
         tessellator.startDrawingQuads();
         tessellator.setNormal(0.0F, 0.0F, 1.0F);
         renderer.renderFaceZPos(block, 0.0D, 0.0D, 0.0D, BlockLockedGate.getFrontOverlayIcon());
+        tessellator.draw();
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(-1.0F, 0.0F, 0.0F);
+        renderer.renderFaceXNeg(block, 0.0D, 0.0D, 0.0D, BlockLockedGate.getFrontOverlayIcon());
+        tessellator.draw();
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(1.0F, 0.0F, 0.0F);
+        renderer.renderFaceXPos(block, 0.0D, 0.0D, 0.0D, BlockLockedGate.getFrontOverlayIcon());
         tessellator.draw();
     }
 
@@ -133,21 +141,17 @@ public class BlockLockedGateRenderer implements ISimpleBlockRenderingHandler
         switch (dir)
         {
             case DOWN:
-                renderer.renderFaceYNeg(block, (double) x, (double) y, (double) z, icon);
-                break;
             case UP:
+                renderer.renderFaceYNeg(block, (double) x, (double) y, (double) z, icon);
                 renderer.renderFaceYPos(block, (double) x, (double) y, (double) z, icon);
                 break;
             case NORTH:
-                renderer.renderFaceZNeg(block, (double) x, (double) y, (double) z, icon);
-                break;
             case SOUTH:
-                renderer.renderFaceZPos(block, (double) x, (double) y, (double) z, icon);
-                break;
             case WEST:
-                renderer.renderFaceXNeg(block, (double) x, (double) y, (double) z, icon);
-                break;
             case EAST:
+                renderer.renderFaceZNeg(block, (double) x, (double) y, (double) z, icon);
+                renderer.renderFaceZPos(block, (double) x, (double) y, (double) z, icon);
+                renderer.renderFaceXNeg(block, (double) x, (double) y, (double) z, icon);
                 renderer.renderFaceXPos(block, (double) x, (double) y, (double) z, icon);
                 break;
         }

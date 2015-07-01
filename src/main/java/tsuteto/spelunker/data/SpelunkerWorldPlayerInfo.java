@@ -1,17 +1,20 @@
 package tsuteto.spelunker.data;
 
+import com.google.common.collect.Lists;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.nbt.NBTTagCompound;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.constants.SpelunkerGameMode;
 
+import java.util.List;
+
 /**
- * Handles world info for Spelunker
+ * Handles player info of the world for Spelunker
  *
  * @author Tsuteto
  *
  */
-public class SpelunkerWorldInfo
+public class SpelunkerWorldPlayerInfo
 {
     private String mode;
     private boolean hardcore;
@@ -19,11 +22,13 @@ public class SpelunkerWorldInfo
     private int score;
     private int hiscore;
     private int lives;
+    private List<Byte> passedCheckPoints = Lists.newArrayList();
+    private boolean isSpeLevelCleared;
     private boolean isDragonDefeated;
     private int goldenSpelunkers;
     private String playerName;
 
-    private SpelunkerWorldInfo()
+    public SpelunkerWorldPlayerInfo(GameProfile profile)
     {
         mode = SpelunkerMod.settings().gameMode.toString();
         hardcore = SpelunkerMod.settings().hardcore;
@@ -31,18 +36,13 @@ public class SpelunkerWorldInfo
         score = 0;
         hiscore = 0;
         lives = SpelunkerMod.settings().initialLives - 1;
+        isSpeLevelCleared = false;
         isDragonDefeated = false;
         goldenSpelunkers = SpelunkerMod.settings().goldenSpelunkers;
-        playerName = null;
-    }
-
-    public SpelunkerWorldInfo(GameProfile profile)
-    {
-        this();
         playerName = profile.getName();
     }
 
-    public SpelunkerWorldInfo(NBTTagCompound nbttagcompound)
+    public SpelunkerWorldPlayerInfo(NBTTagCompound nbttagcompound)
     {
         playerName = nbttagcompound.getString("name");
         mode = nbttagcompound.getString("mode");
@@ -54,6 +54,18 @@ public class SpelunkerWorldInfo
         goldenSpelunkers = nbttagcompound.getByte("gs");
         isDragonDefeated = nbttagcompound.getBoolean("dragon");
 
+        if (nbttagcompound.hasKey("spelvl"))
+        {
+            NBTTagCompound speLevel = nbttagcompound.getCompoundTag("spelvl");
+            isSpeLevelCleared = speLevel.getBoolean("cleared");
+
+            byte[] chkpts = speLevel.getByteArray("chkpts");
+            for (byte chkpt : chkpts)
+            {
+                passedCheckPoints.add(chkpt);
+            }
+        }
+
         if (mode.isEmpty())
         {
             mode = SpelunkerGameMode.Adventure.toString();
@@ -63,11 +75,11 @@ public class SpelunkerWorldInfo
     public NBTTagCompound getNBTTagCompound()
     {
         NBTTagCompound nbttagcompound = new NBTTagCompound();
-        updateTagCompound(nbttagcompound);
+        writeToNBT(nbttagcompound);
         return nbttagcompound;
     }
 
-    private void updateTagCompound(NBTTagCompound nbttagcompound)
+    private void writeToNBT(NBTTagCompound nbttagcompound)
     {
         nbttagcompound.setString("name", playerName);
         nbttagcompound.setString("mode", mode);
@@ -78,6 +90,17 @@ public class SpelunkerWorldInfo
         nbttagcompound.setInteger("hiscore", hiscore);
         nbttagcompound.setByte("gs", (byte)goldenSpelunkers);
         nbttagcompound.setBoolean("dragon", isDragonDefeated);
+
+        NBTTagCompound speLevel = new NBTTagCompound();
+        speLevel.setBoolean("specleared", isSpeLevelCleared);
+        byte[] chkpts = new byte[passedCheckPoints.size()];
+        for (int i = 0; i < passedCheckPoints.size(); i++)
+        {
+            chkpts[i] = (byte)(int) passedCheckPoints.get(i);
+        }
+
+        speLevel.setByteArray("chkpts", chkpts);
+        nbttagcompound.setTag("spelvl", speLevel);
     }
 
     public int getDeaths()
@@ -140,6 +163,40 @@ public class SpelunkerWorldInfo
         this.hardcore = hardcore;
     }
 
+    public boolean isCheckPointPassed(int no)
+    {
+        return passedCheckPoints.contains((byte)no);
+    }
+
+    public int getCheckPointCount()
+    {
+        return passedCheckPoints.size();
+    }
+
+    public void setCheckPointPassed(int no)
+    {
+        Byte b = (byte)no;
+        if (!passedCheckPoints.contains(b))
+        {
+            passedCheckPoints.add(b);
+        }
+    }
+
+    public void resetCheckPoints()
+    {
+        this.passedCheckPoints.clear();
+    }
+
+    public boolean isSpeLevelCleared()
+    {
+        return isSpeLevelCleared;
+    }
+
+    public void setSpeLevelCleared(boolean isSpeLevelCleared)
+    {
+        this.isSpeLevelCleared = isSpeLevelCleared;
+    }
+
     public boolean isDragonDefeated()
     {
         return isDragonDefeated;
@@ -147,7 +204,7 @@ public class SpelunkerWorldInfo
 
     public void setDragonDefeated()
     {
-        isDragonDefeated = true;
+        this.isDragonDefeated = true;
     }
 
     public int getGoldenSpelunkers()

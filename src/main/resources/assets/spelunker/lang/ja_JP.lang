@@ -16,6 +16,12 @@ Spelunker.wrongPotionId3=I:choked=%s   I:sunstroke=%s
 
 Spelunker.spehisc=%1$s's high score: %2$d
 
+Spelunker.checkpoint.title=§lチェックポイント
+Spelunker.speCleared.title=§lステージクリア!
+Spelunker.allCleared.title=§lドラゴン撃破!
+Spelunker.bonus.main=BONUS: %s
+Spelunker.bonus.energy=ENERGY: %s
+
 Spelunker.update.server=スペランカーMOD %1$sに更新しました! ダウンロード: %2$s
 Spelunker.update.client=§eスペランカーMOD§r §a%1$s§rに更新しました! %2$s
 Spelunker.update.link=§nこちらからダウンロード§r
@@ -38,6 +44,8 @@ item.spelunker:goldenStatueF.desc=ただの飾り物
 item.spelunker:woodenGun.name=エアブラスター
 item.spelunker:steelGun.name=マシンブラスター
 item.spelunker:spelunkerGun.name=スペランカーブラスター
+item.spelunker:spelunkerGun.org.info=オリジナル
+item.spelunker:spelunkerGun.sw.info=スペランカーワールド仕様
 item.spelunker:energy.name=エネルギー
 item.spelunker:speedPotion.name=赤い薬
 item.spelunker:dollarBag.name=ドル袋
@@ -59,6 +67,112 @@ entity.flashBullet.name=発光体
 entity.flash.name=フラッシュ
 entity.ghost.name=ゴースト
 
+# achievements
+achievement.spelunker:death=はじめてのミス
+achievement.spelunker:death.desc=ミスする
+achievement.spelunker:deaths50=ファイト!
+achievement.spelunker:deaths50.desc=ミス50回目
+achievement.spelunker:deaths100=ネバーギブアップ!
+achievement.spelunker:deaths100.desc=ミス100回目
+achievement.spelunker:deaths200=不屈の精神
+achievement.spelunker:deaths200.desc=ミス200回目
+achievement.spelunker:deaths500=失敗は成功の母
+achievement.spelunker:deaths500.desc=ミス500回目
+achievement.spelunker:deaths1000=ミス常習者
+achievement.spelunker:deaths1000.desc=ミス1,000回目
+achievement.spelunker:deaths2000=ミス番長
+achievement.spelunker:deaths2000.desc=ミス2,000回目
+achievement.spelunker:deaths3000=ミスの猛者
+achievement.spelunker:deaths3000.desc=ミス3,000回目
+achievement.spelunker:deaths4000=ミスの達人
+achievement.spelunker:deaths4000.desc=ミス4,000回目
+achievement.spelunker:deaths5000=ミスの巨匠
+achievement.spelunker:deaths5000.desc=ミス5,000回目
+achievement.spelunker:deaths10000=ミス・スペランカー?
+achievement.spelunker:deaths10000.desc=ミス10,000回目
+achievement.spelunker:deaths20000=死にすぎ
+achievement.spelunker:deaths20000.desc=ミス20,000回目
+achievement.spelunker:deaths30000=いつまでやるの...?
+achievement.spelunker:deaths30000.desc=ミス30,000回目
+achievement.spelunker:deaths40000=つらくない?
+achievement.spelunker:deaths40000.desc=ミス40,000回目
+achievement.spelunker:deaths50000=ﾃｯﾃﾚｯﾃﾚｯﾃﾚｯﾃﾚｯﾃｯﾃｰ
+achievement.spelunker:deaths50000.desc=ミス50,000回目
+achievement.spelunker:deaths100000=参りました。
+achievement.spelunker:deaths100000.desc=ミス100,000回目
+achievement.spelunker:deaths1m=ミスオネア!
+achievement.spelunker:deaths1m.desc=ミス1,000,000回目
+
+achievement.spelunker:scored=初得点
+achievement.spelunker:scored.desc=アイテムを取ったり敵を倒してスコア獲得
+achievement.spelunker:score5000=駆け出しスペランカー
+achievement.spelunker:score5000.desc=スコア5,000点獲得
+achievement.spelunker:score10000=小遣い稼ぎ
+achievement.spelunker:score10000.desc=スコア10,000点獲得
+achievement.spelunker:score50000=ハイスコア
+achievement.spelunker:score50000.desc=スコア50,000点獲得
+achievement.spelunker:score100000=稼ぎ頭
+achievement.spelunker:score100000.desc=スコア100,000点獲得
+achievement.spelunker:score200000=スコアアタッカー
+achievement.spelunker:score200000.desc=スコア200,000点獲得
+achievement.spelunker:score300000=トレジャーハンター
+achievement.spelunker:score300000.desc=スコア300,000点獲得
+achievement.spelunker:score400000=プロスペランカー
+achievement.spelunker:score400000.desc=スコア400,000点獲得
+achievement.spelunker:score500000=ランカー・スペランカー
+achievement.spelunker:score500000.desc=スコア500,000点獲得
+achievement.spelunker:score1m=ミリオネア!
+achievement.spelunker:score1m.desc=スコア100万点獲得
+achievement.spelunker:score2m=スーパースペランカー
+achievement.spelunker:score2m.desc=スコア200万点獲得
+achievement.spelunker:score3m=スペランカー超人
+achievement.spelunker:score3m.desc=スコア300万点獲得
+achievement.spelunker:score4m=実はスペランカーではない?
+achievement.spelunker:score4m.desc=スコア400万点獲得
+achievement.spelunker:score5m=まさかケイバー!?
+achievement.spelunker:score5m.desc=スコア500万点獲得
+achievement.spelunker:scoreHalf=折り返し地点
+achievement.spelunker:scoreHalf.desc=スコア8,388,608点獲得
+achievement.spelunker:score10m=いや、スペランカー達人だ!
+achievement.spelunker:score10m.desc=スコア1000万点獲得
+achievement.spelunker:score1cycled=スコア一周!
+achievement.spelunker:score1cycled.desc=16,777,216点でスコアが一周する
+achievement.spelunker:score2cycled=スコア二周!!
+achievement.spelunker:score2cycled.desc=スコアが2周する(33,554,432点)
+achievement.spelunker:score3cycled=二度あることは三度ある
+achievement.spelunker:score3cycled.desc=スコアが3周する(50,331,648点)
+achievement.spelunker:score4cycled=スコアは回るもの
+achievement.spelunker:score4cycled.desc=スコアが4周する(67,108,864点)
+achievement.spelunker:score5cycled=スコアとともに世界は回る
+achievement.spelunker:score5cycled.desc=スコアが5周する(83,886,080点)
+achievement.spelunker:score100m=億万長者!
+achievement.spelunker:score100m.desc=スコア1億点獲得
+achievement.spelunker:score6cycled=参りました。
+achievement.spelunker:score6cycled.desc=スコアが6周する(100,663,296点)
+
+achievement.spelunker:speWorld=スペランカーワールドへ
+achievement.spelunker:speWorld.desc=リスポーン地点付近のスペランカー像を右クリック
+achievement.spelunker:speWorldCleared=クリアおめでとう!
+achievement.spelunker:speWorldCleared.desc=スペランカーワールドをがんばってクリアする
+
+achievement.spelunker:airBlaster=空気銃
+achievement.spelunker:airBlaster.desc=エアブラスターをクラフトする
+achievement.spelunker:machineBlaster=マシンガン
+achievement.spelunker:machineBlaster.desc=マシンブラスターをクラフトする
+achievement.spelunker:speBlaster=スペランカーブラスター
+achievement.spelunker:speBlaster.desc=スペランカーブラスターをクラフトする
+
+achievement.spelunker:ghost=ゴーストバスター
+achievement.spelunker:ghost.desc=ゴーストをブラスターで倒す
+achievement.spelunker:bomberMan=ボンバーマン
+achievement.spelunker:bomberMan.desc=ダイナマイトを爆発させる
+achievement.spelunker:mcSpelunker=スペランクラフト
+achievement.spelunker:mcSpelunker.desc=スペランカーヘルメットとスペランカーブラスターを身につけてガストやゴーストを倒す(スペランカーワールド以外で)
+achievement.spelunker:defeatDragon=スペランカー、マイクラ制覇
+achievement.spelunker:defeatDragon.desc=エンダードラゴンを倒す
+achievement.spelunker:defeatWither=ウィザー、スペランカーに屈する
+achievement.spelunker:defeatWither.desc=ウィザーを召喚し、倒す
+
 #
 # Spelunker Level Components
 #
@@ -66,9 +180,11 @@ itemGroup.spelunker.levelComponents=スペランカーステージやくもの(�
 
 tile.spelunker:rope.name=ロープ
 tile.spelunker:liftLauncher.name=リフト射出マシン
-tile.spelunker:spelunkerPortal.name=スペランカーワールドポータル
-tile.spelunker:spelunkerPortal.denied.on=所有者のみスペランカポータルを変更できます。 所有者: %s
-tile.spelunker:spelunkerPortal.denied.off=所有者のみスペランカポータルを変更できます。 所有者: オフラインの誰か
+tile.spelunker:spelunkerPortal.name=スペランカーワールドポータル (カスタム)
+tile.spelunker:spelunkerPortal.denied=所有者のみスペランカポータルを変更できます。 所有者: %s
+tile.spelunker:spelunkerPortal.denied.unknown=所有者のみスペランカポータルを変更できます。 所有者: オフラインの誰か
+tile.spelunker:spelunkerPortal.denied.inventory=スペランカーワールドに入るにはインベントリを空にしてください。
+tile.spelunker:spelunkerPortal2.name=スペランカーワールドポータル (サバイバル)
 tile.spelunker:startPoint.name=スタート地点 (内部使用)
 tile.spelunker:startPoint.desc=取り除けないので使用しないで!
 tile.spelunker:respawnGate.name=リスポーンゲート (内部使用)
@@ -97,13 +213,16 @@ tile.spelunker:bumpyBlock.name=でこぼこ床ブロック
 tile.spelunker:rock.name=岩ブロック
 tile.spelunker:breakableWall.name=破壊可能な壁ブロック
 tile.spelunker:hiddenDiamond.name=ダイヤモンド入り壁ブロック
-tile.spelunker:itemBox.name=アイテム配置ブロック
+tile.spelunker:itemBox.normal.name=アイテム配置ブロック
+tile.spelunker:itemBox.hidden.name=隠しアイテム配置ブロック
 tile.spelunker:platform.name=足場
 tile.spelunker:rail.name=スペランカーレール
 tile.spelunker:railGirder.name=レール用橋桁
 tile.spelunker:light.name=ライトブロック (内部使用)
 tile.spelunker:light.desc=取り除けないので使用しないで!
 tile.spelunker:batSpawner.name=コウモリスポーナー
+tile.spelunker:ladder.name=スペランカー梯子
+tile.spelunker:pyramid.name=ピラミッドブロック
 
 item.spelunker:levelBuilder.name=ステージ生成
 item.spelunker:levelBuilder.desc.level=§a%s§r
@@ -133,17 +252,31 @@ item.spelunker:spelunkerPortal.dimId=ディメンション %s へ
 item.spelunker:spelunkerPortal.level=§a%s§r
 item.spelunker:dropItem.desc=アイテム配置ブロック設定用
 item.spelunker:mapPieceGuide.name=スペランカーステージ作成ガイド
+item.spelunker:hispPlacer.name=隠しアイテム出現トリガー設置
+item.spelunker:hispPlacer.info.na=隠しアイテム配置ブロック: 未設定
+item.spelunker:hispPlacer.info.coord=隠しアイテム配置ブロック: X=%s, Y=%s, Z=%s
+item.spelunker:hispPlacer.desc.1=隠しアイテム配置ブロックに右クリックして
+item.spelunker:hispPlacer.desc.2=位置を設定する
+item.spelunker:hispPlacer.desc.3=右クリックで隠しアイテムの出現トリガーを
+item.spelunker:hispPlacer.desc.4=設置する
+item.spelunker:speBoat.name=スペランカーボート
+item.spelunker:spelunkart.name=スペランカートロッコ
 
 entity.elevator.name=エレベーター
 entity.lift.name=リフト
 entity.steamHole.name=水蒸気孔
 entity.peddle.name=小石
 entity.flameHole.name=噴火口
+entity.waterLift.name=噴水リフト
 
 Spelunker.mapSelect=スペランカーステージマップ選択
 Spelunker.mapSelect.switchMap=マップ切り替え
 Spelunker.mapSelect.switchQuestion=本当にステージを'%s'に切り替えますか?
 Spelunker.mapSelect.switchWarning=切り替えると取り消しできません。
+
+Spelunker.leaveSpeWorld.question=通常世界に戻りますか?
+Spelunker.leaveSpeWorld.warning=一度戻ると最初からやり直しになります。
+Spelunker.leaveSpeWorld.leave=戻る
 
 Spelunker.mapPiece.subject=§nステージマップの色凡例§r
 Spelunker.mapPiece.startPoint=スタート地点 (一度だけ設置可能)
@@ -157,6 +290,10 @@ Spelunker.mapPiece.liftUp=リフト射出マシン (上)
 Spelunker.mapPiece.liftDown=リフト射出マシン (下)
 Spelunker.mapPiece.rope=ロープブロック
 Spelunker.mapPiece.bumpy=でこぼこ床ブロック
+Spelunker.mapPiece.water=水
+Spelunker.mapPiece.waterfall=滝
+Spelunker.mapPiece.waterLift=噴水リフト (移動範囲の一番下)
+Spelunker.mapPiece.waterLiftPath=噴水リフト移動範囲 (垂直の直線のみ)
 Spelunker.mapPiece.fallingFloor=落ちる床ブロック
 Spelunker.mapPiece.rock=岩ブロック
 Spelunker.mapPiece.wallBreakable=破壊可能な壁ブロック
@@ -164,7 +301,7 @@ Spelunker.mapPiece.hiddenDiamond=ダイヤモンド入り壁ブロック
 Spelunker.mapPiece.rail=レール
 Spelunker.mapPiece.pillar=レールの橋柱
 Spelunker.mapPiece.railPlatform=カート乗り場
-Spelunker.mapPiece.minecart=アイテム配置: マインカート
+Spelunker.mapPiece.minecart=アイテム配置: トロッコ
 Spelunker.mapPiece.flameHole=噴火口
 Spelunker.mapPiece.elevatorRight=エレベーター (右)
 Spelunker.mapPiece.elevatorLeft=エレベーター (左)
@@ -187,6 +324,22 @@ Spelunker.mapPiece.dollar=アイテム配置: ドル袋
 Spelunker.mapPiece.miracle=アイテム配置: ミラクル
 Spelunker.mapPiece.gateKeyBlue=アイテム配置: ゲートのカギ (青)
 Spelunker.mapPiece.gateKeyRed=アイテム配置: ゲートのカギ (赤)
+Spelunker.mapPiece.boat=Item box: ボート
+Spelunker.mapPiece.itemSpawnPoint=隠しアイテムの出現トリガー #%1$s
+Spelunker.mapPiece.hiddenItem=隠しアイテム #%1$s
+Spelunker.mapPiece.checkpoint=チェックポイント
+Spelunker.mapPiece.cpStatue=チェックポイント像 (左下の角)
+Spelunker.mapPiece.pyramid1=ピラミッド1階
+Spelunker.mapPiece.pyramid1w=ピラミッド1階の端
+Spelunker.mapPiece.pyramid1e=ピラミッド1階の入り口
+Spelunker.mapPiece.pyramid2=ピラミッド2階
+Spelunker.mapPiece.pyramid2w=ピラミッド2階の端
+Spelunker.mapPiece.pyramid2e=ピラミッド2階の入り口
+Spelunker.mapPiece.pyramid2g=ピラミッド2階のゴール
+Spelunker.mapPiece.pyramid3=ピラミッド3階
+Spelunker.mapPiece.pyramidRoom=ピラミッド部屋
+
+Spelunker.ropeHelp=%1$sで登る, %2$sで降りる, %1$sを2回で飛び移る
 
 #
 # moody death cause
@@ -297,3 +450,56 @@ spe.nor.death.attack.worthyItemDropped=%1$sは金のスペランカー像を捨�
 spe.nor.death.attack.glass=%1$sはガラスの破片で力尽きた
 spe.nor.death.attack.mycelium=%1$sはキノコの菌に感染して力尽きた
 spe.nor.death.attack.web=%1$sはクモの巣に引っかかって身動きできなくなった
+
+#
+# Options
+#
+Spelunker.options.title=スペランカーMOD 設定
+
+Spelunker.options.category.game=ゲーム
+Spelunker.options.category.game.tooltip=ゲーム中に影響があるもの
+Spelunker.options.category.game_start=ゲーム開始
+Spelunker.options.category.game_start.tooltip=ゲーム開始時の設定
+Spelunker.options.category.display=表示
+Spelunker.options.category.display.tooltip=ゲーム画面関連
+Spelunker.options.category.server=サーバ
+Spelunker.options.category.server.tooltip=サーバ側処理関連。ただしシングルプレイにも効果がある
+Spelunker.options.category.levelbuilding=ステージ生成
+Spelunker.options.category.levelbuilding.tooltip=スペランカーワールド生成関連
+Spelunker.options.category.entity=エンティティ
+Spelunker.options.category.entity.tooltip=エンティティID。-1で自動割り当て
+Spelunker.options.category.biome=バイオーム
+Spelunker.options.category.biome.tooltip=バイオームID。-1で再起動時に再割り当て
+Spelunker.options.category.potion=ポーション
+Spelunker.options.category.potion.tooltip=ポーションID。-1で再起動時に再割り当て
+Spelunker.options.category.misc=その他
+
+Spelunker.options.fullHP=体力ハート10個
+Spelunker.options.fullHP.tooltip=trueにするとスペランカーの最大HPがハート10個になる。厳しいスペランカーの難易度をマイルドに
+Spelunker.options.forceDeath=強制死
+Spelunker.options.forceDeath.tooltip=trueにするとスペランカーは強制的に死ぬようになる。このオプションはTFCやDQMなど体力システムを一撃で死なないように変更を加えるMOD向け
+Spelunker.options.moodyDeathCause=スペランカーな死因
+Spelunker.options.moodyDeathCause.tooltip=trueにすると死因メッセージがスペランカー仕様になる。でなければ、マイクラのまま
+Spelunker.options.cursedWords=呪われた言葉
+Spelunker.options.cursedWords.tooltip=ハードコア用。部分一致、ローマ字の大文字小文字は区別せず、スペースやクォーテーションやカンマは無視。すべて削除すれば無効になる
+Spelunker.options.goldenSpelunkers=金のスペランカー像の数
+Spelunker.options.goldenSpelunkers.tooltip=ハードコア用。プレイヤー持つ金のスペランカー像の数
+Spelunker.options.goldenSpelunkerRecipe=金のスペランカー像レシピ
+Spelunker.options.goldenSpelunkerRecipe.tooltip=trueなら金のスペランカー像のレシピが追加される
+Spelunker.options.initialLives=最初の残機数
+Spelunker.options.initialLives.tooltip=スコアアタックモード用。ゲーム開始時に与えられるスペランカーの残機数
+Spelunker.options.deaths=死んだ回数
+Spelunker.options.deaths.tooltip=ゲーム画面に死んだ回数を表示するかどうか
+Spelunker.options.score=スコア
+Spelunker.options.score.tooltip=ゲーム画面にスコアを表示するかどうか
+Spelunker.options.helmetLightIntervalCl=ヘルメットライト更新間隔
+Spelunker.options.helmetLightIntervalCl.tooltip=スペランカーヘルメットのライトの更新間隔(tick)。クライアント側
+Spelunker.options.playerStatusInPublic=プレイヤー情報公開
+Spelunker.options.helmetLightIntervalSv=ヘルメットライト更新間隔
+Spelunker.options.helmetLightIntervalSv.tooltip=スペランカーヘルメットのライトの更新間隔(tick)。サーバ側だがシングルプレイにも効果あり
+Spelunker.options.dimensionTypeId=ディメンションタイプID
+Spelunker.options.dimensionTypeId.tooltip=スペランカーワールドのディメンションタイプID
+Spelunker.options.updateCheck=更新チェック
+Spelunker.options.updateCheck.tooltip=このMODの更新チェックを有効にする
+Spelunker.options.restoreSampleMap=サンプルマップ再作成
+Spelunker.options.restoreSampleMap.tooltip=trueにすると次の起動時にスペランカーワールドのサンプルマップを一度リストアして、falseに戻る

@@ -15,7 +15,7 @@ import net.minecraft.entity.Entity;
  *
  * @author Originally created by 超田中氏 (Tyotanaka) - Thx!
  */
-public class ModelSpelunkerPortal extends ModelBase
+public class ModelSpelunkerPortalStatue extends ModelBase
 {
     //fields
     ModelRenderer helmet1;
@@ -35,11 +35,8 @@ public class ModelSpelunkerPortal extends ModelBase
     ModelRenderer leg1;
     ModelRenderer leg2;
     ModelRenderer leg3;
-    ModelRenderer stage1;
-    ModelRenderer stage2;
-    ModelRenderer stage3;
 
-    public ModelSpelunkerPortal()
+    public ModelSpelunkerPortalStatue()
     {
         textureWidth = 64;
         textureHeight = 64;
@@ -146,24 +143,6 @@ public class ModelSpelunkerPortal extends ModelBase
         leg3.setTextureSize(64, 64);
         leg3.mirror = true;
         setRotation(leg3, 0F, 0F, 0F);
-        stage1 = new ModelRenderer(this, 0, 27);
-        stage1.addBox(0F, 0F, 0F, 10, 2, 10);
-        stage1.setRotationPoint(-5F, 8F, -5F);
-        stage1.setTextureSize(64, 64);
-        stage1.mirror = true;
-        setRotation(stage1, 0F, 0F, 0F);
-        stage2 = new ModelRenderer(this, 20, 5);
-        stage2.addBox(0F, 0F, 0F, 8, 11, 8);
-        stage2.setRotationPoint(-4F, 10F, -4F);
-        stage2.setTextureSize(64, 64);
-        stage2.mirror = true;
-        setRotation(stage2, 0F, 0F, 0F);
-        stage3 = new ModelRenderer(this, 0, 39);
-        stage3.addBox(0F, 0F, 0F, 16, 3, 16);
-        stage3.setRotationPoint(-8F, 21F, -8F);
-        stage3.setTextureSize(64, 64);
-        stage3.mirror = true;
-        setRotation(stage3, 0F, 0F, 0F);
     }
 
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
@@ -185,9 +164,6 @@ public class ModelSpelunkerPortal extends ModelBase
         leg1.render(f5);
         leg2.render(f5);
         leg3.render(f5);
-        stage1.render(f5);
-        stage2.render(f5);
-        stage3.render(f5);
     }
 
     private void setRotation(ModelRenderer model, float x, float y, float z)

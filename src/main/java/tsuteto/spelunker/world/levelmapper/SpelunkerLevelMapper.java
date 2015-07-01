@@ -60,8 +60,13 @@ public class SpelunkerLevelMapper
 
     public MapPiece getMapPiece(int x, int y)
     {
-        int color = mapImg.getRGB(x, y) & 0xffffff;
-        return MapPieces.colorToTileMapping.get(color);
+        int color = this.getColor(x, y);
+        return MapPieces.colorMapping.get(color);
+    }
+
+    public int getColor(int x, int y)
+    {
+        return mapImg.getRGB(x, y) & 0xffffff;
     }
 
     public int getHeight()
@@ -74,4 +79,8 @@ public class SpelunkerLevelMapper
         return mapImg.getWidth();
     }
 
+    public void close()
+    {
+        mapImg = null;
+    }
 }

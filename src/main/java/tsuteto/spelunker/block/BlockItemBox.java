@@ -1,6 +1,7 @@
 package tsuteto.spelunker.block;
 
 import net.minecraft.block.material.Material;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -9,8 +10,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.block.tileentity.TileEntityItemBox;
+import tsuteto.spelunker.block.tileentity.TileEntityItemBoxHidden;
+import tsuteto.spelunker.init.SpelunkerItems;
 import tsuteto.spelunker.item.SpelunkerItem;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
+
+import java.util.List;
 
 public class BlockItemBox extends BlockRespawnPoint
 {
@@ -22,7 +27,7 @@ public class BlockItemBox extends BlockRespawnPoint
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
     {
-        if (player.capabilities.isCreativeMode)
+        if (player.capabilities.isCreativeMode && !isHiddenBox(world, x, y, z))
         {
             ItemStack heldItem = player.getHeldItem();
             if (heldItem != null)
@@ -41,7 +46,7 @@ public class BlockItemBox extends BlockRespawnPoint
         if (te.itemContained != null)
         {
             Item item = te.itemContained.getItem();
-            return entity instanceof EntityPlayer && item instanceof SpelunkerItem && item != SpelunkerItem.itemGateKey;
+            return entity instanceof EntityPlayer && item instanceof SpelunkerItem && item != SpelunkerItems.itemGateKey;
         }
         else
         {
@@ -73,7 +78,7 @@ public class BlockItemBox extends BlockRespawnPoint
                 boolean taken;
                 if (te.itemContained.getItem() instanceof SpelunkerItem)
                 {
-                    ((SpelunkerItem) te.itemContained.getItem()).giveEffect(player.worldObj, spelunker);
+                    ((SpelunkerItem) te.itemContained.getItem()).giveEffect(te.itemContained.copy(), player.worldObj, spelunker);
                     taken = true;
                 }
                 else
@@ -90,10 +95,15 @@ public class BlockItemBox extends BlockRespawnPoint
         }
     }
 
+    public static boolean isHiddenBox(World world, int x, int y, int z)
+    {
+        return world.getBlockMetadata(x, y, z) == 1;
+    }
+
     @Override
     public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
     {
-        return new TileEntityItemBox();
+        return p_149915_2_ == 1 ? new TileEntityItemBoxHidden() : new TileEntityItemBox();
     }
 
     @Override
@@ -101,4 +111,18 @@ public class BlockItemBox extends BlockRespawnPoint
     {
         return -1;
     }
+
+    @Override
+    public void getSubBlocks(Item p_149666_1_, CreativeTabs p_149666_2_, List p_149666_3_)
+    {
+        p_149666_3_.add(new ItemStack(this, 1, 0));
+        p_149666_3_.add(new ItemStack(this, 1, 1));
+    }
+
+    @Override
+    public String getItemIconName()
+    {
+        return SpelunkerMod.resourceDomain + "itemBox";
+    }
+
 }

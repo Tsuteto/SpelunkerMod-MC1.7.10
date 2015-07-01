@@ -20,6 +20,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import tsuteto.spelunker.block.tileentity.TileEntityLockedGate;
+import tsuteto.spelunker.init.SpelunkerBlocks;
 
 import java.awt.*;
 import java.util.List;
@@ -33,7 +34,7 @@ public class BlockLockedGate extends BlockContainer
     private IIcon iconOverlay;
     private IIcon iconSide;
 
-    protected BlockLockedGate()
+    public BlockLockedGate()
     {
         super(Material.rock);
         this.setBlockUnbreakable();
@@ -43,7 +44,14 @@ public class BlockLockedGate extends BlockContainer
     @Override
     public IIcon getIcon(int side, int meta)
     {
-        return (meta & 7) == side ? this.blockIcon : iconSide;
+        if (meta == 0 || meta == 1)
+        {
+            return side < 2 ? this.blockIcon : iconSide;
+        }
+        else
+        {
+            return side > 1 ? this.blockIcon : iconSide;
+        }
     }
 
     @Override

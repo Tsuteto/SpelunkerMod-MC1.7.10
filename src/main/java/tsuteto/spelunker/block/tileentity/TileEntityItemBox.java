@@ -7,13 +7,17 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.server.MinecraftServer;
+import tsuteto.spelunker.SpelunkerMod;
+import tsuteto.spelunker.init.SpelunkerItems;
+import tsuteto.spelunker.item.ItemEnergy;
 import tsuteto.spelunker.item.SpelunkerItem;
 
 public class TileEntityItemBox extends TileEntityRespawnPoint
 {
     public ItemStack itemContained;
-    public int respawnTimer = 0;
-    public boolean shouldUpdateItem = false;
+    public long respawnTime = -1;
+    public boolean shouldSpawnItem = false;
+    public boolean isHidden = false;
 
     public EntityItem itemEntity;
 
@@ -24,9 +28,9 @@ public class TileEntityItemBox extends TileEntityRespawnPoint
 
         if (prevItem == null || this.itemContained == null || !prevItem.isItemEqual(this.itemContained))
         {
-            this.shouldUpdateItem = true;
+            this.shouldSpawnItem = true;
         }
-        this.respawnTimer = 0;
+        this.respawnTime = 0;
     }
 
     public int getItemRespawnTime()
@@ -35,12 +39,14 @@ public class TileEntityItemBox extends TileEntityRespawnPoint
         {
             if (MinecraftServer.getServer().isSinglePlayer())
             {
-                return itemContained.getItem() == SpelunkerItem.itemGateKey || itemContained.getItem() instanceof SpelunkerItem ? 12000 : 200;
+                return itemContained.getItem() == SpelunkerItems.itemGateKey
+                        || itemContained.getItem() instanceof SpelunkerItem ? SpelunkerMod.restorationTime : 200;
             }
             else
             {
-                return itemContained.getItem() == SpelunkerItem.itemGateKey ? 12000
-                        : itemContained.getItem() instanceof SpelunkerItem ? 600 : 100;
+                return itemContained.getItem() == SpelunkerItems.itemGateKey ? SpelunkerMod.restorationTime
+                        : itemContained.getItem() instanceof ItemEnergy ? 100
+                        : itemContained.getItem() instanceof SpelunkerItem ? SpelunkerMod.restorationTime : 100;
             }
         }
         else
@@ -52,18 +58,22 @@ public class TileEntityItemBox extends TileEntityRespawnPoint
     @Override
     public void updateEntity()
     {
-        if (this.respawnTimer > 0)
+        if (this.itemContained != null
+                && this.respawnTime != -1
+                && this.respawnTime <= this.worldObj.getTotalWorldTime())
         {
-            respawnTimer--;
+            this.isHidden = false;
+            this.respawnTime = -1;
         }
-        else if (this.itemContained != null && this.shouldUpdateItem)
+
+        if (this.shouldSpawnItem)
         {
+            this.spawnItem();
+            this.shouldSpawnItem = false;
             if (!this.worldObj.isRemote)
             {
                 this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
             }
-            this.spawnItem();
-            this.shouldUpdateItem = false;
         }
 
         if (this.itemEntity != null) this.itemEntity.age++;
@@ -71,12 +81,12 @@ public class TileEntityItemBox extends TileEntityRespawnPoint
 
     public void onItemTaken()
     {
-        this.respawnTimer = this.getItemRespawnTime();
-        this.itemEntity = null;
+        this.respawnTime = this.worldObj.getTotalWorldTime() + this.getItemRespawnTime();
+        this.isHidden = true;
         this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
-    public void spawnItem()
+    private void spawnItem()
     {
         if (this.itemContained != null)
         {
@@ -87,7 +97,7 @@ public class TileEntityItemBox extends TileEntityRespawnPoint
 
     public boolean isItemAvailable()
     {
-        return this.itemContained != null && this.respawnTimer == 0;
+        return this.itemContained != null && !this.isHidden;
     }
 
     @Override
@@ -95,18 +105,37 @@ public class TileEntityItemBox extends TileEntityRespawnPoint
     {
         super.readFromNBT(p_145839_1_);
 
-        this.respawnTimer = p_145839_1_.getShort("Respawn");
-        NBTTagCompound nbtItem = p_145839_1_.getCompoundTag("Item");
-        this.itemContained = ItemStack.loadItemStackFromNBT(nbtItem);
-        if (this.itemContained.stackSize == 0) this.itemContained.stackSize = 1;
-        this.shouldUpdateItem = true;
+        if (p_145839_1_.hasKey("RespawnTime"))
+        {
+            this.respawnTime = p_145839_1_.getLong("RespawnTime");
+        }
+        else
+        {
+            this.respawnTime = -1;
+        }
+        this.isHidden = p_145839_1_.getBoolean("IsHidden");
+        if (p_145839_1_.hasKey("Item"))
+        {
+            NBTTagCompound nbtItem = p_145839_1_.getCompoundTag("Item");
+            this.itemContained = ItemStack.loadItemStackFromNBT(nbtItem);
+            if (this.itemContained != null && this.itemContained.stackSize == 0)
+            {
+                this.itemContained.stackSize = 1;
+            }
+        }
+        else
+        {
+            this.itemContained = null;
+        }
+        this.shouldSpawnItem = true;
     }
 
     @Override
     public void writeToNBT(NBTTagCompound p_145841_1_)
     {
         super.writeToNBT(p_145841_1_);
-        p_145841_1_.setShort("Respawn", (short)this.respawnTimer);
+        p_145841_1_.setLong("RespawnTime", this.respawnTime);
+        p_145841_1_.setBoolean("IsHidden", this.isHidden);
         if (itemContained != null)
         {
             p_145841_1_.setTag("Item", itemContained.writeToNBT(new NBTTagCompound()));

@@ -9,7 +9,7 @@ import net.minecraft.tileentity.TileEntityCommandBlock;
 import net.minecraft.util.ChatComponentText;
 import org.apache.commons.lang3.StringUtils;
 import tsuteto.spelunker.SpelunkerMod;
-import tsuteto.spelunker.data.SpelunkerWorldInfo;
+import tsuteto.spelunker.data.SpelunkerWorldPlayerInfo;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
 
 import java.util.Collections;
@@ -169,7 +169,7 @@ public class CommandSperank extends CommandSpelunkerBase
                 }
                 else
                 {
-                    SpelunkerWorldInfo worldInfo = getWorldInfo(entryName);
+                    SpelunkerWorldPlayerInfo worldInfo = getWorldInfo(entryName);
                     if (worldInfo == null) continue;
                     if (StringUtils.isNotEmpty(worldInfo.getPlayerName()))
                     {

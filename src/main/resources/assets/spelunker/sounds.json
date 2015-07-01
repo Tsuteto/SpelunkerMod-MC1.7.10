@@ -14,8 +14,12 @@
     "gunshot": {"category": "master","sounds": ["spelunker:gunshot"]},
     "invincible_bgm": {"category": "master","sounds": ["spelunker:invincible_bgm"]},
     "item": {"category": "master","sounds": ["spelunker:item"]},
+    "key": {"category": "master","sounds": ["spelunker:key"]},
     "jump": {"category": "master","sounds": ["spelunker:jump"]},
+    "itemappeared": {"category": "master","sounds": ["spelunker:itemappeared"]},
     "main_bgm": {"category": "master","sounds": ["spelunker:main_bgm"]},
     "speedpotion_bgm": {"category": "master","sounds": ["spelunker:speedpotion_bgm"]},
-    "ghost_bgm": {"category": "master","sounds": ["spelunker:ghost_bgm"]}
+    "ghost_bgm": {"category": "master","sounds": ["spelunker:ghost_bgm"]},
+    "checkpoint": {"category": "master","sounds": ["spelunker:checkpoint"]},
+    "allcleared": {"category": "master","sounds": ["spelunker:allcleared"]}
 }

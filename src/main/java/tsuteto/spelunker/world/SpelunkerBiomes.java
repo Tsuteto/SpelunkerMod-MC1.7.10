@@ -1,52 +1,41 @@
 package tsuteto.spelunker.world;
 
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.common.config.Configuration;
-import org.apache.logging.log4j.Level;
-import tsuteto.spelunker.util.ModLog;
+import net.minecraftforge.common.config.Property;
+import tsuteto.spelunker.SpelunkerMod;
 
 public class SpelunkerBiomes
 {
     public static BiomeGenBase spelunkerCave;
 
-    private static final String CONF_CATEGORY = "biome";
-
-    public static void register(Configuration conf)
+    public static void register()
     {
-        conf.addCustomCategoryComment(CONF_CATEGORY, "Biome IDs. They must be 127 or less");
+        SpelunkerMod.settings().biome();
 
-        try
-        {
-            spelunkerCave = new BiomeGenSpelunkerCave(assignId("spelunkerCave", conf))
-                    .setColor(8421631)
-                    .setBiomeName("SpelunkerCave")
-                    .setDisableRain();
-        }
-        catch (Exception e)
-        {
-            ModLog.log(Level.WARN, e, e.getLocalizedMessage());
-        }
-
+        spelunkerCave = new BiomeGenSpelunkerCave(SpelunkerMod.settings().biomeSpelunkerCaveId)
+                .setColor(8421631)
+                .setBiomeName("SpelunkerCave")
+                .setDisableRain();
     }
 
-    public static int assignId(String confKey, Configuration conf) throws Exception
+    public static int assignId(Property prop) throws Exception
     {
-        if (conf.hasKey(CONF_CATEGORY, confKey))
+        int id = prop.getInt();
+        if (id != -1)
         {
-            int id = conf.get(CONF_CATEGORY, confKey, -1).getInt();
-            if (id != -1)
-            {
-                return id;
-            }
+            return id;
         }
-        // Find an undefined entry
-        for (int i = 127; i >= 0; i--)
+        else
         {
-            BiomeGenBase biome = BiomeGenBase.getBiomeGenArray()[i];
-            if (biome == null)
+            // Find an undefined entry
+            for (int i = 127; i >= 0; i--)
             {
-                conf.get(CONF_CATEGORY, confKey, i).set(i);
-                return i;
+                BiomeGenBase biome = BiomeGenBase.getBiomeGenArray()[i];
+                if (biome == null)
+                {
+                    prop.set(i);
+                    return i;
+                }
             }
         }
 

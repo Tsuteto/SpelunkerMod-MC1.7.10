@@ -269,7 +269,7 @@ public class EntitySpelunkerItem extends Entity
 
             if (this.delayBeforeCanPickup <= 0)
             {
-                ((SpelunkerItem) itemstack.getItem()).giveEffect(par1EntityPlayer.worldObj, spelunker);
+                ((SpelunkerItem) itemstack.getItem()).giveEffect(itemstack, par1EntityPlayer.worldObj, spelunker);
                 this.playSound("random.pop", 0.2F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
                 spelunker.onSpelunkerItemPickup(this);
 

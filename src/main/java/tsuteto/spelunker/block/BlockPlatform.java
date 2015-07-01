@@ -11,7 +11,7 @@ import java.util.List;
 public class BlockPlatform extends Block
 {
 
-    protected BlockPlatform(Material p_i45394_1_)
+    public BlockPlatform(Material p_i45394_1_)
     {
         super(p_i45394_1_);
         float h = 5.0F / 16.0F;

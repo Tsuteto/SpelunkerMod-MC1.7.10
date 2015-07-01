@@ -2,9 +2,18 @@ package tsuteto.spelunker.levelmap;
 
 public class SpelunkerMapInfo
 {
+    public MapSource source;
     public String fileName;
     public String mapName;
-    public MapSource source;
+
+    public SpelunkerMapInfo() {}
+
+    public SpelunkerMapInfo(MapSource source, String fileName, String mapName)
+    {
+        this.source = source;
+        this.fileName = fileName;
+        this.mapName = mapName;
+    }
 
     @Override
     public int hashCode()
