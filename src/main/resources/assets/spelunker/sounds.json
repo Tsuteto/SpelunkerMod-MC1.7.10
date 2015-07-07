@@ -17,7 +17,7 @@
     "key": {"category": "master","sounds": ["spelunker:key"]},
     "jump": {"category": "master","sounds": ["spelunker:jump"]},
     "itemappeared": {"category": "master","sounds": ["spelunker:itemappeared"]},
-    "main_bgm": {"category": "master","sounds": ["spelunker:main_bgm"]},
+    "main_bgm": {"category": "master","stream": true,"sounds": ["spelunker:main_bgm"]},
     "speedpotion_bgm": {"category": "master","sounds": ["spelunker:speedpotion_bgm"]},
     "ghost_bgm": {"category": "master","sounds": ["spelunker:ghost_bgm"]},
     "checkpoint": {"category": "master","sounds": ["spelunker:checkpoint"]},

@@ -42,7 +42,6 @@ public class TileEntityItemBoxHidden extends TileEntityItemBox
         {
             if (this.timeToHide != -1 && this.timeToHide <= this.worldObj.getTotalWorldTime())
             {
-                this.isHidden = true;
                 this.timeToHide = -1;
                 this.setItemStack(null); // Item is not available until revealed next
             }
@@ -51,7 +50,7 @@ public class TileEntityItemBoxHidden extends TileEntityItemBox
 
     public boolean revealItem()
     {
-        if (this.respawnTime == -1 || this.respawnTime <= this.worldObj.getTotalWorldTime())
+        if (this.itemContained == null && (this.respawnTime == -1 || this.respawnTime <= this.worldObj.getTotalWorldTime()))
         {
             this.isHidden = false;
             this.respawnTime = -1;

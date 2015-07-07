@@ -45,7 +45,7 @@ public class SpelunkerSaveHandler extends ModSaveHandler
 
         if (oldFile.exists() && oldFile.isFile() && !newFile.exists())
         {
-            SpelunkerWorldPlayerInfo info = this.loadSpelunker(oldFile);
+            SpelunkerPlayerInfo info = this.loadSpelunker(oldFile);
             info.setPlayerName(username);
             super.saveData(info.getNBTTagCompound(), oldFile);
 
@@ -53,13 +53,13 @@ public class SpelunkerSaveHandler extends ModSaveHandler
         }
     }
 
-    public SpelunkerWorldPlayerInfo loadSpelunker(File file)
+    public SpelunkerPlayerInfo loadSpelunker(File file)
     {
         NBTTagCompound var2 = super.readData(file);
 
         if (var2 != null)
         {
-            return new SpelunkerWorldPlayerInfo(var2);
+            return new SpelunkerPlayerInfo(var2);
         }
         else
         {
@@ -67,13 +67,13 @@ public class SpelunkerSaveHandler extends ModSaveHandler
         }
     }
 
-    public SpelunkerWorldPlayerInfo loadSpelunker(String filename)
+    public SpelunkerPlayerInfo loadSpelunker(String filename)
     {
         NBTTagCompound var2 = super.readData(filename);
 
         if (var2 != null)
         {
-            return new SpelunkerWorldPlayerInfo(var2);
+            return new SpelunkerPlayerInfo(var2);
         }
         else
         {

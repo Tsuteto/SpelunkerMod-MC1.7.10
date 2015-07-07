@@ -17,7 +17,7 @@ import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.achievement.AchievementMgr;
 import tsuteto.spelunker.constants.SpelunkerPacketType;
 import tsuteto.spelunker.damage.SpelunkerDamageSource;
-import tsuteto.spelunker.data.SpelunkerWorldPlayerInfo;
+import tsuteto.spelunker.data.SpelunkerPlayerInfo;
 import tsuteto.spelunker.dimension.SpelunkerLevelManagerClient;
 import tsuteto.spelunker.init.SpeAchievementList;
 import tsuteto.spelunker.init.SpelunkerItems;
@@ -101,6 +101,9 @@ public class PlayerEventHandler
 
         if (worldProviderFrom instanceof WorldProviderSpelunker || worldProviderTo instanceof WorldProviderSpelunker)
         {
+            EntityPlayer player = event.player;
+            SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(player);
+
             if (!event.player.capabilities.isCreativeMode)
             {
                 // Remove spelunker world items from player's inventory
@@ -113,23 +116,30 @@ public class PlayerEventHandler
                     }
                 }
 
-                // Give a blaster when entering
+                // Entering Spelunker World
                 if (worldProviderTo instanceof WorldProviderSpelunker)
                 {
+                    // Give a blaster
                     event.player.inventory.addItemStackToInventory(new ItemStack(SpelunkerItems.itemGunSpeWorld));
                     AchievementMgr.achieve(event.player, SpeAchievementList.Key.speWorld);
                 }
             }
 
-            // Reset flag
-            EntityPlayer player = event.player;
-            SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(player);
-            SpelunkerWorldPlayerInfo worldInfo = spelunker.getWorldInfo();
-            worldInfo.resetCheckPoints();
-            worldInfo.setSpeLevelCleared(false);
-            spelunker.saveSpelunker();
-
-            SpelunkerPacketDispatcher.of(SpelunkerPacketType.DIM_CHANGE);
+            SpelunkerPlayerInfo worldInfo = spelunker.getWorldInfo();
+            if (worldProviderTo instanceof WorldProviderSpelunker)
+            {
+                // Set info
+                worldInfo.createSpeLevelInfo(player);
+                SpelunkerPacketDispatcher.of(SpelunkerPacketType.DIM_CHANGE)
+                        .addLong(player.worldObj.getTotalWorldTime());
+            }
+            else
+            {
+                // Discard info
+                worldInfo.discardSpeLevelInfo();
+                SpelunkerPacketDispatcher.of(SpelunkerPacketType.DIM_CHANGE)
+                        .addLong(-1);
+            }
         }
     }
 

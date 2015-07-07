@@ -26,9 +26,9 @@ import tsuteto.spelunker.command.CommandSpedeath;
 import tsuteto.spelunker.command.CommandSpehisc;
 import tsuteto.spelunker.command.CommandSperank;
 import tsuteto.spelunker.constants.SpelunkerGameMode;
+import tsuteto.spelunker.data.SpelunkerGeneralInfo;
 import tsuteto.spelunker.data.SpelunkerSaveHandler;
 import tsuteto.spelunker.data.SpelunkerSaveHandlerWorld;
-import tsuteto.spelunker.data.SpelunkerWorldGeneralInfo;
 import tsuteto.spelunker.dimension.SpelunkerLevelManager;
 import tsuteto.spelunker.eventhandler.*;
 import tsuteto.spelunker.gui.ScreenRendererGameOverlay;
@@ -60,7 +60,7 @@ import java.util.UUID;
  * @author Tsuteto
  *
  */
-@Mod(modid = SpelunkerMod.modId, useMetadata = true, version = "3.0.0b-MC1.7.10",
+@Mod(modid = SpelunkerMod.modId, useMetadata = true, version = "3.0.0b2-MC1.7.10",
         acceptedMinecraftVersions = "[1.7.2,1.8)",
         guiFactory = "tsuteto.spelunker.config.SpeConfigGuiFactory")
 public class SpelunkerMod
@@ -115,7 +115,7 @@ public class SpelunkerMod
     private ScreenRendererGameOverlay renderScreen = new ScreenRendererGameOverlay();
     private SpelunkerSaveHandler saveHandler = null;
     private SpelunkerSaveHandlerWorld saveHandlerWorld = null;
-    private SpelunkerWorldGeneralInfo worldInfo = null;
+    private SpelunkerGeneralInfo worldInfo = null;
     private SpelunkerLevelManager levelManager = null;
     private SpelunkerMapManager mapManager = null;
 
@@ -249,7 +249,7 @@ public class SpelunkerMod
         worldInfo = worldSaveHandler.loadData();
         if (worldInfo == null)
         {
-            worldInfo = new SpelunkerWorldGeneralInfo();
+            worldInfo = new SpelunkerGeneralInfo();
             saveHandlerWorld.saveData(worldInfo);
             ModLog.debug("World general info newly generated");
         }
@@ -310,7 +310,7 @@ public class SpelunkerMod
         return instance.saveHandlerWorld;
     }
 
-    public static SpelunkerWorldGeneralInfo getWorldInfo()
+    public static SpelunkerGeneralInfo getWorldInfo()
     {
         return instance.worldInfo;
     }

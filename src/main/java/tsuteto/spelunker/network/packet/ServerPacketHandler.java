@@ -12,6 +12,7 @@ import tsuteto.spelunker.blockaspect.BlockAspectHC;
 import tsuteto.spelunker.constants.SpelunkerGameMode;
 import tsuteto.spelunker.constants.SpelunkerPacketType;
 import tsuteto.spelunker.damage.SpelunkerDamageSource;
+import tsuteto.spelunker.data.SpeLevelInfo;
 import tsuteto.spelunker.network.SpelunkerPacketDispatcher;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
 import tsuteto.spelunker.potion.SpelunkerPotion;
@@ -55,6 +56,19 @@ public class ServerPacketHandler
                 response.addInt(spelunkerMp.spelunkerScore.hiscore);
                 response.addInt(spelunkerMp.getMaxEnergy());
                 response.addInt(spelunkerMp.getSpawnTimeInv());
+                if (spelunkerMp.getWorldInfo().hasSpeLevelInfo())
+                {
+                    SpeLevelInfo levelInfo = spelunkerMp.getWorldInfo().getSpeLevelInfo();
+                    response.addLong(levelInfo.getStartTime());
+                    response.addLong(levelInfo.getFinishTime());
+                    response.addBool(levelInfo.isCleared());
+                }
+                else
+                {
+                    response.addLong(-1);
+                    response.addLong(-1);
+                    response.addBool(false);
+                }
                 response.sendPacketPlayer(player);
 
                 if (spelunkerMp.isUsingEnergy()) {

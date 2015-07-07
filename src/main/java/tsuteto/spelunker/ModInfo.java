@@ -14,7 +14,7 @@ public class ModInfo
         meta.version = "3.0 Beta Release";
         meta.credits = "Feature support by MMMさん, 綾繁さん. " +
                 "PlayerAPI support by Divisor. Spelunker model by 超田中さん. " +
-                "Playing video and bug report by ミヤビさん, Silent7さん. Thanks to them all!";
+                "Playing video and bug report by ミヤビさん, Silent7さん, ぶりすさん. Thanks to them all!";
         meta.logoFile = "assets/spelunker/logo.png";
         meta.url = "http://forum.minecraftuser.jp/viewtopic.php?f=13&t=1014";
         meta.updateUrl = "https://dl.dropboxusercontent.com/u/14577828/mcmod/update/spelunkermod.json";

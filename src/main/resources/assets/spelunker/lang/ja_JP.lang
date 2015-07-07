@@ -21,6 +21,8 @@ Spelunker.speCleared.title=§lステージクリア!
 Spelunker.allCleared.title=§lドラゴン撃破!
 Spelunker.bonus.main=BONUS: %s
 Spelunker.bonus.energy=ENERGY: %s
+Spelunker.bonus.split=SPLIT TIME: %s
+Spelunker.bonus.time=TOTAL TIME: %s
 
 Spelunker.update.server=スペランカーMOD %1$sに更新しました! ダウンロード: %2$s
 Spelunker.update.client=§eスペランカーMOD§r §a%1$s§rに更新しました! %2$s
@@ -92,7 +94,7 @@ achievement.spelunker:deaths10000=ミス・スペランカー?
 achievement.spelunker:deaths10000.desc=ミス10,000回目
 achievement.spelunker:deaths20000=死にすぎ
 achievement.spelunker:deaths20000.desc=ミス20,000回目
-achievement.spelunker:deaths30000=いつまでやるの...?
+achievement.spelunker:deaths30000=いつまでやるの・・・?
 achievement.spelunker:deaths30000.desc=ミス30,000回目
 achievement.spelunker:deaths40000=つらくない?
 achievement.spelunker:deaths40000.desc=ミス40,000回目
@@ -176,7 +178,7 @@ achievement.spelunker:defeatWither.desc=ウィザーを召喚し、倒す
 #
 # Spelunker Level Components
 #
-itemGroup.spelunker.levelComponents=スペランカーステージやくもの(作成中)
+itemGroup.spelunker.levelComponents=スペランカーステージやくもの
 
 tile.spelunker:rope.name=ロープ
 tile.spelunker:liftLauncher.name=リフト射出マシン
@@ -275,7 +277,7 @@ Spelunker.mapSelect.switchQuestion=本当にステージを'%s'に切り替え�
 Spelunker.mapSelect.switchWarning=切り替えると取り消しできません。
 
 Spelunker.leaveSpeWorld.question=通常世界に戻りますか?
-Spelunker.leaveSpeWorld.warning=一度戻ると最初からやり直しになります。
+Spelunker.leaveSpeWorld.warning=一度戻るとこのステージは最初からになります。
 Spelunker.leaveSpeWorld.leave=戻る
 
 Spelunker.mapPiece.subject=§nステージマップの色凡例§r

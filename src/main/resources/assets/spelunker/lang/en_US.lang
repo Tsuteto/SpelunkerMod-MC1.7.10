@@ -21,6 +21,8 @@ Spelunker.speCleared.title=§lLevel Cleared!
 Spelunker.allCleared.title=§lDragon Defeated!
 Spelunker.bonus.main=BONUS: %s
 Spelunker.bonus.energy=ENERGY: %s
+Spelunker.bonus.split=SPLIT TIME: %s
+Spelunker.bonus.time=TOTAL TIME: %s
 
 Spelunker.update.server=SpelunkerMod updated to %1$s, available at %2$s
 Spelunker.update.client=§eSpelunkerMod§r updated to §a%1$s§r! %2$s
@@ -131,7 +133,7 @@ achievement.spelunker:score4m=You ain't Spelunker now?
 achievement.spelunker:score4m.desc=Score 4 million pts.
 achievement.spelunker:score5m=Are you a caver!?
 achievement.spelunker:score5m.desc=Score 5 million pts.
-achievement.spelunker:scoreHalf=Turning point
+achievement.spelunker:scoreHalf=Turn-around point
 achievement.spelunker:scoreHalf.desc=Score 8,388,608 pts.
 achievement.spelunker:score10m=No, a Spelunker master!
 achievement.spelunker:score10m.desc=Score 10 million pts.
@@ -176,7 +178,7 @@ achievement.spelunker:defeatWither.desc=Summon Wither and defeat it
 #
 # Spelunker Level Components
 #
-itemGroup.spelunker.levelComponents=Spelunker Level Components (WIP)
+itemGroup.spelunker.levelComponents=Spelunker Level Components
 
 tile.spelunker:rope.name=Rope
 tile.spelunker:liftLauncher.name=Lift Launcher
@@ -277,7 +279,7 @@ Spelunker.mapSelect.switchQuestion=Are you sure you want to switch the map to '%
 Spelunker.mapSelect.switchWarning=Once switched, you cannot undo.
 
 Spelunker.leaveSpeWorld.question=Do you want to leave the Spelunker World?
-Spelunker.leaveSpeWorld.warning=Once you leave, you will start over again.
+Spelunker.leaveSpeWorld.warning=Once you leave, you will start over again in this level.
 Spelunker.leaveSpeWorld.leave=Leave
 
 Spelunker.mapPiece.subject=§nColor Legend of Level Map§r

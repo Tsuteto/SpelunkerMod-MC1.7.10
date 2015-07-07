@@ -70,8 +70,7 @@ public class SpelunkerItems
         itemGunSpeWorld = $("speWorldGun", new ItemSpeWorldBlaster())
                 .withResource("spelunkerGun")
                 .register()
-                .setFull3D()
-                .setCreativeTab(null);
+                .setFull3D();
 
         // Tools
         itemDynamite = $("dynamite", new ItemDynamite()).register().setCreativeTab(CreativeTabs.tabTools);

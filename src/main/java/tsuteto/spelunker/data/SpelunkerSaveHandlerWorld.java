@@ -21,14 +21,14 @@ public class SpelunkerSaveHandlerWorld extends ModSaveHandler
         ModLog.debug("Located data for multi: " + this.getSaveDirectory());
     }
 
-    public SpelunkerWorldGeneralInfo loadData()
+    public SpelunkerGeneralInfo loadData()
     {
         this.migration();
 
         NBTTagCompound var2 = this.readData(filename);
         if (var2 != null)
         {
-            return new SpelunkerWorldGeneralInfo(var2);
+            return new SpelunkerGeneralInfo(var2);
         }
         else
         {
@@ -36,7 +36,7 @@ public class SpelunkerSaveHandlerWorld extends ModSaveHandler
         }
     }
 
-    public void saveData(SpelunkerWorldGeneralInfo multiWorldInfo)
+    public void saveData(SpelunkerGeneralInfo multiWorldInfo)
     {
         super.saveData(multiWorldInfo.getNBTTagCompound(), filename);
     }

@@ -19,14 +19,14 @@ public class ScoreManager
     {
     }
 
-    public void load(SpelunkerWorldPlayerInfo modinfo)
+    public void load(SpelunkerPlayerInfo modinfo)
     {
         scoreActual = modinfo.getScore();
         scoreDisplay = scoreActual;
         hiscore = modinfo.getHiscore();
     }
 
-    public void store(SpelunkerWorldPlayerInfo modinfo)
+    public void store(SpelunkerPlayerInfo modinfo)
     {
         modinfo.setScore(scoreActual);
         modinfo.setHiscore(hiscore);

@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GL11;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.constants.SpelunkerGameMode;
 import tsuteto.spelunker.player.SpelunkerPlayerSP;
+import tsuteto.spelunker.util.Utils;
 
 /**
  * Renders Spelunker status on the screen
@@ -32,12 +33,12 @@ public class ScreenRenderer
         Minecraft mc = FMLClientHandler.instance().getClient();
         EntityPlayerSP player = mc.thePlayer;
         SpelunkerPlayerSP spelunker = SpelunkerMod.getSpelunkerPlayer(player);
-        long worldtime = mc.theWorld.getWorldTime();
+        long worldtime = mc.theWorld.getTotalWorldTime();
 
         if (!spelunker.isReady) return;
 
         // TITLE
-        TitleController.instance().renderTitle(mc);
+        TitleController.instance().render(mc);
 
         ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
         int guiW = scaledresolution.getScaledWidth();
@@ -47,6 +48,21 @@ public class ScreenRenderer
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
+        // TIME
+        if (spelunker.speLevelStartTime != -1)
+        {
+            long timeTo = spelunker.speLevelFinishTime != -1 ? spelunker.speLevelFinishTime : worldtime;
+            String str;
+            str = "TIME   " + Utils.formatTickToTime((int) (timeTo - spelunker.speLevelStartTime), spelunker.isSpeLevelCleared);
+
+            boolean originalUnicodeFlag = fontrenderer.getUnicodeFlag();
+            fontrenderer.setUnicodeFlag(false);
+            int w = fontrenderer.getStringWidth(str);
+            fontrenderer.drawStringWithShadow(str, guiW / 2 - w / 2, 20, 0xffffff);
+            fontrenderer.setUnicodeFlag(originalUnicodeFlag);
+        }
+
+        // STATUS
         int ox = 0;
         int oy = 0;
         if (!player.capabilities.isCreativeMode)

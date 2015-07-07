@@ -17,6 +17,7 @@ import tsuteto.spelunker.potion.SpelunkerPotion;
 import tsuteto.spelunker.sound.ModSound;
 import tsuteto.spelunker.sound.SpelunkerBgm;
 import tsuteto.spelunker.util.PlayerUtils;
+import tsuteto.spelunker.util.Utils;
 
 /**
  * Handles network packets on client side
@@ -45,6 +46,9 @@ public class ClientPacketHandler extends CommonClientPacketHandler
                 spelunker.spelunkerScore.hiscore = data.readInt();
                 spelunker.maxEnergy = data.readInt();
                 spelunker.timeSpawnInv = data.readInt();
+                spelunker.speLevelStartTime = data.readLong();
+                spelunker.speLevelFinishTime = data.readLong();
+                spelunker.isSpeLevelCleared = data.readBoolean();
                 spelunker.isReady = true;
                 spelunker.isInitializing = false;
                 if (spelunker.hardcore)
@@ -63,6 +67,8 @@ public class ClientPacketHandler extends CommonClientPacketHandler
                 break;
 
             case DIM_CHANGE:
+                spelunker.speLevelStartTime = data.readLong();
+                spelunker.isSpeLevelCleared = false;
                 TitleController.instance().clear();
                 break;
 
@@ -139,19 +145,23 @@ public class ClientPacketHandler extends CommonClientPacketHandler
             case SPE_CHECKPOINT:
                 {
                     int mainBonus = data.readInt();
-                    final int energyBonus = data.readInt();
+                    int energyBonus = data.readInt();
+                    int time = data.readInt();
                     if (mainBonus > 0)
                     {
                         TitleController.instance().setTitle(
                                 I18n.format("Spelunker.checkpoint.title"),
                                 I18n.format("Spelunker.bonus.main", mainBonus),
-                                I18n.format("Spelunker.bonus.energy", energyBonus)
+                                I18n.format("Spelunker.bonus.energy", energyBonus),
+                                I18n.format("Spelunker.bonus.split", Utils.formatTickToTime(time, true))
                         );
                     }
                     else
                     {
                         TitleController.instance().setTitle(
-                                I18n.format("Spelunker.checkpoint.title"));
+                                I18n.format("Spelunker.checkpoint.title"),
+                                I18n.format("Spelunker.bonus.split", Utils.formatTickToTime(time, true))
+                        );
                     }
                 }
 
@@ -165,20 +175,27 @@ public class ClientPacketHandler extends CommonClientPacketHandler
                 {
                     int mainBonus = data.readInt();
                     int energyBonus = data.readInt();
+                    int time = data.readInt();
                     if (mainBonus > 0)
                     {
                         TitleController.instance().setTitle(
                                 I18n.format("Spelunker.speCleared.title"),
                                 I18n.format("Spelunker.bonus.main", mainBonus),
-                                I18n.format("Spelunker.bonus.energy", energyBonus)
+                                I18n.format("Spelunker.bonus.energy", energyBonus),
+                                I18n.format("Spelunker.bonus.time", Utils.formatTickToTime(time, true))
                         );
                     }
                     else
                     {
                         TitleController.instance().setTitle(
-                                I18n.format("Spelunker.speCleared.title"));
+                                I18n.format("Spelunker.speCleared.title"),
+                                I18n.format("Spelunker.bonus.time", Utils.formatTickToTime(time, true))
+                        );
                     }
                 }
+
+                spelunker.speLevelFinishTime = entityPlayer.worldObj.getTotalWorldTime();
+                spelunker.isSpeLevelCleared = true;
 
                 if (SpelunkerMod.isBgmAllCleardAvailable)
                 {

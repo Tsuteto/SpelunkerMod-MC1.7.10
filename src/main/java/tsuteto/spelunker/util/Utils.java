@@ -64,4 +64,18 @@ public class Utils
         return filename.substring(0, dotpos);
     }
 
+    public static String formatTickToTime(int tick, boolean addFrac)
+    {
+        int millisec = tick * 50;
+        int min = millisec / 60 / 1000;
+        int sec = millisec / 1000 % 60;
+        if (addFrac)
+        {
+            return String.format("%d:%02d.%d", min, sec, millisec / 100 % 10);
+        }
+        else
+        {
+            return String.format("%d:%02d", min, sec);
+        }
+    }
 }

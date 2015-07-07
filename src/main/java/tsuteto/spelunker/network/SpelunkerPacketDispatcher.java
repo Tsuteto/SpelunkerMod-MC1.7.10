@@ -63,6 +63,19 @@ public class SpelunkerPacketDispatcher
         return this;
 	}
 
+    public SpelunkerPacketDispatcher addLong(long val)
+    {
+        try
+        {
+            dataStream.writeLong(val);
+        }
+        catch (IOException e)
+        {
+            ModLog.log(Level.WARN, e, "Failed to set value to a packet.");
+        }
+        return this;
+    }
+
     public SpelunkerPacketDispatcher addByte(byte val)
     {
         try
@@ -191,5 +204,4 @@ public class SpelunkerPacketDispatcher
         }
         catch (IOException e) {}
     }
-
 }

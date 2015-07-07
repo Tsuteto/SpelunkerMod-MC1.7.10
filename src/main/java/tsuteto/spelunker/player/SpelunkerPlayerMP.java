@@ -46,8 +46,8 @@ import tsuteto.spelunker.constants.SpelunkerGameMode;
 import tsuteto.spelunker.constants.SpelunkerPacketType;
 import tsuteto.spelunker.damage.SpelunkerDamageSource;
 import tsuteto.spelunker.data.ScoreManager;
+import tsuteto.spelunker.data.SpelunkerPlayerInfo;
 import tsuteto.spelunker.data.SpelunkerSaveHandler;
-import tsuteto.spelunker.data.SpelunkerWorldPlayerInfo;
 import tsuteto.spelunker.entity.EntityGhost;
 import tsuteto.spelunker.entity.EntitySpelunkerItem;
 import tsuteto.spelunker.entity.EntityStillBat;
@@ -97,7 +97,7 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
     public int gunDamageCount = 0;
     public int energyAlertTime;
 
-    private SpelunkerWorldPlayerInfo worldInfo;
+    private SpelunkerPlayerInfo worldInfo;
     private SpelunkerSaveHandler saveHandler;
 
     private int time2xScore;
@@ -159,7 +159,7 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
             if (worldInfo == null)
             {
                 // Initialize world info
-                worldInfo = new SpelunkerWorldPlayerInfo(gameProfile);
+                worldInfo = new SpelunkerPlayerInfo(gameProfile);
                 saveHandler.saveSpelunker(this);
                 worldInfo = saveHandler.loadSpelunker(uuid.toString());
 
@@ -511,7 +511,7 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
                     SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(player);
                     if (spelunker != null)
                     {
-                        SpelunkerWorldPlayerInfo winfo = spelunker.worldInfo;
+                        SpelunkerPlayerInfo winfo = spelunker.worldInfo;
                         if (!winfo.isDragonDefeated())
                         {
                             spelunker.addSpelunkerScore(SpelunkerMod.bonusAllCleared, true);
@@ -1162,7 +1162,7 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
         return this.playerAPI;
     }
 
-    public SpelunkerWorldPlayerInfo getWorldInfo()
+    public SpelunkerPlayerInfo getWorldInfo()
     {
         return worldInfo;
     }

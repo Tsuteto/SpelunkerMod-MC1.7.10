@@ -4,6 +4,7 @@ import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSound;
 import net.minecraft.util.ResourceLocation;
+import tsuteto.spelunker.util.ModLog;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ public class ModSound extends PositionedSound
 {
     private static net.minecraft.client.audio.SoundHandler soundHandler;
     private static ModSound bgmNowPlaying = null;
+    private static boolean isBgmAboutToPlay = false;
 
     public static void init()
     {
@@ -32,23 +34,27 @@ public class ModSound extends PositionedSound
         return new ModSound(resourceLocation, volume, 1.0F, repeat, 0, AttenuationType.NONE, 0.0F, 0.0F, 0.0F);
     }
 
-    public synchronized static void playBgm(ModSound sound)
+    public static void playBgm(ModSound sound)
     {
+        ModLog.debug("play: " + sound.getSoundLocation());
         if (bgmNowPlaying != null) return;
 
         soundHandler.playSound(sound);
         SpelunkerBgm.addBgmPlaying(sound);
         bgmNowPlaying = sound;
+        isBgmAboutToPlay = true;
     }
 
     public static void interruptBgm(ModSound sound)
     {
+        ModLog.debug("interrupt play: " + sound.getSoundLocation());
         if (bgmNowPlaying != null && bgmNowPlaying.equals(sound)) return;
 
         stopCurrentBgm();
         soundHandler.playSound(sound);
         SpelunkerBgm.addBgmPlaying(sound);
         bgmNowPlaying = sound;
+        isBgmAboutToPlay = true;
     }
 
 //    public static void playSound(ResourceLocation resourceLocation, double x, double y, double z, float volume, float pitch)
@@ -58,6 +64,7 @@ public class ModSound extends PositionedSound
 
     public static void stopBgm(ResourceLocation resLoc)
     {
+        ModLog.debug("stop: " + resLoc);
         List<ModSound> bgmList = SpelunkerBgm.pullBgmPlaying(resLoc);
         if (bgmList != null)
         {
@@ -68,9 +75,9 @@ public class ModSound extends PositionedSound
 
     public static void stopCurrentBgm()
     {
-        if (bgmNowPlaying != null && soundHandler.isSoundPlaying(bgmNowPlaying))
+        if (bgmNowPlaying != null)
         {
-            soundHandler.stopSound(bgmNowPlaying);
+            stopBgm(bgmNowPlaying.getSoundLocation());
         }
     }
 
@@ -99,10 +106,17 @@ public class ModSound extends PositionedSound
         if (bgmNowPlaying != null)
         {
             boolean playing = isReady() && soundHandler.isSoundPlaying(bgmNowPlaying);
-            if (!playing)
+            if (!isBgmAboutToPlay && !playing)
             {
+                ModLog.debug("finished: " + bgmNowPlaying.getSoundLocation());
                 bgmNowPlaying = null;
             }
+
+            if (isBgmAboutToPlay && playing)
+            {
+                isBgmAboutToPlay = false;
+            }
+            if (isBgmAboutToPlay) ModLog.debug("BGM about to play!");
         }
     }
 

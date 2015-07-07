@@ -23,6 +23,7 @@ import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.constants.SpelunkerGameMode;
 import tsuteto.spelunker.constants.SpelunkerPacketType;
 import tsuteto.spelunker.data.ScoreManager;
+import tsuteto.spelunker.gui.TitleController;
 import tsuteto.spelunker.network.SpelunkerPacketDispatcher;
 import tsuteto.spelunker.sound.ModSound;
 import tsuteto.spelunker.sound.SpelunkerBgm;
@@ -62,6 +63,10 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
     public boolean isInitializing = false;
     private boolean hasStartedGameStable = false;
     private boolean isDigging = false;
+
+    public long speLevelStartTime = -1;
+    public long speLevelFinishTime = -1;
+    public boolean isSpeLevelCleared = false;
 
     private boolean isUsingEnergy = false;
     private WatchBool statInCave = new WatchBool(false);
@@ -387,8 +392,7 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
                 GameSettings gamesettings = mc.gameSettings;
                 String sneakKey = GameSettings.getKeyDisplayString(gamesettings.keyBindSneak.getKeyCode());
                 String jumpKey = GameSettings.getKeyDisplayString(gamesettings.keyBindJump.getKeyCode());
-                mc.ingameGUI.func_110326_a(I18n.format("Spelunker.ropeHelp", jumpKey, sneakKey), false);
-
+                TitleController.instance().setInstruction(I18n.format("Spelunker.ropeHelp", jumpKey, sneakKey));
             }
             prevGrabbingRope = true;
             isGrabbingRope = false;
@@ -457,6 +461,12 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
     @Override
     public void killInstantly(DamageSource dmgsrc)
     {
+    }
+
+    @Override
+    public void afterOnDeath(DamageSource damageSource)
+    {
+        ModSound.stopCurrentBgm();
     }
 
     public void setDifficultyHardcore()
