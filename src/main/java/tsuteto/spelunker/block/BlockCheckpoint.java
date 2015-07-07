@@ -13,7 +13,8 @@ import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.achievement.AchievementMgr;
 import tsuteto.spelunker.block.tileentity.TileEntityCheckpoint;
 import tsuteto.spelunker.constants.SpelunkerPacketType;
-import tsuteto.spelunker.data.SpeLevelInfo;
+import tsuteto.spelunker.data.SpeLevelPlayerInfo;
+import tsuteto.spelunker.data.SpeLevelRecordInfo;
 import tsuteto.spelunker.init.SpeAchievementList;
 import tsuteto.spelunker.network.SpelunkerPacketDispatcher;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
@@ -38,44 +39,20 @@ public class BlockCheckpoint extends BlockRespawnPoint
                 SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(player);
                 if (spelunker.getWorldInfo().hasSpeLevelInfo())
                 {
-                    SpeLevelInfo levelInfo = spelunker.getWorldInfo().getSpeLevelInfo();
+                    SpeLevelPlayerInfo playerLevelInfo = spelunker.getWorldInfo().getSpeLevelInfo();
                     if (isLevelGoal(world, x, y, z))
                     {
-                        if (!player.capabilities.isCreativeMode && !levelInfo.isCleared())
+                        if (!player.capabilities.isCreativeMode && !playerLevelInfo.isCleared())
                         {
-                            int finishBonus = SpelunkerMod.bonusSpeLvlClearedBase + SpelunkerMod.bonusSpeLvlClearedChkPt * levelInfo.getCheckPointCount();
-                            int energyBonus = SpelunkerMod.bonusEnergyMax * spelunker.getEnergy() / spelunker.getMaxEnergy() / 10 * 10;
-                            spelunker.addSpelunkerScore(finishBonus + energyBonus, true);
-                            spelunker.increaseLife(1);
-                            levelInfo.setCleared(true);
-                            levelInfo.setFinishTime(world.getTotalWorldTime());
-                            spelunker.saveSpelunker();
-
-                            AchievementMgr.achieve(player, SpeAchievementList.Key.speWorldCleared);
-
-                            SpelunkerPacketDispatcher.of(SpelunkerPacketType.SPE_CLEARED)
-                                    .addInt(spelunker.calcActualScore(finishBonus, true))
-                                    .addInt(spelunker.calcActualScore(energyBonus, true))
-                                    .addInt(levelInfo.getTimeElapsed(player))
-                                    .sendPacketPlayer(player);
+                            onGoalPassed(world, player, playerLevelInfo);
                         }
                     }
                     else
                     {
-                        int cpNo = getCheckPointNo(world, x, y, z);
-                        if (!player.capabilities.isCreativeMode && cpNo != -1 && !levelInfo.isCheckPointPassed(cpNo))
+                        int cpNo = getCheckpointNo(world, x, y, z);
+                        if (!player.capabilities.isCreativeMode && cpNo != -1 && !playerLevelInfo.isCheckPointPassed(cpNo))
                         {
-                            int energyBonus = SpelunkerMod.bonusEnergyMax * spelunker.getEnergy() / spelunker.getMaxEnergy() / 10 * 10;
-                            spelunker.addSpelunkerScore(SpelunkerMod.bonusSpeCheckPoint + energyBonus, true);
-                            spelunker.increaseLife(1);
-                            levelInfo.setCheckPointPassed(cpNo);
-                            spelunker.saveSpelunker();
-
-                            SpelunkerPacketDispatcher.of(SpelunkerPacketType.SPE_CHECKPOINT)
-                                    .addInt(spelunker.calcActualScore(SpelunkerMod.bonusSpeCheckPoint, true))
-                                    .addInt(spelunker.calcActualScore(energyBonus, true))
-                                    .addInt(levelInfo.getTimeElapsed(player))
-                                    .sendPacketPlayer(player);
+                            this.onCheckpointPassed(world, player, playerLevelInfo, cpNo);
                         }
                     }
 
@@ -86,12 +63,70 @@ public class BlockCheckpoint extends BlockRespawnPoint
         }
     }
 
+    private void onCheckpointPassed(World world, EntityPlayer player, SpeLevelPlayerInfo playerLevelInfo, int cpNo)
+    {
+        SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(player);
+
+        int energyBonus = SpelunkerMod.bonusEnergyMax * spelunker.getEnergy() / spelunker.getMaxEnergy() / 10 * 10;
+        spelunker.addSpelunkerScore(SpelunkerMod.bonusSpeCheckPoint + energyBonus, true);
+        spelunker.increaseLife(1);
+        playerLevelInfo.setCheckPointPassed(cpNo);
+        int splitTime = playerLevelInfo.markSplitTime(player);
+        spelunker.saveSpelunker();
+        spelunker.eliminateGhosts();
+
+        SpelunkerPacketDispatcher.of(SpelunkerPacketType.SPE_CHECKPOINT)
+                .addInt(spelunker.calcActualScore(SpelunkerMod.bonusSpeCheckPoint, true))
+                .addInt(spelunker.calcActualScore(energyBonus, true))
+                .addInt(splitTime)
+                .sendPacketPlayer(player);
+    }
+
+    private void onGoalPassed(World world, EntityPlayer player, SpeLevelPlayerInfo playerLevelInfo)
+    {
+        SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(player);
+
+        long finishTime = world.getTotalWorldTime();
+        int finishBonus = SpelunkerMod.bonusSpeLvlClearedBase + SpelunkerMod.bonusSpeLvlClearedChkPt * playerLevelInfo.getCheckPointCount();
+        int energyBonus = SpelunkerMod.bonusEnergyMax * spelunker.getEnergy() / spelunker.getMaxEnergy() / 10 * 10;
+        spelunker.addSpelunkerScore(finishBonus + energyBonus, true);
+        spelunker.increaseLife(1);
+        playerLevelInfo.setCleared(true);
+        playerLevelInfo.setFinishTime(finishTime);
+        int splitTime = playerLevelInfo.markSplitTime(player);
+
+        boolean isBestTime = false;
+        int totalTime = playerLevelInfo.getTotalTime(player);
+        SpeLevelRecordInfo.Record record = spelunker.getSpeLevelRecord();
+        if (SpelunkerMod.isSinglePlayer()
+                && !playerLevelInfo.isCheated()
+                && (record == null || totalTime < record.time))
+        {
+            spelunker.registerSpeLevelRecord(totalTime);
+            isBestTime = true;
+        }
+
+        spelunker.saveSpelunker();
+        spelunker.eliminateGhosts();
+
+        AchievementMgr.achieve(player, SpeAchievementList.Key.speWorldCleared);
+
+        SpelunkerPacketDispatcher.of(SpelunkerPacketType.SPE_CLEARED)
+                .addInt(spelunker.calcActualScore(finishBonus, true))
+                .addInt(spelunker.calcActualScore(energyBonus, true))
+                .addInt(splitTime)
+                .addLong(finishTime)
+                .addInt(totalTime)
+                .addBool(isBestTime)
+                .sendPacketPlayer(player);
+    }
+
     public static boolean isLevelGoal(World world, int x, int y, int z)
     {
         return world.getBlockMetadata(x, y, z) == 1;
     }
 
-    public static int getCheckPointNo(World world, int x, int y, int z)
+    public static int getCheckpointNo(World world, int x, int y, int z)
     {
         TileEntity te = world.getTileEntity(x, y, z);
         if (te != null && te instanceof TileEntityCheckpoint)

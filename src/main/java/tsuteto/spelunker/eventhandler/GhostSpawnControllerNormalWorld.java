@@ -7,11 +7,11 @@ import tsuteto.spelunker.util.ModLog;
 
 import java.util.Random;
 
-public class GhostSpawnHandlerNormalWorld extends GhostSpawnHandler
+public class GhostSpawnControllerNormalWorld extends GhostSpawnController
 {
-    protected GhostSpawnHandlerNormalWorld(SpelunkerPlayerMP spelunker, Random rand)
+    protected GhostSpawnControllerNormalWorld(GhostSpawnHandler handler, SpelunkerPlayerMP spelunker, Random rand)
     {
-        super(spelunker, rand);
+        super(handler, spelunker, rand);
     }
 
     @Override
@@ -23,7 +23,7 @@ public class GhostSpawnHandlerNormalWorld extends GhostSpawnHandler
     @Override
     public boolean isGhostComing()
     {
-        for (EntityGhost ghost : ghostList)
+        for (EntityGhost ghost : GhostSpawnHandler.ghostList)
         {
             if (player.dimension == ghost.dimension
                     && ghost.isEntityAlive() && ghost.getEntityToAttack() != null
@@ -41,9 +41,11 @@ public class GhostSpawnHandlerNormalWorld extends GhostSpawnHandler
         for (int i = 0; i < 10; i++)
         {
             int remaining = rand.nextInt(25) + 40;
-            int dx = rand.nextInt(remaining);
-            int dy = rand.nextInt(remaining -= dx);
-            int dz = remaining - dy;
+            int dx = rand.nextInt(remaining) - rand.nextInt(remaining);
+            remaining -= Math.abs(dx);
+            int dy = rand.nextInt(remaining) - rand.nextInt(remaining);
+            remaining -= Math.abs(dy);
+            int dz = rand.nextInt(2) == 0 ? remaining : -remaining;
             float dist = MathHelper.sqrt_double(dx * dx + dy * dy + dz * dz);
             ModLog.debug("Ghost at (%d, %d, %d) dist=%f", dx, dy, dz, dist);
             double x = dx + player.posX;
@@ -60,5 +62,11 @@ public class GhostSpawnHandlerNormalWorld extends GhostSpawnHandler
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean isSpawnValid()
+    {
+        return true;
     }
 }

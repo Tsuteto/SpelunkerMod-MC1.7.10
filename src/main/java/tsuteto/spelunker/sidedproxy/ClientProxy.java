@@ -17,6 +17,7 @@ import tsuteto.spelunker.init.SpelunkerBlocks;
 import tsuteto.spelunker.init.SpelunkerEntity;
 import tsuteto.spelunker.player.ISpelunkerPlayer;
 import tsuteto.spelunker.player.SpelunkerPlayerSP;
+import tsuteto.spelunker.sound.SpelunkerBgm;
 import tsuteto.spelunker.util.Utils;
 
 import java.io.File;
@@ -68,32 +69,38 @@ public class ClientProxy implements ISidedProxy
     {
         // BGM file check
         if (Utils.soundFileExists("main_bgm"))
-            SpelunkerMod.isBgmMainAvailable = true;
+            SpelunkerBgm.isBgmMainAvailable = true;
 
         if (Utils.soundFileExists("2xscore_bgm"))
-            SpelunkerMod.isBgm2xScoreAvailable = true;
+            SpelunkerBgm.isBgm2xScoreAvailable = true;
 
         if (Utils.soundFileExists("invincible_bgm"))
-            SpelunkerMod.isBgmInvincibleAvailable = true;
+            SpelunkerBgm.isBgmInvincibleAvailable = true;
 
         if (Utils.soundFileExists("speedpotion_bgm"))
-            SpelunkerMod.isBgmSpeedPotionAvailable = true;
+            SpelunkerBgm.isBgmSpeedPotionAvailable = true;
 
         if (Utils.soundFileExists("ghost_bgm"))
-            SpelunkerMod.isBgmGhostComingAvailable = true;
+            SpelunkerBgm.isBgmGhostComingAvailable = true;
 
         if (Utils.soundFileExists("checkpoint"))
-            SpelunkerMod.isBgmCheckPointAvailable = true;
+            SpelunkerBgm.isBgmCheckPointAvailable = true;
 
         if (Utils.soundFileExists("allcleared"))
-            SpelunkerMod.isBgmAllCleardAvailable = true;
+            SpelunkerBgm.isBgmAllCleardAvailable = true;
     }
 
     @Override
-    public File getMapDataDir()
+    public File getDataDir(String name)
     {
         Minecraft mc = FMLClientHandler.instance().getClient();
-        return new File(mc.mcDataDir, SpelunkerMod.levelMapFileDir);
+        return new File(mc.mcDataDir, name);
     }
 
+    @Override
+    public boolean isSinglePlayer()
+    {
+        Minecraft mc = FMLClientHandler.instance().getClient();
+        return mc.isIntegratedServerRunning();
+    }
 }

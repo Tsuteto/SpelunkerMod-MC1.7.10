@@ -23,6 +23,8 @@ Spelunker.bonus.main=BONUS: %s
 Spelunker.bonus.energy=ENERGY: %s
 Spelunker.bonus.split=SPLIT TIME: %s
 Spelunker.bonus.time=TOTAL TIME: %s
+Spelunker.deathScreen.info=You can't respawn anymore!
+Spelunker.cheated=*CHEATED*
 
 Spelunker.update.server=SpelunkerMod updated to %1$s, available at %2$s
 Spelunker.update.client=§eSpelunkerMod§r updated to §a%1$s§r! %2$s
@@ -69,6 +71,12 @@ entity.flashBullet.name=Luminary
 entity.flash.name=Flash
 entity.ghost.name=Ghost
 
+commands.sperank.usage=/sperank <sc|hisc|death> [page|all]
+commands.spehisc.usage=/spehisc [player]
+commands.spedeath.usage=/spedeath [player]
+commands.resetghost.usage=/resetghost
+commands.spehardcore.usage=/spehardcore <player> <true|false>
+
 # achievements
 achievement.spelunker:death=My first mistake
 achievement.spelunker:death.desc=Just missed
@@ -76,10 +84,22 @@ achievement.spelunker:deaths50=Keep fighting!
 achievement.spelunker:deaths50.desc=The 50th mistake
 achievement.spelunker:deaths100=Never give up!
 achievement.spelunker:deaths100.desc=The 100th mistake
-achievement.spelunker:deaths200=Fortitude!
+achievement.spelunker:deaths200=Carry out your goal
 achievement.spelunker:deaths200.desc=The 200th mistake
-achievement.spelunker:deaths500=Failure teaches success
+achievement.spelunker:deaths300=Fortitude!
+achievement.spelunker:deaths300.desc=The 300th mistake
+achievement.spelunker:deaths400=Failure teaches success
+achievement.spelunker:deaths400.desc=The 400th mistake
+achievement.spelunker:deaths500=Phoenix
 achievement.spelunker:deaths500.desc=The 500th mistake
+achievement.spelunker:deaths600=Everlasting immortality
+achievement.spelunker:deaths600.desc=The 600th mistake
+achievement.spelunker:deaths700=Overcome every mistake
+achievement.spelunker:deaths700.desc=The 700th mistake
+achievement.spelunker:deaths800=Indomitableness
+achievement.spelunker:deaths800.desc=The 800th mistake
+achievement.spelunker:deaths900=Unwavering resolve
+achievement.spelunker:deaths900.desc=The 900th mistake
 achievement.spelunker:deaths1000=Mistake addict
 achievement.spelunker:deaths1000.desc=The 1000th mistake
 achievement.spelunker:deaths2000=Mistake leader
@@ -90,7 +110,15 @@ achievement.spelunker:deaths4000=Mistake master
 achievement.spelunker:deaths4000.desc=The 4000th mistake
 achievement.spelunker:deaths5000=Mistake legend
 achievement.spelunker:deaths5000.desc=The 5000th mistake
-achievement.spelunker:deaths10000=Miss. Spelunker?
+achievement.spelunker:deaths6000=Miss. Spelunker?
+achievement.spelunker:deaths6000.desc=The 6000th mistake
+achievement.spelunker:deaths7000=How's the progress?
+achievement.spelunker:deaths7000.desc=The 7000th mistake
+achievement.spelunker:deaths8000=How sincere you are!
+achievement.spelunker:deaths8000.desc=The 8000th mistake
+achievement.spelunker:deaths9000=Spelunker will live
+achievement.spelunker:deaths9000.desc=The 9000th mistake
+achievement.spelunker:deaths10000=You will return it to life!
 achievement.spelunker:deaths10000.desc=The 10000th mistake
 achievement.spelunker:deaths20000=Too many mistakes
 achievement.spelunker:deaths20000.desc=The 20000th mistake
@@ -185,7 +213,8 @@ tile.spelunker:liftLauncher.name=Lift Launcher
 tile.spelunker:spelunkerPortal.name=Spelunker World Portal (Custom)
 tile.spelunker:spelunkerPortal.denied=Only owner can modify Spelunker Portal. Owner: %s
 tile.spelunker:spelunkerPortal.denied.unknown=Only owner can modify Spelunker Portal. Owner: someone offline
-tile.spelunker:spelunkerPortal.denied.inventory=Empty your inventory to enter Spelunker World.
+tile.spelunker:spelunkerPortal.denied.inventory=Empty your inventory to enter Spelunker World. (Only golden Spelunker statues are allowed)
+tile.spelunker:spelunkerPortal.denied.armor=Remove your armors to enter Spelunker World.
 tile.spelunker:spelunkerPortal2.name=Spelunker World Portal (Survival)
 tile.spelunker:startPoint.name=Start Point (For internal use)
 tile.spelunker:startPoint.desc=Don't use this! You can't remove it
@@ -345,6 +374,7 @@ Spelunker.mapPiece.pyramid3=Pyramid 3rd floor
 Spelunker.mapPiece.pyramidRoom=Pyramid Room
 
 Spelunker.ropeHelp=%1$s to climb, %2$s to descend, %1$s twice to leap
+Spelunker.elevatorHelp=Holding %1$s, %2$s to go up, %3$s to go down
 
 #
 # moody death cause
@@ -455,6 +485,10 @@ spe.nor.death.attack.worthyItemDropped=%1$s was slain by a curse of golden Spelu
 spe.nor.death.attack.glass=%1$s hurt with broken glass
 spe.nor.death.attack.mycelium=%1$s infected with mycelium
 spe.nor.death.attack.web=%1$s got stuck in a cobweb
+
+# mob death cause
+death.attack.flash=%1$s was exposed to a flash
+death.attack.flash.item=%1$s was exposed to a flash by %2$s
 
 #
 # Options

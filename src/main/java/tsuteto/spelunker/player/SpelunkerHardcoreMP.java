@@ -67,11 +67,11 @@ public class SpelunkerHardcoreMP extends SpelunkerNormalMP
     public boolean isSleepy = false;
     public boolean shouldCheckGS = false;
 
-    public SpelunkerHardcoreMP(SpelunkerPlayerMP spelunker, boolean isFirstLogin)
+    public SpelunkerHardcoreMP(SpelunkerPlayerMP spelunker, boolean init)
     {
         super(spelunker);
 
-        if (isFirstLogin)
+        if (init)
         {
             // Give golden statues
             this.giveGoldenSpelunkers();
@@ -117,7 +117,7 @@ public class SpelunkerHardcoreMP extends SpelunkerNormalMP
         int pz = MathHelper.floor_double(player.posZ);
         BiomeGenBase biome = player.worldObj.getBiomeGenForCoords(px, pz);
 
-        isRainHit = player.worldObj.canLightningStrikeAt(px, py + 1, pz);
+        isRainHit = player.worldObj.canLightningStrikeAt(px, py + (int)(player.posY + player.getEyeHeight()), pz);
         isSnowHit = this.isSnowHit(px, py, pz);
         isInColdPlace = biome.getEnableSnow();
         isInHighPlace = player.posY + player.getEyeHeight() > 85;
@@ -131,7 +131,8 @@ public class SpelunkerHardcoreMP extends SpelunkerNormalMP
         }
 
         // Dark place
-        if (player.worldObj.getBlockLightValue(px, (int)(player.posY + player.getEyeHeight()), pz) == 0)
+        if (!spelunker.isInSpelunkerWorld()
+                && player.worldObj.getBlockLightValue(px, (int)(player.posY + player.getEyeHeight()), pz) == 0)
         {
             ticksInDarkPlace++;
             if (ticksInDarkPlace > 600)

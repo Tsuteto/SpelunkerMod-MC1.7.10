@@ -187,9 +187,9 @@ public class MapPieces
     public static final MapPiece miracle = new MapPieceItem("miracle", 0x8dffff)
             .setItem(new ItemStack(SpelunkerItems.itemMiracle));
     public static final MapPiece gateKeyBlue = new MapPieceItem("gateKeyBlue", 0x0000e0)
-            .setItem(new ItemStack(SpelunkerItems.itemGateKey, 1, 11));
+            .setItem(new ItemStack(SpelunkerItems.itemGateKeyDrop, 1, 11));
     public static final MapPiece gateKeyRed = new MapPieceItem("gateKeyRed", 0xe00000)
-            .setItem(new ItemStack(SpelunkerItems.itemGateKey, 1, 14));
+            .setItem(new ItemStack(SpelunkerItems.itemGateKeyDrop, 1, 14));
 
     // Hidden Item
     public static final MapPiece itemSpawnPoint = new MapPieceItemSpawnPoint("itemSpawnPoint", 0x336650);

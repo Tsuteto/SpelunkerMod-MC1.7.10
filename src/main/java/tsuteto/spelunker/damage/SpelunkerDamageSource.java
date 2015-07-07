@@ -3,6 +3,7 @@ package tsuteto.spelunker.damage;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSourceIndirect;
 
 /**
  * DamageSource wrapper for Spelunker
@@ -72,5 +73,10 @@ public class SpelunkerDamageSource extends DamageSource
     public static DamageSource causeDamageOfPetKilled(EntityLivingBase pet)
     {
         return new EntityDamageSourcePetKilled("petKilled", pet);
+    }
+
+    public static DamageSource causeFlashDamage(Entity damageSource, Entity indirectEntity)
+    {
+        return new EntityDamageSourceIndirect("flash", damageSource, indirectEntity).setDamageBypassesArmor();
     }
 }

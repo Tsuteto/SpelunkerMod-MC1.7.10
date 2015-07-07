@@ -10,8 +10,6 @@ import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.constants.SpelunkerGameMode;
 import tsuteto.spelunker.constants.SpelunkerPacketType;
 import tsuteto.spelunker.gui.TitleController;
-import tsuteto.spelunker.player.SpelunkerHardcoreSP;
-import tsuteto.spelunker.player.SpelunkerNormalSP;
 import tsuteto.spelunker.player.SpelunkerPlayerSP;
 import tsuteto.spelunker.potion.SpelunkerPotion;
 import tsuteto.spelunker.sound.ModSound;
@@ -49,27 +47,29 @@ public class ClientPacketHandler extends CommonClientPacketHandler
                 spelunker.speLevelStartTime = data.readLong();
                 spelunker.speLevelFinishTime = data.readLong();
                 spelunker.isSpeLevelCleared = data.readBoolean();
+                spelunker.isSpeLevelCheated = data.readBoolean();
+                spelunker.speLevelBestTime = data.readInt();
                 spelunker.isReady = true;
                 spelunker.isInitializing = false;
-                if (spelunker.hardcore)
-                {
-                    spelunker.spelunkerExtra = new SpelunkerHardcoreSP(spelunker);
-                }
-                else
-                {
-                    spelunker.spelunkerExtra = new SpelunkerNormalSP(spelunker);
-                }
+                spelunker.setSpelunkerExtra();
                 TitleController.instance().clear();
                 break;
 
             case INIT_FAILED:
                 spelunker.isInitializing = false;
-                break;
+                 break;
 
             case DIM_CHANGE:
-                spelunker.speLevelStartTime = data.readLong();
+                spelunker.speLevelBestTime = data.readInt();
+                spelunker.isBestTime = false;
                 spelunker.isSpeLevelCleared = false;
+                spelunker.isSpeLevelCheated = false;
                 TitleController.instance().clear();
+                break;
+
+            case TOGGLE_HC:
+                spelunker.hardcore = data.readBoolean();
+                spelunker.setSpelunkerExtra();
                 break;
 
             case ENERGY:
@@ -138,34 +138,44 @@ public class ClientPacketHandler extends CommonClientPacketHandler
                 spelunker.isGhostComing = false;
                 break;
 
-            case GAMEOVER:
+            case GHOST_TARGETING:
+                spelunker.ghosts.add(entityPlayer.worldObj.getEntityByID(data.readInt()));
+                break;
+
+            case SET_HARDCORE:
                 spelunker.setDifficultyHardcore();
+                break;
+
+            case SPE_START:
+                spelunker.speLevelStartTime = data.readLong();
                 break;
 
             case SPE_CHECKPOINT:
                 {
                     int mainBonus = data.readInt();
                     int energyBonus = data.readInt();
-                    int time = data.readInt();
+                    int split = data.readInt();
+                    String dispSplit = spelunker.isSpeLevelCheated ?
+                            I18n.format("Spelunker.cheated") : Utils.formatTickToTime(split, true);
                     if (mainBonus > 0)
                     {
                         TitleController.instance().setTitle(
                                 I18n.format("Spelunker.checkpoint.title"),
                                 I18n.format("Spelunker.bonus.main", mainBonus),
                                 I18n.format("Spelunker.bonus.energy", energyBonus),
-                                I18n.format("Spelunker.bonus.split", Utils.formatTickToTime(time, true))
+                                I18n.format("Spelunker.bonus.split", dispSplit)
                         );
                     }
                     else
                     {
                         TitleController.instance().setTitle(
                                 I18n.format("Spelunker.checkpoint.title"),
-                                I18n.format("Spelunker.bonus.split", Utils.formatTickToTime(time, true))
+                                I18n.format("Spelunker.bonus.split", dispSplit)
                         );
                     }
                 }
 
-                if (SpelunkerMod.isBgmCheckPointAvailable)
+                if (SpelunkerBgm.isBgmCheckPointAvailable)
                 {
                     ModSound.interruptBgm(SpelunkerBgm.getCheckPoint());
                 }
@@ -175,32 +185,51 @@ public class ClientPacketHandler extends CommonClientPacketHandler
                 {
                     int mainBonus = data.readInt();
                     int energyBonus = data.readInt();
-                    int time = data.readInt();
+                    int splitTime = data.readInt();
+                    long finishTime = data.readLong();
+                    int totalTime = data.readInt();
+                    boolean isBestTime = data.readBoolean();
+
+                    String dispSplit = spelunker.isSpeLevelCheated ?
+                            I18n.format("Spelunker.cheated") : Utils.formatTickToTime(splitTime, true);
+                    String dispTotal = spelunker.isSpeLevelCheated ?
+                            I18n.format("Spelunker.cheated") : Utils.formatTickToTime(totalTime, true);
                     if (mainBonus > 0)
                     {
                         TitleController.instance().setTitle(
                                 I18n.format("Spelunker.speCleared.title"),
                                 I18n.format("Spelunker.bonus.main", mainBonus),
                                 I18n.format("Spelunker.bonus.energy", energyBonus),
-                                I18n.format("Spelunker.bonus.time", Utils.formatTickToTime(time, true))
+                                I18n.format("Spelunker.bonus.split", dispSplit),
+                                I18n.format("Spelunker.bonus.time", dispTotal)
                         );
                     }
                     else
                     {
                         TitleController.instance().setTitle(
                                 I18n.format("Spelunker.speCleared.title"),
-                                I18n.format("Spelunker.bonus.time", Utils.formatTickToTime(time, true))
+                                I18n.format("Spelunker.bonus.split", dispSplit),
+                                I18n.format("Spelunker.bonus.time", dispTotal)
                         );
+                    }
+
+                    spelunker.speLevelFinishTime = finishTime;
+                    spelunker.isSpeLevelCleared = true;
+                    spelunker.isBestTime = isBestTime;
+                    if (isBestTime)
+                    {
+                        spelunker.speLevelBestTime = totalTime;
                     }
                 }
 
-                spelunker.speLevelFinishTime = entityPlayer.worldObj.getTotalWorldTime();
-                spelunker.isSpeLevelCleared = true;
-
-                if (SpelunkerMod.isBgmAllCleardAvailable)
+                if (SpelunkerBgm.isBgmAllCleardAvailable)
                 {
                     ModSound.interruptBgm(SpelunkerBgm.getAllCleared());
                 }
+                break;
+
+            case SPE_CHEATED:
+                spelunker.isSpeLevelCheated = true;
                 break;
 
             case ALL_CLEARED:
@@ -218,7 +247,7 @@ public class ClientPacketHandler extends CommonClientPacketHandler
                             I18n.format("Spelunker.allCleared.title"));
                 }
 
-                if (SpelunkerMod.isBgmAllCleardAvailable)
+                if (SpelunkerBgm.isBgmAllCleardAvailable)
                 {
                     ModSound.interruptBgm(SpelunkerBgm.getAllCleared());
                 }

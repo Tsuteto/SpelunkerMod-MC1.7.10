@@ -45,9 +45,8 @@ import tsuteto.spelunker.constants.SpelunkerDifficulty;
 import tsuteto.spelunker.constants.SpelunkerGameMode;
 import tsuteto.spelunker.constants.SpelunkerPacketType;
 import tsuteto.spelunker.damage.SpelunkerDamageSource;
-import tsuteto.spelunker.data.ScoreManager;
-import tsuteto.spelunker.data.SpelunkerPlayerInfo;
-import tsuteto.spelunker.data.SpelunkerSaveHandler;
+import tsuteto.spelunker.data.*;
+import tsuteto.spelunker.dimension.SpelunkerLevelInfo;
 import tsuteto.spelunker.entity.EntityGhost;
 import tsuteto.spelunker.entity.EntitySpelunkerItem;
 import tsuteto.spelunker.entity.EntityStillBat;
@@ -96,6 +95,7 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
     public int gunInUseCount = 0;
     public int gunDamageCount = 0;
     public int energyAlertTime;
+    public boolean isRopeJumping = false;
 
     private SpelunkerPlayerInfo worldInfo;
     private SpelunkerSaveHandler saveHandler;
@@ -108,7 +108,7 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
     protected Random rand = new Random();
     private int prevExpLevel = -1;
     protected boolean aroundSurface = false;
-    protected GhostSpawnHandler ghostSpawnHandler = GhostSpawnHandler.create(this, this.rand);
+    protected GhostSpawnHandler ghostSpawnHandler = new GhostSpawnHandler(this, this.rand);
 
     private ItemStack[] mainInventoryToCarryover;
     private ItemStack[] armorInventoryToCarryover;
@@ -132,19 +132,22 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
             player.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(0.1D);
             player.setHealth(0.1f);
         }
+        else
+        {
+            player.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20.0D);
+        }
     }
 
     @Override
     public void afterLocalConstructing(MinecraftServer server, WorldServer world, GameProfile gameProfile, ItemInWorldManager itemInWorldManager)
     {
-        this.initSpelunker(gameProfile);
+        this.initSpelunker(world, gameProfile);
     }
 
     /**
      * Load Spelunker info for the world
      */
-    @Override
-    public void initSpelunker(GameProfile gameProfile)
+    public void initSpelunker(WorldServer world, GameProfile gameProfile)
     {
         UUID uuid = gameProfile.getId();
         try
@@ -180,19 +183,17 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
             this.livesLeft = worldInfo.getLives();
             this.spelunkerScore.load(worldInfo);
 
-            if (isHardcore())
-            {
-                this.spelunkerExtra = new SpelunkerHardcoreMP(this, isFirstLogin);
-            }
-            else
-            {
-                this.spelunkerExtra = new SpelunkerNormalMP(this);
-            }
+            this.setSpelunkerExtra(isFirstLogin);
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            ModLog.warn(e, "Caught an error in Spelunker initialization");
         }
+    }
+
+    public void initGhostSpawnHandler()
+    {
+        this.ghostSpawnHandler.initController(this, this.rand);
     }
 
     public int getMaxEnergy()
@@ -209,6 +210,8 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
     public void onLivingUpdate()
     {
         this.spelunkerExtra.beforeOnLivingUpdate();
+
+        this.checkSpelunkerLevelStarting();
 
         // Give an instant death on fall
         //ModLog.debug("fallDistance: %.2f", player.fallDistance);
@@ -395,6 +398,25 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
         {
             timeSpawnInv--;
         }
+
+        // Creative mode check
+        if (player.capabilities.isCreativeMode && this.isInSpelunkerWorld())
+        {
+            setSpelunkerLevelCheated();
+        }
+    }
+
+    public void setSpelunkerLevelCheated()
+    {
+        if (this.getWorldInfo().hasSpeLevelInfo())
+        {
+            SpeLevelPlayerInfo info = this.getWorldInfo().getSpeLevelInfo();
+            if (!info.isCheated())
+            {
+                info.setCheated();
+                SpelunkerPacketDispatcher.of(SpelunkerPacketType.SPE_CHEATED).sendPacketPlayer(player);
+            }
+        }
     }
 
     @Override
@@ -480,6 +502,24 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
     public boolean isWithinSpawnTimeInv()
     {
         return timeSpawnInv > 0;
+    }
+
+    private void checkSpelunkerLevelStarting()
+    {
+        // Start the Spelunker level
+        if (this.isInSpelunkerWorld() && this.getWorldInfo().hasSpeLevelInfo())
+        {
+            SpeLevelPlayerInfo info = this.getWorldInfo().getSpeLevelInfo();
+            if (!info.isStarted())
+            {
+                long startTime = player.worldObj.getTotalWorldTime();
+                info.setStartTime(startTime);
+                this.saveSpelunker();
+                SpelunkerPacketDispatcher.of(SpelunkerPacketType.SPE_START)
+                        .addLong(startTime)
+                        .sendPacketPlayer(player);
+            }
+        }
     }
 
     @Override
@@ -708,7 +748,7 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
     @Override
     public void afterOnDeath(DamageSource damagesource)
     {
-        boolean isSinglePlayer = MinecraftServer.getServer().isSinglePlayer();
+        boolean isSinglePlayer = SpelunkerMod.isSinglePlayer();
 
         if (player.ticksExisted > 1)
         {
@@ -737,16 +777,20 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
                 }
                 else
                 {
+                    // Game over
                     SpelunkerMod.setGameToBeFinished(true);
-                    new SpelunkerPacketDispatcher(SpelunkerPacketType.GAMEOVER).sendPacketPlayer(player);
+                    SpelunkerPacketDispatcher.of(SpelunkerPacketType.LIVES).addInt(-1).sendPacketPlayer(player);
                 }
             }
 
             if (!isSinglePlayer && SpelunkerMod.getGamemodeMulti() == SpelunkerGameMode.Arcade)
             {
-                new SpelunkerPacketDispatcher(SpelunkerPacketType.LIVES)
-                        .addInt(SpelunkerMod.getTotalLivesLeft())
-                        .sendPacketAll();
+                if (SpelunkerMod.getTotalLivesLeft() > 0)
+                {
+                    new SpelunkerPacketDispatcher(SpelunkerPacketType.LIVES)
+                            .addInt(SpelunkerMod.getTotalLivesLeft())
+                            .sendPacketAll();
+                }
             }
             else
             {
@@ -781,13 +825,6 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
             armorInventoryToCarryover = null;
         }
 
-        // Game over!
-        if (livesLeft < 0 && isSinglePlayer && this.gameMode == SpelunkerGameMode.Arcade)
-        {
-            setDifficultyHardcore();
-            new SpelunkerPacketDispatcher(SpelunkerPacketType.GAMEOVER).sendPacketPlayer(player);
-        }
-
         // Play sound
         if (this.gameMode == SpelunkerGameMode.Arcade && livesLeft < 0)
         {
@@ -801,9 +838,18 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
 
     public void banByGameover()
     {
-        BanEntry banentry = new UserListBansEntry(player.getGameProfile(), null, SpelunkerMod.modId, null, "Out of lives of spelunker");
-        MinecraftServer.getServer().getConfigurationManager().func_152608_h().func_152687_a(banentry);
-        player.playerNetServerHandler.kickPlayerFromServer("You missed too much. Game over, man, it\'s game over!");
+        MinecraftServer server = MinecraftServer.getServer();
+        if (server.isSinglePlayer() && player.getCommandSenderName().equals(server.getServerOwner()))
+        {
+            player.playerNetServerHandler.kickPlayerFromServer("You missed too much. Game over, man, it\'s game over!");
+            MinecraftServer.getServer().deleteWorldAndStopServer();
+        }
+        else
+        {
+            BanEntry banentry = new UserListBansEntry(player.getGameProfile(), null, SpelunkerMod.modId, null, "Out of lives of spelunker");
+            MinecraftServer.getServer().getConfigurationManager().func_152608_h().func_152687_a(banentry);
+            player.playerNetServerHandler.kickPlayerFromServer("You missed too much. Game over, man, it\'s game over!");
+        }
     }
 
     public void setDifficultyHardcore()
@@ -941,7 +987,7 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
 
     public void increaseLife(int i)
     {
-        if (!MinecraftServer.getServer().isSinglePlayer() && SpelunkerMod.getGamemodeMulti() == SpelunkerGameMode.Arcade)
+        if (!SpelunkerMod.isSinglePlayer() && SpelunkerMod.getGamemodeMulti() == SpelunkerGameMode.Arcade)
         {
             SpelunkerMod.increaseTotalLivesLeft(i);
 
@@ -1102,6 +1148,11 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
         timeSpeedPotion = i;
     }
 
+    public void eliminateGhosts()
+    {
+        ghostSpawnHandler.eliminate();
+    }
+
     public void saveSpelunker()
     {
         saveHandler.saveSpelunker(this);
@@ -1231,9 +1282,38 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
         ((SpelunkerHardcoreMP)spelunkerExtra).giveGoldenSpelunkers();
     }
 
+    public SpeLevelRecordInfo.Record getSpeLevelRecord()
+    {
+        return this.getSpeLevelRecord(player.dimension);
+    }
+
+    public SpeLevelRecordInfo.Record getSpeLevelRecord(int dimId)
+    {
+        SpelunkerLevelInfo levelInfo = SpelunkerMod.levelManager().getLevelInfo(dimId);
+        return levelInfo != null ? SpelunkerMod.recordManager().getRecord(player, levelInfo) : null;
+    }
+
+    public void registerSpeLevelRecord(int totalTime)
+    {
+        SpelunkerLevelInfo levelInfo = SpelunkerMod.levelManager().getLevelInfo(player.dimension);
+        SpelunkerMod.recordManager().registerRecord(levelInfo, player, totalTime);
+    }
+
     public <T extends ISpelunkerExtraMP> T getSpelunkerExtra()
     {
         return (T)this.spelunkerExtra;
+    }
+
+    public void setSpelunkerExtra(boolean isInit)
+    {
+        if (isHardcore())
+        {
+            this.spelunkerExtra = new SpelunkerHardcoreMP(this, isInit);
+        }
+        else
+        {
+            this.spelunkerExtra = new SpelunkerNormalMP(this);
+        }
     }
 
     @Override

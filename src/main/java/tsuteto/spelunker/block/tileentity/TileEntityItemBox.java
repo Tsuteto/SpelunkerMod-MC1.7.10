@@ -6,9 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.server.MinecraftServer;
 import tsuteto.spelunker.SpelunkerMod;
-import tsuteto.spelunker.init.SpelunkerItems;
 import tsuteto.spelunker.item.ItemEnergy;
 import tsuteto.spelunker.item.SpelunkerItem;
 
@@ -37,15 +35,13 @@ public class TileEntityItemBox extends TileEntityRespawnPoint
     {
         if (itemContained != null)
         {
-            if (MinecraftServer.getServer().isSinglePlayer())
+            if (SpelunkerMod.isSinglePlayer())
             {
-                return itemContained.getItem() == SpelunkerItems.itemGateKey
-                        || itemContained.getItem() instanceof SpelunkerItem ? SpelunkerMod.restorationTime : 200;
+                return itemContained.getItem() instanceof SpelunkerItem ? SpelunkerMod.restorationTime : 200;
             }
             else
             {
-                return itemContained.getItem() == SpelunkerItems.itemGateKey ? SpelunkerMod.restorationTime
-                        : itemContained.getItem() instanceof ItemEnergy ? 100
+                return itemContained.getItem() instanceof ItemEnergy ? 100
                         : itemContained.getItem() instanceof SpelunkerItem ? SpelunkerMod.restorationTime : 100;
             }
         }

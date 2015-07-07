@@ -45,8 +45,14 @@ public class ServerProxy implements ISidedProxy
     }
 
     @Override
-    public File getMapDataDir()
+    public File getDataDir(String name)
     {
-        return FMLServerHandler.instance().getServer().getFile(SpelunkerMod.levelMapFileDir);
+        return FMLServerHandler.instance().getServer().getFile(name);
+    }
+
+    @Override
+    public boolean isSinglePlayer()
+    {
+        return FMLServerHandler.instance().getServer().isSinglePlayer();
     }
 }

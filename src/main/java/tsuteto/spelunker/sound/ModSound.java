@@ -12,7 +12,7 @@ public class ModSound extends PositionedSound
 {
     private static net.minecraft.client.audio.SoundHandler soundHandler;
     private static ModSound bgmNowPlaying = null;
-    private static boolean isBgmAboutToPlay = false;
+    private static int ticksInterval = 0;
 
     public static void init()
     {
@@ -42,7 +42,7 @@ public class ModSound extends PositionedSound
         soundHandler.playSound(sound);
         SpelunkerBgm.addBgmPlaying(sound);
         bgmNowPlaying = sound;
-        isBgmAboutToPlay = true;
+        ticksInterval = 10;
     }
 
     public static void interruptBgm(ModSound sound)
@@ -54,7 +54,7 @@ public class ModSound extends PositionedSound
         soundHandler.playSound(sound);
         SpelunkerBgm.addBgmPlaying(sound);
         bgmNowPlaying = sound;
-        isBgmAboutToPlay = true;
+        ticksInterval = 10;
     }
 
 //    public static void playSound(ResourceLocation resourceLocation, double x, double y, double z, float volume, float pitch)
@@ -71,6 +71,7 @@ public class ModSound extends PositionedSound
             for (ModSound bgm : bgmList) soundHandler.stopSound(bgm);
         }
         SpelunkerBgm.bgmPlaying.remove(resLoc);
+        ticksInterval = 0;
     }
 
     public static void stopCurrentBgm()
@@ -106,17 +107,16 @@ public class ModSound extends PositionedSound
         if (bgmNowPlaying != null)
         {
             boolean playing = isReady() && soundHandler.isSoundPlaying(bgmNowPlaying);
-            if (!isBgmAboutToPlay && !playing)
+            if (ticksInterval == 0 && !playing)
             {
-                ModLog.debug("finished: " + bgmNowPlaying.getSoundLocation());
                 bgmNowPlaying = null;
             }
 
-            if (isBgmAboutToPlay && playing)
+            if (ticksInterval > 0 && playing)
             {
-                isBgmAboutToPlay = false;
+                ticksInterval = 0;
             }
-            if (isBgmAboutToPlay) ModLog.debug("BGM about to play!");
+            if (ticksInterval > 0) ticksInterval--;
         }
     }
 

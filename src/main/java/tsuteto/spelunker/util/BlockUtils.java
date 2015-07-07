@@ -1,13 +1,23 @@
 package tsuteto.spelunker.util;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 
 public class BlockUtils
 {
+    @SidedProxy(
+            serverSide = "tsuteto.spelunker.util.BlockUtils$CommonProxy",
+            clientSide = "tsuteto.spelunker.util.BlockUtils$ClientProxy")
+    private static CommonProxy proxy;
+
+
     public static int determineBlockOrientation6(World world, int x, int y, int z, EntityLivingBase entity)
     {
         // Following vanilla
@@ -54,5 +64,34 @@ public class BlockUtils
                 par2 + block.getBlockBoundsMaxX(),
                 par3 + block.getBlockBoundsMaxY(),
                 par4 + block.getBlockBoundsMaxZ());
+    }
+
+    public static void setInvisibleBlockBounds(Block block)
+    {
+        proxy.setBlockBounds(block);
+    }
+
+    public static class CommonProxy
+    {
+        public void setBlockBounds(Block block) {}
+    }
+
+    public static class ClientProxy extends CommonProxy
+    {
+        public void setBlockBounds(Block block)
+        {
+            if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+            {
+                EntityPlayer player = cpw.mods.fml.client.FMLClientHandler.instance().getClientPlayerEntity();
+                if (!player.capabilities.isCreativeMode)
+                {
+                    block.setBlockBounds(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
+                }
+                else
+                {
+                    block.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+                }
+            }
+        }
     }
 }

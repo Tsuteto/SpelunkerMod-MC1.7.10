@@ -23,6 +23,7 @@ Spelunker.bonus.main=BONUS: %s
 Spelunker.bonus.energy=ENERGY: %s
 Spelunker.bonus.split=SPLIT TIME: %s
 Spelunker.bonus.time=TOTAL TIME: %s
+Spelunker.deathScreen.info=残念、もうリスポーンできません！
 
 Spelunker.update.server=スペランカーMOD %1$sに更新しました! ダウンロード: %2$s
 Spelunker.update.client=§eスペランカーMOD§r §a%1$s§rに更新しました! %2$s
@@ -69,6 +70,12 @@ entity.flashBullet.name=発光体
 entity.flash.name=フラッシュ
 entity.ghost.name=ゴースト
 
+commands.sperank.usage=/sperank <sc|hisc|death> [ページ番号|all]
+commands.spehisc.usage=/spehisc [プレイヤー]
+commands.spedeath.usage=/spedeath [プレイヤー]
+commands.resetghost.usage=/resetghost
+commands.spehardcore.usage=/spehardcore <true|false>
+
 # achievements
 achievement.spelunker:death=はじめてのミス
 achievement.spelunker:death.desc=ミスする
@@ -76,10 +83,22 @@ achievement.spelunker:deaths50=ファイト!
 achievement.spelunker:deaths50.desc=ミス50回目
 achievement.spelunker:deaths100=ネバーギブアップ!
 achievement.spelunker:deaths100.desc=ミス100回目
-achievement.spelunker:deaths200=不屈の精神
+achievement.spelunker:deaths200=初志貫徹
 achievement.spelunker:deaths200.desc=ミス200回目
-achievement.spelunker:deaths500=失敗は成功の母
+achievement.spelunker:deaths300=不屈の精神
+achievement.spelunker:deaths300.desc=ミス300回目
+achievement.spelunker:deaths400=失敗は成功の母
+achievement.spelunker:deaths400.desc=ミス400回目
+achievement.spelunker:deaths500=不死鳥
 achievement.spelunker:deaths500.desc=ミス500回目
+achievement.spelunker:deaths600=不朽不滅
+achievement.spelunker:deaths600.desc=ミス600回目
+achievement.spelunker:deaths700=七転八起
+achievement.spelunker:deaths700.desc=ミス700回目
+achievement.spelunker:deaths800=不撓不屈
+achievement.spelunker:deaths800.desc=ミス800回目
+achievement.spelunker:deaths900=不退転の決意
+achievement.spelunker:deaths900.desc=ミス900回目
 achievement.spelunker:deaths1000=ミス常習者
 achievement.spelunker:deaths1000.desc=ミス1,000回目
 achievement.spelunker:deaths2000=ミス番長
@@ -90,7 +109,15 @@ achievement.spelunker:deaths4000=ミスの達人
 achievement.spelunker:deaths4000.desc=ミス4,000回目
 achievement.spelunker:deaths5000=ミスの巨匠
 achievement.spelunker:deaths5000.desc=ミス5,000回目
-achievement.spelunker:deaths10000=ミス・スペランカー?
+achievement.spelunker:deaths6000=ミス・スペランカー?
+achievement.spelunker:deaths6000.desc=ミス6,000回目
+achievement.spelunker:deaths7000=進捗どうですか?
+achievement.spelunker:deaths7000.desc=ミス7,000回目
+achievement.spelunker:deaths8000=歪みねぇな
+achievement.spelunker:deaths8000.desc=ミス8,000回目
+achievement.spelunker:deaths9000=スペランカーは滅びぬ
+achievement.spelunker:deaths9000.desc=ミス9,000回目
+achievement.spelunker:deaths10000=何度でも蘇るさ!
 achievement.spelunker:deaths10000.desc=ミス10,000回目
 achievement.spelunker:deaths20000=死にすぎ
 achievement.spelunker:deaths20000.desc=ミス20,000回目
@@ -169,7 +196,7 @@ achievement.spelunker:ghost.desc=ゴーストをブラスターで倒す
 achievement.spelunker:bomberMan=ボンバーマン
 achievement.spelunker:bomberMan.desc=ダイナマイトを爆発させる
 achievement.spelunker:mcSpelunker=スペランクラフト
-achievement.spelunker:mcSpelunker.desc=スペランカーヘルメットとスペランカーブラスターを身につけてガストやゴーストを倒す(スペランカーワールド以外で)
+achievement.spelunker:mcSpelunker.desc=スペランカーヘルメットとスペランカーブラスターを身につけてガストやゴーストを倒す
 achievement.spelunker:defeatDragon=スペランカー、マイクラ制覇
 achievement.spelunker:defeatDragon.desc=エンダードラゴンを倒す
 achievement.spelunker:defeatWither=ウィザー、スペランカーに屈する
@@ -185,7 +212,8 @@ tile.spelunker:liftLauncher.name=リフト射出マシン
 tile.spelunker:spelunkerPortal.name=スペランカーワールドポータル (カスタム)
 tile.spelunker:spelunkerPortal.denied=所有者のみスペランカポータルを変更できます。 所有者: %s
 tile.spelunker:spelunkerPortal.denied.unknown=所有者のみスペランカポータルを変更できます。 所有者: オフラインの誰か
-tile.spelunker:spelunkerPortal.denied.inventory=スペランカーワールドに入るにはインベントリを空にしてください。
+tile.spelunker:spelunkerPortal.denied.inventory=スペランカーワールドに入るにはインベントリを空にしてください。(金のスペランカー像はOK)
+tile.spelunker:spelunkerPortal.denied.armor=スペランカーワールドに入るには防具を外してください。
 tile.spelunker:spelunkerPortal2.name=スペランカーワールドポータル (サバイバル)
 tile.spelunker:startPoint.name=スタート地点 (内部使用)
 tile.spelunker:startPoint.desc=取り除けないので使用しないで!
@@ -342,6 +370,7 @@ Spelunker.mapPiece.pyramid3=ピラミッド3階
 Spelunker.mapPiece.pyramidRoom=ピラミッド部屋
 
 Spelunker.ropeHelp=%1$sで登る, %2$sで降りる, %1$sを2回で飛び移る
+Spelunker.elevatorHelp=%1$s押しながら%2$sで上がる, %3$sで下がる
 
 #
 # moody death cause
@@ -452,6 +481,10 @@ spe.nor.death.attack.worthyItemDropped=%1$sは金のスペランカー像を捨�
 spe.nor.death.attack.glass=%1$sはガラスの破片で力尽きた
 spe.nor.death.attack.mycelium=%1$sはキノコの菌に感染して力尽きた
 spe.nor.death.attack.web=%1$sはクモの巣に引っかかって身動きできなくなった
+
+# mob death cause
+death.attack.flash=%1$sは%2$sを浴びてかき消えた
+death.attack.flash.item=%1$sは%2$sの%3$sを浴びてかき消えた
 
 #
 # Options

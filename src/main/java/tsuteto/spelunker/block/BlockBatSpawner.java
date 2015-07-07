@@ -2,6 +2,7 @@ package tsuteto.spelunker.block;
 
 import com.google.common.collect.Lists;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
@@ -17,7 +18,7 @@ import tsuteto.spelunker.entity.EntityStillBat;
 import java.util.List;
 import java.util.Random;
 
-public class BlockBatSpawner extends BlockInsubstantial
+public class BlockBatSpawner extends BlockInvisible
 {
     public static final int MAX_BAT_SPAWN = 2;
 
@@ -72,7 +73,7 @@ public class BlockBatSpawner extends BlockInsubstantial
         }
     }
 
-    public void elimitateBats(World world, int x, int y, int z, DamageSource damageSource)
+    public void eliminateBats(World world, int x, int y, int z, DamageSource damageSource)
     {
         List<EntityStillBat> bats = this.getBatsBounded(world, x, y, z);
         for (EntityStillBat bat : bats)
@@ -87,7 +88,7 @@ public class BlockBatSpawner extends BlockInsubstantial
         List<EntityStillBat> list = Lists.newArrayList();
         for (Object o : world.loadedEntityList)
         {
-            if (o instanceof EntityStillBat && ((EntityStillBat) o).homePos.equals(blockCoord))
+            if (o instanceof EntityStillBat && blockCoord.equals(((EntityStillBat) o).homePos))
             {
                 list.add((EntityStillBat)o);
             }
@@ -108,5 +109,11 @@ public class BlockBatSpawner extends BlockInsubstantial
     public String getItemIconName()
     {
         return SpelunkerMod.resourceDomain + "batSpawner";
+    }
+
+    @Override
+    public void registerBlockIcons(IIconRegister p_149651_1_)
+    {
+        this.blockIcon = p_149651_1_.registerIcon(SpelunkerMod.resourceDomain + "transparent");
     }
 }

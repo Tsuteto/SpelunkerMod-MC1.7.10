@@ -5,6 +5,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import tsuteto.spelunker.SpelunkerMod;
 
+import java.io.File;
 import java.net.URL;
 
 public class Utils
@@ -77,5 +78,17 @@ public class Utils
         {
             return String.format("%d:%02d", min, sec);
         }
+    }
+
+    public static boolean renameFileSafely(File oldFile, File newFile)
+    {
+        return oldFile.exists() && oldFile.isFile() && !newFile.exists()
+                && oldFile.renameTo(newFile);
+    }
+
+    public static boolean renameDirectorySafely(File oldFile, File newFile)
+    {
+        return oldFile.exists() && oldFile.isDirectory() && !newFile.exists()
+                && oldFile.renameTo(newFile);
     }
 }

@@ -20,8 +20,8 @@ import java.util.List;
 
 public class EntitySteamHole extends Entity implements IEntityAdditionalSpawnData
 {
-    public static final int steamDuration = 60;
-    public static final int cycleTicks = 200;
+    public static final int steamDuration = 50;
+    public static final int cycleTicks = 100;
 
     public ForgeDirection dir;
     public int tileX;

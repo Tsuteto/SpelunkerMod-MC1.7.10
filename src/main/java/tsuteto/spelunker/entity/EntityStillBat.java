@@ -163,7 +163,7 @@ public class EntityStillBat extends EntityAmbientCreature
         {
             return false;
         }
-        else if (p_70097_1_.getSourceOfDamage() instanceof EntityGunBullet)
+        else if (!"flash".equals(p_70097_1_.damageType))
         {
             return false;
         }

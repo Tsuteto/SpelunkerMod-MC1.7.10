@@ -1,7 +1,6 @@
 package tsuteto.spelunker.data;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.constants.SpelunkerGameMode;
@@ -22,7 +21,7 @@ public class SpelunkerPlayerInfo
     private int lives;
     private boolean isDragonDefeated;
     private int goldenSpelunkers;
-    private SpeLevelInfo speLevel;
+    private SpeLevelPlayerInfo speLevel;
     private String playerName;
 
     public SpelunkerPlayerInfo(GameProfile profile)
@@ -54,7 +53,7 @@ public class SpelunkerPlayerInfo
 
         if (root.hasKey("spelvl"))
         {
-            speLevel = new SpeLevelInfo(root.getCompoundTag("spelvl"));
+            speLevel = new SpeLevelPlayerInfo(root.getCompoundTag("spelvl"));
         }
 
         if (mode.isEmpty())
@@ -173,14 +172,14 @@ public class SpelunkerPlayerInfo
         this.goldenSpelunkers += 1;
     }
 
-    public SpeLevelInfo getSpeLevelInfo()
+    public SpeLevelPlayerInfo getSpeLevelInfo()
     {
         return this.speLevel;
     }
 
-    public void createSpeLevelInfo(EntityPlayer player)
+    public void createSpeLevelInfo()
     {
-        this.speLevel = new SpeLevelInfo(player);
+        this.speLevel = new SpeLevelPlayerInfo();
     }
 
     public void discardSpeLevelInfo()

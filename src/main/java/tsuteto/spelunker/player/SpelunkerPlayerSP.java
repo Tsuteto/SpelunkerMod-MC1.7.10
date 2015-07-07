@@ -2,7 +2,7 @@ package tsuteto.spelunker.player;
 
 import api.player.client.ClientPlayerAPI;
 import api.player.client.ClientPlayerBase;
-import com.mojang.authlib.GameProfile;
+import com.google.common.collect.Lists;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.relauncher.ReflectionHelper;
@@ -66,6 +66,9 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
 
     public long speLevelStartTime = -1;
     public long speLevelFinishTime = -1;
+    public int speLevelBestTime = -1;
+    public boolean isBestTime = false;
+    public boolean isSpeLevelCheated = false;
     public boolean isSpeLevelCleared = false;
 
     private boolean isUsingEnergy = false;
@@ -80,6 +83,7 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
     public boolean isInvincible = false;
     private WatchBool statInvincible = new WatchBool(false);
 
+    public List<Entity> ghosts = Lists.newArrayList();
     public boolean isGhostComing = false;
     private WatchBool statGhostComing = new WatchBool(false);
 
@@ -88,7 +92,7 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
     private boolean prevGrabbingRope = false;
     public int ropeJumpToggleTimer = 0;
     public boolean prevJumpping = false;
-    public boolean isRopeJumpping = false;
+    public boolean isRopeJumping = false;
 
     public static Field fldEffectRendererFxLayers = ReflectionHelper.findField(EffectRenderer.class, "field_78876_b", "fxLayers");
     public static Field fldIsHittingBlock = ReflectionHelper.findField(PlayerControllerMP.class, "field_78778_j", "isHittingBlock");
@@ -202,7 +206,7 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
          */
         if (player.isEntityAlive())
         {
-            if (SpelunkerMod.isBgm2xScoreAvailable)
+            if (SpelunkerBgm.isBgm2xScoreAvailable)
             {
                 if (stat2xScore.checkVal(is2xScore()))
                 {
@@ -222,7 +226,7 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
                 }
             }
 
-            if (SpelunkerMod.isBgmInvincibleAvailable)
+            if (SpelunkerBgm.isBgmInvincibleAvailable)
             {
                 if (statInvincible.checkVal(isInvincible()))
                 {
@@ -242,7 +246,7 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
                 }
             }
 
-            if (SpelunkerMod.isBgmSpeedPotionAvailable)
+            if (SpelunkerBgm.isBgmSpeedPotionAvailable)
             {
                 if (statSpeedPotion.checkVal(isSpeedPotion()))
                 {
@@ -262,7 +266,7 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
                 }
             }
 
-            if (SpelunkerMod.isBgmGhostComingAvailable)
+            if (SpelunkerBgm.isBgmGhostComingAvailable)
             {
                 if (statGhostComing.checkVal(isGhostComing())
                         && (ModSound.getBgmNowPlaying() == null || !ModSound.bgmPlayingEquals(SpelunkerBgm.resLocCheckPoint)))
@@ -283,7 +287,7 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
                 }
             }
 
-            if (SpelunkerMod.isBgmMainAvailable)
+            if (SpelunkerBgm.isBgmMainAvailable)
             {
                 if (statInCave.checkVal(isUsingEnergy()) && !isUsingEnergy())
                 {
@@ -349,7 +353,7 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
         // Rope Handling
         if (isGrabbingRope)
         {
-            if (!isRopeJumpping)
+            if (!isRopeJumping)
             {
                 if (player.movementInput.jump)
                 {
@@ -361,8 +365,9 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
                 {
                     player.motionY = 0.0D;
                 }
-                player.motionX *= 0.2D;
-                player.motionZ *= 0.2D;
+                player.motionX *= 0.85D;
+                player.motionZ *= 0.85D;
+                player.fallDistance = 0.0F;
             }
 
             if (!prevJumpping && player.movementInput.jump)
@@ -378,7 +383,10 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
                     player.motionZ = (double)(MathHelper.cos(player.rotationYaw / 180.0F * (float)Math.PI) * f);
                     player.motionY = 0.25D;
                     ropeJumpToggleTimer = 0;
-                    isRopeJumpping = true;
+                    isRopeJumping = true;
+                    SpelunkerPacketDispatcher.of(SpelunkerPacketType.ROPE_JUMP)
+                            .addBool(true)
+                            .sendPacketToServer();
                 }
             }
             if (ropeJumpToggleTimer > 0)
@@ -399,7 +407,13 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
         }
         else
         {
-            isRopeJumpping = false;
+            if (isRopeJumping)
+            {
+                SpelunkerPacketDispatcher.of(SpelunkerPacketType.ROPE_JUMP)
+                        .addBool(false)
+                        .sendPacketToServer();
+            }
+            isRopeJumping = false;
             prevGrabbingRope = false;
         }
 
@@ -575,11 +589,6 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
     {
     }
 
-    @Override
-    public void initSpelunker(GameProfile gameProfile)
-    {
-    }
-
     public EntityPlayerSP player()
     {
         return player;
@@ -598,5 +607,22 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
     public boolean isInSpelunkerWorld()
     {
         return player.worldObj.provider instanceof WorldProviderSpelunker;
+    }
+
+    public boolean isGameOver()
+    {
+        return livesLeft < 0 && this.gameMode == SpelunkerGameMode.Arcade;
+    }
+
+    public void setSpelunkerExtra()
+    {
+        if (this.hardcore)
+        {
+            this.spelunkerExtra = new SpelunkerHardcoreSP(this);
+        }
+        else
+        {
+            this.spelunkerExtra = new SpelunkerNormalSP(this);
+        }
     }
 }

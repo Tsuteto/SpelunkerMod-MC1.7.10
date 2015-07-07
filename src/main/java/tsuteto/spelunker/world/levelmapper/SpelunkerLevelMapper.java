@@ -21,7 +21,7 @@ public class SpelunkerLevelMapper
         {
             if (mapInfo.source == MapSource.USER)
             {
-                this.loadMap(new File(SpelunkerMod.getMapDataDir(), mapInfo.fileName));
+                this.loadMap(new File(new File(SpelunkerMod.getSpelunkerDir(), SpelunkerMod.levelMapFileDir), mapInfo.fileName));
             }
             else if (mapInfo.source == MapSource.RESOURCE)
             {

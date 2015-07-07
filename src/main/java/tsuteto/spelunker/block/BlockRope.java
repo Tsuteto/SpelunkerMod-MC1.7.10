@@ -10,12 +10,14 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import tsuteto.spelunker.SpelunkerMod;
+import tsuteto.spelunker.player.SpelunkerPlayerMP;
 import tsuteto.spelunker.player.SpelunkerPlayerSP;
 
 import java.util.List;
@@ -78,12 +80,20 @@ public class BlockRope extends Block
             {
                 this.onClientControl((EntityPlayerSP)entity);
             }
+            else if (!entity.worldObj.isRemote && entity instanceof EntityPlayerMP)
+            {
+                SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer((EntityPlayer)entity);
+                if (spelunker != null && !spelunker.isRopeJumping)
+                {
+                    entity.fallDistance = 0.0F;
+                }
+            }
         }
         else if (entity instanceof EntityLivingBase)
         {
             entity.motionY = 0.0D;
+            entity.fallDistance = 0.0F;
         }
-        entity.fallDistance = 0.0F;
     }
 
     @SideOnly(Side.CLIENT)

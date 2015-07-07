@@ -15,6 +15,7 @@ public class ItemGateKeyDrop extends SpelunkerItem
 {
     public ItemGateKeyDrop()
     {
+        super(false);
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
     }
@@ -23,7 +24,7 @@ public class ItemGateKeyDrop extends SpelunkerItem
     public void giveEffect(ItemStack itemStack, World world, SpelunkerPlayerMP spelunker)
     {
         spelunker.player().inventory.addItemStackToInventory(new ItemStack(SpelunkerItems.itemGateKey, 1, itemStack.getItemDamage()));
-        spelunker.addSpelunkerScore(2000);
+        spelunker.addSpelunkerScore(itemStack.getItemDamage() == 14 ? 2000 : 1000);
         spelunker.playSound("spelunker:key", 1.0F, 1.0F);
     }
 

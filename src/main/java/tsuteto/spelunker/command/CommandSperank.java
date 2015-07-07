@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntityCommandBlock;
 import net.minecraft.util.ChatComponentText;
 import org.apache.commons.lang3.StringUtils;
@@ -92,7 +91,7 @@ public class CommandSperank extends CommandSpelunkerBase
     @Override
     public String getCommandUsage(ICommandSender par1ICommandSender)
     {
-        return "/sperank <sc|hisc|death> [page|all]";
+        return "commands.sperank.usage";
     }
 
     @Override
@@ -139,7 +138,7 @@ public class CommandSperank extends CommandSpelunkerBase
 
         // Obtain world info
         String[] entryList;
-        if (MinecraftServer.getServer().isSinglePlayer())
+        if (SpelunkerMod.isSinglePlayer())
         {
             entryList = new String[]{commandSender.getCommandSenderName()};
         }

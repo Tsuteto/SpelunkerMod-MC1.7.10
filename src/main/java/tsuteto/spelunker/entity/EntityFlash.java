@@ -3,8 +3,6 @@ package tsuteto.spelunker.entity;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.passive.EntityBat;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -12,6 +10,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import tsuteto.spelunker.block.BlockBatSpawner;
+import tsuteto.spelunker.damage.SpelunkerDamageSource;
 import tsuteto.spelunker.init.SpelunkerBlocks;
 
 import java.util.List;
@@ -58,52 +57,43 @@ public class EntityFlash extends EntityThrowable
     {
         EntityLivingBase thrower = this.getThrower();
 
-        if (thrower != null) {
-            if (var1 != null && var1.entityHit != null)
-            {
-                var1.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, thrower), 0);
-            }
+        if (var1 != null && var1.entityHit != null)
+        {
+            var1.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, thrower), 0);
+        }
 
-            // Attack bats around
-            List<Entity> entityList = this.worldObj.getEntitiesWithinAABBExcludingEntity(thrower, this.boundingBox.expand(15.0D, 10.0D, 15.0D));
-            for (Entity entity : entityList)
+        // Attack bats around
+        List<Entity> entityList = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.boundingBox.expand(15.0D, 10.0D, 15.0D));
+        for (Entity entity : entityList)
+        {
+            if (entity instanceof EntityLivingBase)
             {
-                if (entity instanceof EntityBat)
+                EntityLivingBase bat = (EntityLivingBase)entity;
+                if (bat.canEntityBeSeen(this))
                 {
-                    EntityLivingBase bat = (EntityLivingBase)entity;
-                    if (bat.canEntityBeSeen(this))
-                    {
-                        bat.attackEntityFrom(DamageSource.onFire, bat.getHealth());
-                    }
+                    bat.attackEntityFrom(SpelunkerDamageSource.causeFlashDamage(this, thrower), bat.getHealth());
                 }
             }
+        }
 
-            for (int i = -15; i < 15; i++)
+        for (int i = -15; i < 15; i++)
+        {
+            for (int j = -10; j < 10; j++)
             {
-                for (int j = -10; j < 10; j++)
+                for (int k = -15; k < 15; k++)
                 {
-                    for (int k = -15; k < 15; k++)
+                    int x = MathHelper.floor_double(this.posX + i);
+                    int y = MathHelper.floor_double(this.posY + j);
+                    int z = MathHelper.floor_double(this.posZ + k);
+                    Block block = this.worldObj.getBlock(x, y, z);
+                    if (block == SpelunkerBlocks.blockBatSpawner)
                     {
-                        int x = MathHelper.floor_double(this.posX + i);
-                        int y = MathHelper.floor_double(this.posY + j);
-                        int z = MathHelper.floor_double(this.posZ + k);
-                        Block block = this.worldObj.getBlock(x, y, z);
-                        if (block == SpelunkerBlocks.blockBatSpawner)
+                        MovingObjectPosition mop = worldObj.rayTraceBlocks(Vec3.createVectorHelper(this.posX, this.posY, this.posZ), Vec3.createVectorHelper(x, y, z));
+                        if (mop == null)
                         {
-                            MovingObjectPosition mop = worldObj.rayTraceBlocks(Vec3.createVectorHelper(this.posX, this.posY, this.posZ), Vec3.createVectorHelper(x, y, z));
-                            if (mop == null)
-                            {
-                                DamageSource dmgSrc;
-                                if (thrower instanceof EntityPlayer)
-                                {
-                                    dmgSrc = DamageSource.causePlayerDamage((EntityPlayer)thrower);
-                                }
-                                else
-                                {
-                                    dmgSrc = DamageSource.onFire;
-                                }
-                                ((BlockBatSpawner) block).elimitateBats(this.worldObj, x, y, z, dmgSrc);
-                            }
+                            DamageSource dmgSrc;
+                            dmgSrc = SpelunkerDamageSource.causeFlashDamage(this, thrower);
+                            ((BlockBatSpawner) block).eliminateBats(this.worldObj, x, y, z, dmgSrc);
                         }
                     }
                 }

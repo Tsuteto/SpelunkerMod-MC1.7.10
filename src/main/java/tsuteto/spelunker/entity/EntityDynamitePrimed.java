@@ -92,7 +92,7 @@ public class EntityDynamitePrimed extends Entity
     private void explode()
     {
         float f = 4.0F;
-        this.worldObj.createExplosion(this, this.posX, this.posY + 0.5D, this.posZ, f, true);
+        this.worldObj.createExplosion(this.placedBy, this.posX, this.posY + 0.5D, this.posZ, f, true);
     }
 
     protected void writeEntityToNBT(NBTTagCompound p_70014_1_)
@@ -109,10 +109,5 @@ public class EntityDynamitePrimed extends Entity
     public float getShadowSize()
     {
         return 0.0F;
-    }
-
-    public EntityLivingBase getPlacedBy()
-    {
-        return this.placedBy;
     }
 }

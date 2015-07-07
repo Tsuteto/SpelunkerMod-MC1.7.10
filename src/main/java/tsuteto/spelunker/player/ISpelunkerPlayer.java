@@ -1,6 +1,5 @@
 package tsuteto.spelunker.player;
 
-import com.mojang.authlib.GameProfile;
 import net.minecraft.util.DamageSource;
 import tsuteto.spelunker.data.ScoreManager;
 
@@ -12,8 +11,6 @@ import tsuteto.spelunker.data.ScoreManager;
  */
 public interface ISpelunkerPlayer
 {
-    void initSpelunker(GameProfile gameProfile);
-
     ScoreManager getSpelunkerScore();
 
     int getGunInUseCount();

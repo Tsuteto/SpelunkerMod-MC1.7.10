@@ -1,12 +1,9 @@
 package tsuteto.spelunker.block;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
+import tsuteto.spelunker.util.BlockUtils;
 
 public class BlockInvisible extends BlockInsubstantial
 {
@@ -21,21 +18,11 @@ public class BlockInvisible extends BlockInsubstantial
         this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
     }
 
+    @Override
     public void setBlockBoundsBasedOnState(IBlockAccess p_149719_1_, int p_149719_2_, int p_149719_3_, int p_149719_4_)
     {
-        this.setSelectedBoundingBox(p_149719_1_.getBlockMetadata(p_149719_2_, p_149719_3_, p_149719_4_));
-    }
-
-    public void setSelectedBoundingBox(int meta)
-    {
-        this.setBlockBounds(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getSelectedBoundingBoxFromPool(World p_149633_1_, int p_149633_2_, int p_149633_3_, int p_149633_4_)
-    {
-        this.setSelectedBoundingBox(p_149633_1_.getBlockMetadata(p_149633_2_, p_149633_3_, p_149633_4_));
-        return super.getSelectedBoundingBoxFromPool(p_149633_1_, p_149633_2_, p_149633_3_, p_149633_4_);
+        BlockUtils.setInvisibleBlockBounds(this);
+        super.setBlockBoundsBasedOnState(p_149719_1_, p_149719_2_, p_149719_3_, p_149719_4_);
     }
 
     @Override

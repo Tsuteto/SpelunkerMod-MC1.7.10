@@ -7,11 +7,17 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import org.lwjgl.opengl.GL11;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.constants.SpelunkerGameMode;
+import tsuteto.spelunker.entity.EntityGhost;
 import tsuteto.spelunker.player.SpelunkerPlayerSP;
 import tsuteto.spelunker.util.Utils;
 
@@ -26,6 +32,55 @@ public class ScreenRenderer
     private static final ResourceLocation texture = new ResourceLocation("spelunker", "textures/icons.png");
 
     private int airPointerPos = -1;
+
+    @SubscribeEvent
+    public void renderEntitySpecials(RenderLivingEvent.Post event)
+    {
+
+        if (event.entity instanceof EntityGhost)
+        {
+            Minecraft mc = FMLClientHandler.instance().getClient();
+            EntityPlayerSP player = mc.thePlayer;
+
+            if (!player.canEntityBeSeen(event.entity))
+            {
+                Gui gui = new Gui();
+                RenderManager renderManager = RenderManager.instance;
+
+                double x = event.x;
+                double y = event.y;
+                double z = event.z;
+                float f = 6.4F;
+                float f1 = 0.016666668F * f;
+
+                OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 0xf0, 0xf0);
+
+                GL11.glPushMatrix();
+                GL11.glTranslatef((float) x, (float) y + event.entity.height / 2 + 0.5F, (float) z);
+                GL11.glNormal3f(0.0F, 1.0F, 0.0F);
+                GL11.glRotatef(-renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
+                GL11.glRotatef(renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
+                GL11.glScalef(-f1, -f1, f1);
+                GL11.glDisable(GL11.GL_LIGHTING);
+                GL11.glTranslatef(0.0F, 0.25F / f1, 0.0F);
+                GL11.glDepthMask(false);
+                GL11.glDisable(GL11.GL_DEPTH_TEST);
+                GL11.glEnable(GL11.GL_BLEND);
+                OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+                GL11.glEnable(GL11.GL_TEXTURE_2D);
+                mc.getTextureManager().bindTexture(texture);
+                GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.75F);
+                Tessellator.instance.setBrightness(player.worldObj.getLightBrightnessForSkyBlocks((int) player.posX, (int) player.posY, (int) player.posZ, 15));
+                gui.drawTexturedModalRect(-8, -9, 90, 0, 17, 18);
+                GL11.glEnable(GL11.GL_DEPTH_TEST);
+                GL11.glDepthMask(true);
+                GL11.glEnable(GL11.GL_LIGHTING);
+                GL11.glDisable(GL11.GL_BLEND);
+                GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                GL11.glPopMatrix();
+            }
+        }
+    }
 
     @SubscribeEvent
     public void renderGameOverlay(RenderGameOverlayEvent.Text event)
@@ -49,17 +104,53 @@ public class ScreenRenderer
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         // TIME
-        if (spelunker.speLevelStartTime != -1)
+        if (spelunker.isInSpelunkerWorld() && spelunker.speLevelStartTime != -1)
         {
             long timeTo = spelunker.speLevelFinishTime != -1 ? spelunker.speLevelFinishTime : worldtime;
-            String str;
-            str = "TIME   " + Utils.formatTickToTime((int) (timeTo - spelunker.speLevelStartTime), spelunker.isSpeLevelCleared);
+            String dispTime, dispBest;
+            String color;
+            if (spelunker.isSpeLevelCleared && spelunker.isBestTime)
+            {
+                color = "§" + (char) ('a' + mc.theWorld.getTotalWorldTime() % 6);
+            }
+            else
+            {
+                color = "";
+            }
+            if (!spelunker.isSpeLevelCheated)
+            {
+                dispTime = color + Utils.formatTickToTime((int) (timeTo - spelunker.speLevelStartTime), spelunker.isSpeLevelCleared);
+            }
+            else
+            {
+                dispTime = "§8" + I18n.format("Spelunker.cheated");
+            }
+            dispBest = spelunker.speLevelBestTime != -1 ? color + Utils.formatTickToTime(spelunker.speLevelBestTime, true) : "--:--";
 
             boolean originalUnicodeFlag = fontrenderer.getUnicodeFlag();
             fontrenderer.setUnicodeFlag(false);
-            int w = fontrenderer.getStringWidth(str);
-            fontrenderer.drawStringWithShadow(str, guiW / 2 - w / 2, 20, 0xffffff);
+            int widthFull = fontrenderer.getStringWidth("TIME " + I18n.format("Spelunker.cheated"));
+            if (SpelunkerMod.isSinglePlayer())
+            {
+                int widthLegend = fontrenderer.getStringWidth("BEST");
+                int widthLegendTime = fontrenderer.getStringWidth("TIME");
+                fontrenderer.drawStringWithShadow("TIME", guiW / 2 - widthFull / 2 + widthLegend - widthLegendTime, 20, 0xffffff);
+                int widthTime = fontrenderer.getStringWidth(dispTime);
+                fontrenderer.drawStringWithShadow(dispTime, guiW / 2 + widthFull / 2 - widthTime, 20, 0xffffff);
+
+                int widthBest = fontrenderer.getStringWidth(dispBest);
+                fontrenderer.drawStringWithShadow("BEST", guiW / 2 - widthFull / 2, 8, 0xaaaacc);
+                fontrenderer.drawStringWithShadow(dispBest, guiW / 2 + widthFull / 2 - widthBest, 8, 0xaaaacc);
+            }
+            else
+            {
+                fontrenderer.drawStringWithShadow("TIME", guiW / 2 - widthFull / 2, 20, 0xffffff);
+                int widthTime = fontrenderer.getStringWidth(dispTime);
+                fontrenderer.drawStringWithShadow(dispTime, guiW / 2 + widthFull / 2 - widthTime, 20, 0xffffff);
+            }
             fontrenderer.setUnicodeFlag(originalUnicodeFlag);
+
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         }
 
         // STATUS

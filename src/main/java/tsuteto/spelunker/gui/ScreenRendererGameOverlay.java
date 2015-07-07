@@ -25,7 +25,7 @@ public class ScreenRendererGameOverlay
         if (!spelunker.isReady) return;
 
         // GAME OVER
-        if (mc.currentScreen instanceof GuiGameOver)
+        if (mc.currentScreen instanceof GuiGameOver || mc.currentScreen instanceof GuiSpeGameOver)
         {
             ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
             int guiW = scaledresolution.getScaledWidth();
@@ -41,7 +41,7 @@ public class ScreenRendererGameOverlay
                     && spelunker.spelunkerScore.scoreActual != 0 || spelunker.gameMode == SpelunkerGameMode.Arcade
                     && spelunker.livesLeft < 0)
             {
-                color = "§" + (char) ('a' + mc.theWorld.getWorldTime() % 6);
+                color = "§" + (char) ('a' + mc.theWorld.getTotalWorldTime() % 6);
             }
             else
             {

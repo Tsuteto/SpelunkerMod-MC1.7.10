@@ -10,6 +10,8 @@ import tsuteto.spelunker.data.SpelunkerPlayerInfo;
 import tsuteto.spelunker.data.SpelunkerSaveHandler;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
 
+import java.util.List;
+
 /**
  * Command base class for Spelunker Mod
  *
@@ -35,6 +37,16 @@ public abstract class CommandSpelunkerBase extends CommandBase
     protected EntityPlayer getOnlinePlayer(String par1Str)
     {
         return MinecraftServer.getServer().getConfigurationManager().func_152612_a(par1Str);
+    }
+
+    protected String[] getPlayers()
+    {
+        return MinecraftServer.getServer().getAllUsernames();
+    }
+
+    protected List getPlayerEntities()
+    {
+        return MinecraftServer.getServer().getConfigurationManager().playerEntityList;
     }
 
     protected SpelunkerPlayerInfo getWorldInfo(String par1Str)

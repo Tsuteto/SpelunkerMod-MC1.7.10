@@ -1,8 +1,10 @@
 package tsuteto.spelunker.eventhandler;
 
 import com.google.common.collect.Lists;
+import cpw.mods.fml.server.FMLServerHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import tsuteto.spelunker.constants.SpelunkerDifficulty;
 import tsuteto.spelunker.constants.SpelunkerPacketType;
@@ -11,35 +13,28 @@ import tsuteto.spelunker.network.SpelunkerPacketDispatcher;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
 import tsuteto.spelunker.util.ModLog;
 import tsuteto.spelunker.util.WatchBool;
+import tsuteto.spelunker.world.WorldProviderSpelunker;
 
 import java.util.List;
 import java.util.Random;
 
-public abstract class GhostSpawnHandler
+public class GhostSpawnHandler
 {
     public static List<EntityGhost> ghostList = Lists.newArrayList();
 
-    public static GhostSpawnHandler create(SpelunkerPlayerMP spelunker, Random rand)
-    {
-        if (spelunker.isInSpelunkerWorld())
-        {
-            return new GhostSpawnHandlerSpelunkerLevel(spelunker, rand);
-        }
-        else
-        {
-            return new GhostSpawnHandlerNormalWorld(spelunker, rand);
-        }
-    }
-
-    public static void resetGhostList(World world)
+    public static void resetGhostList()
     {
         ghostList.clear();
 
-        for (Object obj : world.getLoadedEntityList())
+        MinecraftServer server = FMLServerHandler.instance().getServer();
+        for (World world : server.worldServers)
         {
-            if (obj instanceof EntityGhost)
+            for (Object obj : world.getLoadedEntityList())
             {
-                ghostList.add((EntityGhost)obj);
+                if (obj instanceof EntityGhost)
+                {
+                    ghostList.add((EntityGhost) obj);
+                }
             }
         }
     }
@@ -49,6 +44,8 @@ public abstract class GhostSpawnHandler
         ghostList.clear();
     }
 
+    protected GhostSpawnController controller;
+
     protected EntityPlayer player;
     protected SpelunkerPlayerMP spelunker;
     protected Random rand;
@@ -57,12 +54,31 @@ public abstract class GhostSpawnHandler
     protected WatchBool statGhostComing;
     protected int timeUntilNextSpawn = -1;
 
-    protected GhostSpawnHandler(SpelunkerPlayerMP spelunker, Random rand)
+    public GhostSpawnHandler(SpelunkerPlayerMP spelunker, Random rand)
     {
         this.player = spelunker.player();
         this.spelunker = spelunker;
         this.rand = rand;
         this.statGhostComing = new WatchBool(isGhostComing);
+    }
+
+    public void initController(SpelunkerPlayerMP spelunker, Random rand)
+    {
+        GhostSpawnController prevController = this.controller;
+        if (spelunker.player().worldObj.provider instanceof WorldProviderSpelunker)
+        {
+            this.controller = new GhostSpawnControllerSpelunkerLevel(this, spelunker, rand);
+        }
+        else
+        {
+            this.controller = new GhostSpawnControllerNormalWorld(this, spelunker, rand);
+        }
+        ModLog.debug("GSH controller: %s", this.controller.getClass().getName());
+
+        if (prevController != null && this.controller.getClass() != prevController.getClass())
+        {
+            this.resetGhostSpawnTimer();
+        }
     }
 
     public void updateGhostStat()
@@ -74,7 +90,8 @@ public abstract class GhostSpawnHandler
         {
             if (isGhostComing)
             {
-                new SpelunkerPacketDispatcher(SpelunkerPacketType.GHOST_COMING).sendPacketPlayer(player);
+                new SpelunkerPacketDispatcher(SpelunkerPacketType.GHOST_COMING)
+                        .sendPacketPlayer(player);
             }
             else
             {
@@ -85,12 +102,14 @@ public abstract class GhostSpawnHandler
 
     public void spawnCheck()
     {
+        if (!controller.isSpawnValid()) return;
+
         double ghostSpawnRate = SpelunkerDifficulty.getSettings(player.worldObj).ghostSpawnRate;
-        if (player.isEntityAlive() && spelunker.isInCave() && ghostSpawnRate > 0 && !isGhostComing)
+        if (!player.capabilities.isCreativeMode && player.isEntityAlive() && spelunker.isInCave() && ghostSpawnRate > 0 && !isGhostComing)
         {
             if (timeUntilNextSpawn < 0)
             {
-                this.resetGhostSpawnTimer(ghostSpawnRate);
+                this.resetGhostSpawnTimer();
             }
             else
             {
@@ -121,15 +140,36 @@ public abstract class GhostSpawnHandler
         nbtTagCompound.setTag("Spelunker_Ghost", tag);
     }
 
-    public abstract boolean isGhostComing();
-
-    protected void resetGhostSpawnTimer(double ghostSpawnRate)
+    public boolean isGhostComing()
     {
+        return this.controller.isGhostComing();
+    }
+
+    public void resetGhostSpawnTimer()
+    {
+        double ghostSpawnRate = SpelunkerDifficulty.getSettings(player.worldObj).ghostSpawnRate;
         timeUntilNextSpawn = (int)(this.getTimeUntilNextSpawn() / ghostSpawnRate);
         ModLog.debug("Ghost spawns in %d", timeUntilNextSpawn);
     }
 
-    protected abstract int getTimeUntilNextSpawn();
+    protected int getTimeUntilNextSpawn()
+    {
+        return this.controller.getTimeUntilNextSpawn();
+    }
 
-    protected abstract boolean spawnGhost();
+    protected boolean spawnGhost()
+    {
+        return this.controller.spawnGhost();
+    }
+
+    public void eliminate()
+    {
+        for (EntityGhost ghost : ghostList)
+        {
+            if (this.player.equals(ghost.getAttackTarget()))
+            {
+                ghost.setDead();
+            }
+        }
+    }
 }

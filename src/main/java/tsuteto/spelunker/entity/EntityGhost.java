@@ -12,8 +12,10 @@ import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.achievement.AchievementMgr;
+import tsuteto.spelunker.constants.SpelunkerPacketType;
 import tsuteto.spelunker.eventhandler.GhostSpawnHandler;
 import tsuteto.spelunker.init.SpeAchievementList;
+import tsuteto.spelunker.network.SpelunkerPacketDispatcher;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
 import tsuteto.spelunker.util.PlayerUtils;
 
@@ -84,7 +86,12 @@ public class EntityGhost extends EntityCreature implements IMob
         if (this.entityToAttack == null)
         {
             this.entityToAttack = this.findPlayerToAttack();
-
+            if (this.entityToAttack != null)
+            {
+                SpelunkerPacketDispatcher.of(SpelunkerPacketType.GHOST_TARGETING)
+                        .addInt(this.getEntityId())
+                        .sendPacketPlayer((EntityPlayer)this.entityToAttack);
+            }
         }
         else if (this.entityToAttack.isEntityAlive())
         {
@@ -132,6 +139,7 @@ public class EntityGhost extends EntityCreature implements IMob
         {
             this.attackTime = 20;
             this.attackEntityAsMob(p_70785_1_);
+            // Note: Ghosts disappear in LivingEventHandler.onLivingAttack() because Spelunker takes damage just by touching
         }
     }
 
@@ -144,7 +152,7 @@ public class EntityGhost extends EntityCreature implements IMob
 
     protected EntityPlayer findPlayerToAttack()
     {
-        EntityPlayer entityplayer = PlayerUtils.getClosestVulnerableSpelunkerToEntity(this, 32.0D);
+        EntityPlayer entityplayer = PlayerUtils.getClosestVulnerableSpelunkerToEntity(this, 40.0D);
         return entityplayer;
     }
 

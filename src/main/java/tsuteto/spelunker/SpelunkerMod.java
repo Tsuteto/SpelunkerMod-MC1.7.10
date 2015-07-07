@@ -21,14 +21,9 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import tsuteto.spelunker.blockaspect.BlockAspectHC;
-import tsuteto.spelunker.command.CommandResetGhost;
-import tsuteto.spelunker.command.CommandSpedeath;
-import tsuteto.spelunker.command.CommandSpehisc;
-import tsuteto.spelunker.command.CommandSperank;
+import tsuteto.spelunker.command.*;
 import tsuteto.spelunker.constants.SpelunkerGameMode;
-import tsuteto.spelunker.data.SpelunkerGeneralInfo;
-import tsuteto.spelunker.data.SpelunkerSaveHandler;
-import tsuteto.spelunker.data.SpelunkerSaveHandlerWorld;
+import tsuteto.spelunker.data.*;
 import tsuteto.spelunker.dimension.SpelunkerLevelManager;
 import tsuteto.spelunker.eventhandler.*;
 import tsuteto.spelunker.gui.ScreenRendererGameOverlay;
@@ -46,6 +41,7 @@ import tsuteto.spelunker.potion.SpelunkerPotion;
 import tsuteto.spelunker.sidedproxy.ISidedProxy;
 import tsuteto.spelunker.util.ModLog;
 import tsuteto.spelunker.util.UpdateNotification;
+import tsuteto.spelunker.util.Utils;
 import tsuteto.spelunker.world.SpelunkerBiomes;
 import tsuteto.spelunker.world.WorldProviderSpelunker;
 import tsuteto.spelunker.world.gen.WorldGenEventHandler;
@@ -60,15 +56,16 @@ import java.util.UUID;
  * @author Tsuteto
  *
  */
-@Mod(modid = SpelunkerMod.modId, useMetadata = true, version = "3.0.0b2-MC1.7.10",
-        acceptedMinecraftVersions = "[1.7.2,1.8)",
+@Mod(modid = SpelunkerMod.modId, useMetadata = true, version = "3.0.0b3-MC1.7.10",
+        //acceptedMinecraftVersions = "[1.7.2,1.8)",
         guiFactory = "tsuteto.spelunker.config.SpeConfigGuiFactory")
 public class SpelunkerMod
 {
     public static final String modId = "SpelunkerMod";
     public static final String resourceDomain = "spelunker:";
 
-    public static final String levelMapFileDir = "Spelunker Maps";
+    public static String spelunkerDir = "spelunker-mod";
+    public static final String levelMapFileDir = "maps";
 
     @Mod.Instance(modId)
     public static SpelunkerMod instance;
@@ -92,14 +89,6 @@ public class SpelunkerMod
 
     public static final int restorationTime = 36000;
 
-    public static boolean isBgmMainAvailable = false;
-    public static boolean isBgm2xScoreAvailable = false;
-    public static boolean isBgmInvincibleAvailable = false;
-    public static boolean isBgmSpeedPotionAvailable = false;
-    public static boolean isBgmGhostComingAvailable = false;
-    public static boolean isBgmCheckPointAvailable = false;
-    public static boolean isBgmAllCleardAvailable = false;
-
     public static Map<UUID, EntityPlayerMP> deadPlayerStorage = Maps.newHashMap();
 
     public static ChestGenHooks hardcoreBonusChest;
@@ -118,6 +107,7 @@ public class SpelunkerMod
     private SpelunkerGeneralInfo worldInfo = null;
     private SpelunkerLevelManager levelManager = null;
     private SpelunkerMapManager mapManager = null;
+    private SpeLevelRecordManager recordManager = null;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
@@ -127,7 +117,14 @@ public class SpelunkerMod
 
         ModInfo.load(metadata);
 
-        this.renameConfigFile(event.getSuggestedConfigurationFile());
+        // Create Spelunker data directory
+        if (!getSpelunkerDir().exists() && !getSpelunkerDir().mkdir())
+        {
+            throw new RuntimeException("Failed to create Spelunker Mod's data directory at: " + getSpelunkerDir().getAbsolutePath());
+        }
+
+        this.migrate(event.getSuggestedConfigurationFile());
+
         Configuration cfg = new Configuration(event.getSuggestedConfigurationFile());
         this.settings = new Settings(cfg, event.getSide());
         UpdateNotification.initialize(metadata);
@@ -197,16 +194,23 @@ public class SpelunkerMod
         DimensionManager.registerProviderType(settings.dimTypeId, WorldProviderSpelunker.class, false);
 
         // Spelunker Level Map Manager
-        mapManager = new SpelunkerMapManager(getMapDataDir());
+        mapManager = new SpelunkerMapManager(new File(getSpelunkerDir(), levelMapFileDir));
+
+        // Spelunker Record
+        SpelunkerSaveHandlerRecords saveHandlerRecords = new SpelunkerSaveHandlerRecords(getSpelunkerDir());
+        this.recordManager = saveHandlerRecords.loadData();
     }
 
-    private void renameConfigFile(File newCfg)
+    private void migrate(File newCfg)
     {
+        // Config file
         File oldCfg = new File(newCfg.getParent(), "SpelunkerMod2.cfg");
-        if (oldCfg.exists() && oldCfg.isFile() && !newCfg.exists())
-        {
-            oldCfg.renameTo(newCfg);
-        }
+        Utils.renameFileSafely(oldCfg, newCfg);
+
+        // Spelunker Maps
+        File oldMapDir = sidedProxy.getDataDir("Spelunker Maps");
+        File newMapDir = new File(getSpelunkerDir(), levelMapFileDir);
+        Utils.renameDirectorySafely(oldMapDir, newMapDir);
     }
 
     @Mod.EventHandler
@@ -223,40 +227,28 @@ public class SpelunkerMod
     }
 
     @Mod.EventHandler
-    public void onFMLServerAboutToStart(FMLServerAboutToStartEvent event)
-    {
-    }
-
-    @Mod.EventHandler
     public void onServerStarting(FMLServerStartingEvent event)
     {
         event.registerServerCommand(new CommandSpehisc());
         event.registerServerCommand(new CommandSpedeath());
         event.registerServerCommand(new CommandSperank());
         event.registerServerCommand(new CommandResetGhost());
+        event.registerServerCommand(new CommandSpeHardcore());
 
         // Set up SaveHandler for players
         SaveHandler saveHandler = (SaveHandler)event.getServer().worldServerForDimension(0).getSaveHandler();
 
         SpelunkerSaveHandler spelunkerSaveHandler = new SpelunkerSaveHandler(saveHandler.getWorldDirectory(), event.getServer().isSinglePlayer());
-
         this.saveHandler = spelunkerSaveHandler;
 
         // Set up SaveHandler for world
         SpelunkerSaveHandlerWorld worldSaveHandler = new SpelunkerSaveHandlerWorld(saveHandler.getWorldDirectory());
         this.saveHandlerWorld = worldSaveHandler;
+        this.worldInfo = worldSaveHandler.loadData();
 
-        worldInfo = worldSaveHandler.loadData();
-        if (worldInfo == null)
-        {
-            worldInfo = new SpelunkerGeneralInfo();
-            saveHandlerWorld.saveData(worldInfo);
-            ModLog.debug("World general info newly generated");
-        }
-
-        // Set up SpelunkerLevelManager
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
         {
+            // Set up SpelunkerLevelManager
             levelManager = new SpelunkerLevelManager(settings.dimTypeId, saveHandler.getWorldDirectory());
             levelManager.loadLevelData();
             levelManager.registerAll();
@@ -276,6 +268,7 @@ public class SpelunkerMod
         levelManager = null;
 
         GhostSpawnHandler.onWorldClosed();
+        deadPlayerStorage.clear();
 
         saveHandler = null;
         saveHandlerWorld = null;
@@ -376,6 +369,16 @@ public class SpelunkerMod
         return instance.mapManager;
     }
 
+    public static SpeLevelRecordManager recordManager()
+    {
+        return instance.recordManager;
+    }
+
+    public static boolean isSinglePlayer()
+    {
+        return sidedProxy.isSinglePlayer();
+    }
+
     /**
      * This is server-side use only!
      */
@@ -384,8 +387,8 @@ public class SpelunkerMod
         return instance.worldInfo.hardcore;
     }
 
-    public static File getMapDataDir()
+    public static File getSpelunkerDir()
     {
-        return sidedProxy.getMapDataDir();
+        return sidedProxy.getDataDir(SpelunkerMod.spelunkerDir);
     }
 }

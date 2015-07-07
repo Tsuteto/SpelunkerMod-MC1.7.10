@@ -1,5 +1,6 @@
 package tsuteto.spelunker.potion;
 
+import com.google.common.collect.Lists;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.potion.Potion;
 import tsuteto.spelunker.SpelunkerMod;
@@ -13,6 +14,7 @@ public class SpelunkerPotion
 {
     public static Potion choked;
     public static Potion heatStroke;
+    public static List<Integer> assignedIDs = Lists.newArrayList();
     public static List<Potion> disabledPotionList = new ArrayList<Potion>();
 
     public static void register()
@@ -51,8 +53,9 @@ public class SpelunkerPotion
         for (int i = Potion.potionTypes.length - 1; i >= 0; i--)
         {
             Potion potion = Potion.potionTypes[i];
-            if (potion == null)
+            if (potion == null && !assignedIDs.contains(i))
             {
+                assignedIDs.add(i);
                 return i;
             }
         }

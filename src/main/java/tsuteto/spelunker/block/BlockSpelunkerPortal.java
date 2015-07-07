@@ -22,6 +22,7 @@ import tsuteto.spelunker.block.tileentity.TileEntitySpelunkerPortalStatue;
 import tsuteto.spelunker.dimension.DimensionRegenerator;
 import tsuteto.spelunker.dimension.SpelunkerDimensionTeleportation;
 import tsuteto.spelunker.gui.SpelunkerGuiHandler;
+import tsuteto.spelunker.init.SpelunkerItems;
 import tsuteto.spelunker.levelmap.SpelunkerMapInfo;
 import tsuteto.spelunker.levelmap.SpelunkerMapManager;
 import tsuteto.spelunker.util.PlayerUtils;
@@ -160,21 +161,8 @@ public class BlockSpelunkerPortal extends BlockContainer4Directions
     {
         if (!player.capabilities.isCreativeMode)
         {
-            boolean isInventoryEmpty = true;
-
-            // Inventory check
-            for (ItemStack itemStack : player.inventory.mainInventory)
+            if (!checkInventory(player))
             {
-                if (itemStack != null)
-                {
-                    isInventoryEmpty = false;
-                    break;
-                }
-            }
-
-            if (!isInventoryEmpty)
-            {
-                player.addChatComponentMessage(new ChatComponentTranslation("tile.spelunker:spelunkerPortal.denied.inventory"));
                 return;
             }
         }
@@ -183,6 +171,51 @@ public class BlockSpelunkerPortal extends BlockContainer4Directions
         PlayerUtils.updatePlayerSpawnPoint(world, x, y, z, player);
         SpelunkerDimensionTeleportation.transferPlayerToDimension((EntityPlayerMP) player, te.levelInfo.dimId);
     }
+
+    public static boolean checkInventory(EntityPlayer player)
+    {
+        // Inventory
+        boolean isInventoryValid = true;
+        for (ItemStack itemStack : player.inventory.mainInventory)
+        {
+            if (itemStack != null && itemStack.getItem() != SpelunkerItems.itemGoldenStatue)
+            {
+                isInventoryValid = false;
+                break;
+            }
+        }
+
+        if (!isInventoryValid)
+        {
+            player.addChatComponentMessage(new ChatComponentTranslation("tile.spelunker:spelunkerPortal.denied.inventory"));
+        }
+
+        // Armor
+        boolean isArmorValid = true;
+        for (int i = 0; i < player.inventory.armorInventory.length; i++)
+        {
+            ItemStack itemStack = player.inventory.armorInventory[i];
+//            if (i == 3)
+//            {
+//                if (itemStack != null && itemStack.getItem() != SpelunkerItems.itemHelmet)
+//                {
+//                    isArmorValid = false;
+//                }
+//            }
+//            else
+//            {
+//                if (itemStack != null) isArmorValid = false;
+//            }
+            if (itemStack != null) isArmorValid = false;
+        }
+        if (!isArmorValid)
+        {
+            player.addChatComponentMessage(new ChatComponentTranslation("tile.spelunker:spelunkerPortal.denied.armor"));
+        }
+
+        return isInventoryValid && isArmorValid;
+    }
+
 
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLivingBase, ItemStack itemStack)

@@ -32,7 +32,10 @@ public class SpelunkerSaveHandlerWorld extends ModSaveHandler
         }
         else
         {
-            return null;
+            SpelunkerGeneralInfo worldInfo = new SpelunkerGeneralInfo();
+            this.saveData(worldInfo);
+            ModLog.debug("World general info newly generated");
+            return worldInfo;
         }
     }
 

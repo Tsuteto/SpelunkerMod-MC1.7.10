@@ -5,14 +5,16 @@ public class SpelunkerMapInfo
     public MapSource source;
     public String fileName;
     public String mapName;
+    public long revision;
 
     public SpelunkerMapInfo() {}
 
-    public SpelunkerMapInfo(MapSource source, String fileName, String mapName)
+    public SpelunkerMapInfo(MapSource source, String fileName, String mapName, long revision)
     {
         this.source = source;
         this.fileName = fileName;
         this.mapName = mapName;
+        this.revision = revision;
     }
 
     @Override

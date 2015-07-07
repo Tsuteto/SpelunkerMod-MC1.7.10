@@ -6,31 +6,34 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.List;
 
-public class SpeLevelInfo
+public class SpeLevelPlayerInfo
 {
     private long startTime;
+    private long cpTime;
     private long finishTime;
     private boolean isCheated;
 
     private List<Byte> passedCheckPoints = Lists.newArrayList();
     private boolean isCleared;
 
-    public SpeLevelInfo(NBTTagCompound nbt)
+    public SpeLevelPlayerInfo(NBTTagCompound nbt)
     {
         this.readFromNBT(nbt);
     }
 
-    public SpeLevelInfo(EntityPlayer player)
+    public SpeLevelPlayerInfo()
     {
-        startTime = player.worldObj.getTotalWorldTime();
-        finishTime = -1;
-        isCheated = player.worldObj.getWorldInfo().areCommandsAllowed();
-        isCleared = false;
+        this.startTime = -1;
+        this.cpTime = -1;
+        this.finishTime = -1;
+        this.isCheated = false;
+        this.isCleared = false;
     }
 
     private void readFromNBT(NBTTagCompound nbt)
     {
         this.startTime = nbt.getLong("starttime");
+        this.cpTime = nbt.getLong("cptime");
         this.finishTime = nbt.getLong("finishtime");
         this.isCheated = nbt.getBoolean("cheated");
         this.isCleared = nbt.getBoolean("cleared");
@@ -46,6 +49,7 @@ public class SpeLevelInfo
     {
         NBTTagCompound stat = new NBTTagCompound();
         stat.setLong("starttime", startTime);
+        stat.setLong("cptime", cpTime);
         stat.setLong("finishtime", finishTime);
         stat.setBoolean("cheated", isCheated);
 
@@ -62,26 +66,26 @@ public class SpeLevelInfo
 
     public boolean isCheckPointPassed(int no)
     {
-        return passedCheckPoints.contains((byte)no);
+        return this.passedCheckPoints.contains((byte)no);
     }
 
     public int getCheckPointCount()
     {
-        return passedCheckPoints.size();
+        return this.passedCheckPoints.size();
     }
 
     public void setCheckPointPassed(int no)
     {
         Byte b = (byte)no;
-        if (!passedCheckPoints.contains(b))
+        if (!this.passedCheckPoints.contains(b))
         {
-            passedCheckPoints.add(b);
+            this.passedCheckPoints.add(b);
         }
     }
 
     public boolean isCleared()
     {
-        return isCleared;
+        return this.isCleared;
     }
 
     public void setCleared(boolean isCleared)
@@ -94,15 +98,28 @@ public class SpeLevelInfo
         return this.startTime;
     }
 
+    public void setStartTime(long startTime)
+    {
+        this.startTime = startTime;
+    }
+
     public long getFinishTime()
     {
         return this.finishTime;
     }
 
-    public int getTimeElapsed(EntityPlayer player)
+    public int markSplitTime(EntityPlayer player)
     {
-        long timeTo = finishTime != -1 ? finishTime : player.worldObj.getTotalWorldTime();
-        return (int)(timeTo - startTime);
+        long timeFrom = this.cpTime != -1 ? this.cpTime : this.startTime;
+        int splitTime = (int)(player.worldObj.getTotalWorldTime() - timeFrom);
+        this.cpTime = player.worldObj.getTotalWorldTime();
+        return splitTime;
+    }
+
+    public int getTotalTime(EntityPlayer player)
+    {
+        long timeTo = this.finishTime != -1 ? this.finishTime : player.worldObj.getTotalWorldTime();
+        return (int)(timeTo - this.startTime);
     }
 
     public void setFinishTime(long tick)
@@ -113,5 +130,15 @@ public class SpeLevelInfo
     public boolean isCheated()
     {
         return this.isCheated;
+    }
+
+    public void setCheated()
+    {
+        this.isCheated = true;
+    }
+
+    public boolean isStarted()
+    {
+        return this.startTime != -1;
     }
 }

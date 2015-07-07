@@ -2,7 +2,6 @@ package tsuteto.spelunker.sound;
 
 import com.google.common.collect.Maps;
 import net.minecraft.util.ResourceLocation;
-import tsuteto.spelunker.SpelunkerMod;
 
 import java.util.LinkedList;
 import java.util.Map;
@@ -16,6 +15,14 @@ public class SpelunkerBgm
     public static final ResourceLocation resLocGhostComing = new ResourceLocation("spelunker:ghost_bgm");
     public static final ResourceLocation resLocCheckPoint = new ResourceLocation("spelunker:checkpoint");
     public static final ResourceLocation resLocAllCleared = new ResourceLocation("spelunker:allcleared");
+
+    public static boolean isBgmMainAvailable = false;
+    public static boolean isBgm2xScoreAvailable = false;
+    public static boolean isBgmInvincibleAvailable = false;
+    public static boolean isBgmSpeedPotionAvailable = false;
+    public static boolean isBgmGhostComingAvailable = false;
+    public static boolean isBgmCheckPointAvailable = false;
+    public static boolean isBgmAllCleardAvailable = false;
 
     public static final Map<ResourceLocation, LinkedList<ModSound>> bgmPlaying = Maps.newHashMap();
 
@@ -73,6 +80,6 @@ public class SpelunkerBgm
 
     private static float getVolume()
     {
-        return SpelunkerMod.isBgmMainAvailable ? 1.0F : 0.75F;
+        return isBgmMainAvailable ? 1.0F : 0.75F;
     }
 }

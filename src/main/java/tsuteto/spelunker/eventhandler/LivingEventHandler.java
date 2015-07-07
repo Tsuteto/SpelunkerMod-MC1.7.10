@@ -95,7 +95,7 @@ public class LivingEventHandler
         DamageSource source = event.source;
 
         // Ghost is forced to disappear
-        if (source.getDamageType().equals("mob") && source.getEntity() instanceof EntityGhost)
+        if ("mob".equals(source.getDamageType()) && source.getEntity() instanceof EntityGhost)
         {
             source.getEntity().setDead();
         }

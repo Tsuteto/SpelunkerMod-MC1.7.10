@@ -46,7 +46,10 @@ public class BlockItemBox extends BlockRespawnPoint
         if (te.itemContained != null)
         {
             Item item = te.itemContained.getItem();
-            return entity instanceof EntityPlayer && item instanceof SpelunkerItem && item != SpelunkerItems.itemGateKey;
+            return entity instanceof EntityPlayer
+                    && !te.isHidden
+                    && item instanceof SpelunkerItem
+                    && item != SpelunkerItems.itemGateKeyDrop;
         }
         else
         {
@@ -59,7 +62,7 @@ public class BlockItemBox extends BlockRespawnPoint
     {
         super.onEntityCollidedWithBlock(p_149670_1_, p_149670_2_, p_149670_3_, p_149670_4_, p_149670_5_);
 
-        if (!p_149670_1_.isRemote && p_149670_5_ instanceof EntityPlayer)
+        if (p_149670_5_ instanceof EntityPlayer)
         {
             onItemTaken(p_149670_1_, p_149670_2_, p_149670_3_, p_149670_4_, (EntityPlayer)p_149670_5_);
         }
@@ -69,28 +72,32 @@ public class BlockItemBox extends BlockRespawnPoint
     {
         if (player.capabilities.isCreativeMode) return;
 
-        SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(player);
-        if (spelunker != null)
+        TileEntityItemBox te = (TileEntityItemBox) world.getTileEntity(x, y, z);
+        if (te != null && te.isItemAvailable())
         {
-            TileEntityItemBox te = (TileEntityItemBox)world.getTileEntity(x, y, z);
-            if (te != null && te.isItemAvailable())
+            boolean taken;
+            if (te.itemContained.getItem() instanceof SpelunkerItem)
             {
-                boolean taken;
-                if (te.itemContained.getItem() instanceof SpelunkerItem)
+                if (!world.isRemote)
                 {
-                    ((SpelunkerItem) te.itemContained.getItem()).giveEffect(te.itemContained.copy(), player.worldObj, spelunker);
-                    taken = true;
+                    SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(player);
+                    if (spelunker != null)
+                    {
+                        ((SpelunkerItem) te.itemContained.getItem()).giveEffect(te.itemContained.copy(), player.worldObj, spelunker);
+                    }
                 }
-                else
-                {
-                    taken = player.inventory.addItemStackToInventory(te.itemContained.copy());
-                }
+                taken = true;
+            }
+            else
+            {
+                taken = player.inventory.addItemStackToInventory(te.itemContained.copy());
+            }
 
-                if (taken)
-                {
-                    te.onItemTaken();
-                    world.playSoundAtEntity(player, "random.pop", 0.2F, ((player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.7F + 1.0F) * 2.0F);
-                }
+            if (taken)
+            {
+                te.onItemTaken();
+                world.playSoundAtEntity(player, "random.pop", 0.2F, ((player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.7F + 1.0F) * 2.0F);
+                player.inventory.markDirty();
             }
         }
     }

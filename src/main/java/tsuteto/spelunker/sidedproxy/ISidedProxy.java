@@ -12,5 +12,6 @@ public interface ISidedProxy
     void registerComponent(SpelunkerMod mod);
     void registerTextureFile(String filepath);
     void checkBgmSoundFile();
-    File getMapDataDir();
+    File getDataDir(String name);
+    boolean isSinglePlayer();
 }

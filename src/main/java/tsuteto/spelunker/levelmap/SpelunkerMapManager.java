@@ -13,7 +13,8 @@ import java.util.Map;
 
 public class SpelunkerMapManager
 {
-    public static final SpelunkerMapInfo SPELUNKER_MAP = new SpelunkerMapInfo(MapSource.RESOURCE, "SpelunkerMap.png", "Famicom Spelunker Map");
+    public static final SpelunkerMapInfo SPELUNKER_MAP = new SpelunkerMapInfo(MapSource.RESOURCE,
+            "SpelunkerMap.png", "Famicom Spelunker Map", 1L);
     public static final String[] SAMPLE_FILES = new String[]{"Sample Map.png"};
 
     private Map<String, SpelunkerMapInfo> fileNameToInfoMapping = Maps.newHashMap();
@@ -71,7 +72,10 @@ public class SpelunkerMapManager
 
         for (File file : files)
         {
-            SpelunkerMapInfo info = new SpelunkerMapInfo(MapSource.USER, file.getName(), Utils.removeFileExtension(file.getName()));
+            SpelunkerMapInfo info = new SpelunkerMapInfo(MapSource.USER,
+                    file.getName(),
+                    Utils.removeFileExtension(file.getName()),
+                    file.lastModified());
             this.addMap(info);
         }
     }

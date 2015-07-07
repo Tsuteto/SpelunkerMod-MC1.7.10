@@ -12,11 +12,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldProvider;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.achievement.AchievementMgr;
 import tsuteto.spelunker.constants.SpelunkerPacketType;
 import tsuteto.spelunker.damage.SpelunkerDamageSource;
+import tsuteto.spelunker.data.SpeLevelRecordInfo;
 import tsuteto.spelunker.data.SpelunkerPlayerInfo;
 import tsuteto.spelunker.dimension.SpelunkerLevelManagerClient;
 import tsuteto.spelunker.init.SpeAchievementList;
@@ -75,6 +77,9 @@ public class PlayerEventHandler
                 .addInt(SpelunkerPotion.choked.id)
                 .addInt(SpelunkerPotion.heatStroke.id)
                 .sendPacketPlayer(event.player);
+
+        SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(event.player);
+        if (spelunker != null) spelunker.initGhostSpawnHandler();
     }
 
     @SubscribeEvent
@@ -120,26 +125,36 @@ public class PlayerEventHandler
                 if (worldProviderTo instanceof WorldProviderSpelunker)
                 {
                     // Give a blaster
-                    event.player.inventory.addItemStackToInventory(new ItemStack(SpelunkerItems.itemGunSpeWorld));
+                    inventory.addItemStackToInventory(new ItemStack(SpelunkerItems.itemGunSpeWorld));
                     AchievementMgr.achieve(event.player, SpeAchievementList.Key.speWorld);
                 }
+
+                MinecraftServer.getServer().getConfigurationManager().syncPlayerInventory((EntityPlayerMP)player);
             }
 
             SpelunkerPlayerInfo worldInfo = spelunker.getWorldInfo();
             if (worldProviderTo instanceof WorldProviderSpelunker)
             {
                 // Set info
-                worldInfo.createSpeLevelInfo(player);
+                SpeLevelRecordInfo.Record bestRecord = spelunker.getSpeLevelRecord(event.toDim);
+                int bestTime = bestRecord != null ? bestRecord.time : -1;
+                worldInfo.createSpeLevelInfo();
                 SpelunkerPacketDispatcher.of(SpelunkerPacketType.DIM_CHANGE)
-                        .addLong(player.worldObj.getTotalWorldTime());
+                        .addInt(bestTime)
+                        .sendPacketPlayer(player);
             }
             else
             {
                 // Discard info
                 worldInfo.discardSpeLevelInfo();
                 SpelunkerPacketDispatcher.of(SpelunkerPacketType.DIM_CHANGE)
-                        .addLong(-1);
+                        .addLong(-1)
+                        .addInt(-1)
+                        .sendPacketPlayer(player);
             }
+
+            // GhostSpawnHandler
+            spelunker.initGhostSpawnHandler();
         }
     }
 
@@ -152,7 +167,7 @@ public class PlayerEventHandler
         {
             SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(player);
 
-            if (!MinecraftServer.getServer().isSinglePlayer() && SpelunkerMod.isGameToBeFinished())
+            if (!SpelunkerMod.isSinglePlayer() && SpelunkerMod.isGameToBeFinished())
             {
                 spelunker.banByGameover();
             }
@@ -166,6 +181,8 @@ public class PlayerEventHandler
                     spelunker.onRespawn(deadPlayer);
                     SpelunkerMod.deadPlayerStorage.remove(player.getUniqueID());
                 }
+
+                spelunker.initGhostSpawnHandler();
             }
         }
     }
@@ -181,6 +198,19 @@ public class PlayerEventHandler
             {
                 EntityPlayer player = event.entityPlayer;
                 player.attackEntityFrom(SpelunkerDamageSource.itemDestroy, 1.0f);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onCommandExecution(CommandEvent event)
+    {
+        if (SpelunkerMod.isSinglePlayer() && event.sender instanceof EntityPlayer)
+        {
+            SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer((EntityPlayer)event.sender);
+            if (spelunker != null && spelunker.isInSpelunkerWorld())
+            {
+                spelunker.setSpelunkerLevelCheated();
             }
         }
     }

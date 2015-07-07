@@ -3,7 +3,6 @@ package tsuteto.spelunker.block.tileentity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.init.SpelunkerItems;
 
@@ -23,7 +22,7 @@ public class TileEntityItemBoxHidden extends TileEntityItemBox
 
     public int getItemRespawnTime()
     {
-        if (MinecraftServer.getServer().isSinglePlayer())
+        if (SpelunkerMod.isSinglePlayer())
         {
             return SpelunkerMod.restorationTime;
         }

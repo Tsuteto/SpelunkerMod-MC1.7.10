@@ -1,10 +1,15 @@
 package tsuteto.spelunker.network.packet;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import tsuteto.spelunker.entity.EntityElevator;
+import tsuteto.spelunker.gui.TitleController;
 import tsuteto.spelunker.network.AbstractPacket;
 import tsuteto.spelunker.network.MessageToClient;
 import tsuteto.spelunker.util.ModLog;
@@ -60,6 +65,16 @@ public class PacketElevatorControlCl extends AbstractPacket implements MessageTo
                 EntityElevator elevator = (EntityElevator) entity;
                 elevator.controlledBy = (EntityPlayer)elevator.worldObj.getEntityByID(controllerEntityId);
                 ModLog.debug("Elevator connected on client");
+
+                Minecraft mc = FMLClientHandler.instance().getClient();
+                if (this.controllerEntityId == mc.thePlayer.getEntityId())
+                {
+                    GameSettings gamesettings = mc.gameSettings;
+                    String sneakKey = GameSettings.getKeyDisplayString(gamesettings.keyBindSneak.getKeyCode());
+                    String forwardKey = GameSettings.getKeyDisplayString(gamesettings.keyBindForward.getKeyCode());
+                    String backKey = GameSettings.getKeyDisplayString(gamesettings.keyBindBack.getKeyCode());
+                    TitleController.instance().setInstruction(I18n.format("Spelunker.elevatorHelp", sneakKey, forwardKey, backKey));
+                }
             }
         }
         else

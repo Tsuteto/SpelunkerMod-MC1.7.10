@@ -5,17 +5,18 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.blockaspect.BlockAspectHC;
 import tsuteto.spelunker.constants.SpelunkerGameMode;
 import tsuteto.spelunker.constants.SpelunkerPacketType;
 import tsuteto.spelunker.damage.SpelunkerDamageSource;
-import tsuteto.spelunker.data.SpeLevelInfo;
+import tsuteto.spelunker.data.SpeLevelPlayerInfo;
+import tsuteto.spelunker.data.SpeLevelRecordInfo;
 import tsuteto.spelunker.network.SpelunkerPacketDispatcher;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
 import tsuteto.spelunker.potion.SpelunkerPotion;
+import tsuteto.spelunker.util.ModLog;
 
 /**
  * Handles network packets on server side
@@ -28,7 +29,8 @@ public class ServerPacketHandler
 
     public void onPacketData(ByteBuf data, EntityPlayer player)
     {
-        SpelunkerPlayerMP spelunkerMp = SpelunkerMod.getSpelunkerPlayer((EntityPlayerMP)player);
+        EntityPlayerMP playermp = (EntityPlayerMP)player;
+        SpelunkerPlayerMP spelunkerMp = SpelunkerMod.getSpelunkerPlayer(playermp);
         if (spelunkerMp == null) return;
 
         SpelunkerPacketType packetType = SpelunkerPacketType.values()[data.readByte()];
@@ -43,7 +45,7 @@ public class ServerPacketHandler
                 response.addBool(SpelunkerMod.isHardcore());
                 response.addInt(spelunkerMp.deaths);
 
-                if (!MinecraftServer.getServer().isSinglePlayer() && SpelunkerMod.settings().gameMode == SpelunkerGameMode.Arcade)
+                if (!SpelunkerMod.isSinglePlayer() && SpelunkerMod.settings().gameMode == SpelunkerGameMode.Arcade)
                 {
                     response.addInt(SpelunkerMod.getTotalLivesLeft());
                 }
@@ -56,18 +58,23 @@ public class ServerPacketHandler
                 response.addInt(spelunkerMp.spelunkerScore.hiscore);
                 response.addInt(spelunkerMp.getMaxEnergy());
                 response.addInt(spelunkerMp.getSpawnTimeInv());
-                if (spelunkerMp.getWorldInfo().hasSpeLevelInfo())
+                if (spelunkerMp.isInSpelunkerWorld() && spelunkerMp.getWorldInfo().hasSpeLevelInfo())
                 {
-                    SpeLevelInfo levelInfo = spelunkerMp.getWorldInfo().getSpeLevelInfo();
+                    SpeLevelPlayerInfo levelInfo = spelunkerMp.getWorldInfo().getSpeLevelInfo();
                     response.addLong(levelInfo.getStartTime());
                     response.addLong(levelInfo.getFinishTime());
                     response.addBool(levelInfo.isCleared());
+                    response.addBool(levelInfo.isCheated());
+                    SpeLevelRecordInfo.Record record = spelunkerMp.getSpeLevelRecord();
+                    response.addInt(record != null ? record.time : -1);
                 }
                 else
                 {
                     response.addLong(-1);
                     response.addLong(-1);
                     response.addBool(false);
+                    response.addBool(false);
+                    response.addInt(-1);
                 }
                 response.sendPacketPlayer(player);
 
@@ -107,6 +114,7 @@ public class ServerPacketHandler
             }
             catch (NullPointerException e)
             {
+                ModLog.warn(e, "Failed to response for INIT");
                 new SpelunkerPacketDispatcher(SpelunkerPacketType.INIT_FAILED).sendPacketPlayer(player);
             }
 
@@ -117,11 +125,11 @@ public class ServerPacketHandler
             break;
 
         case DMG_FIREWORKS:
-            ((EntityPlayerMP)player).attackEntityFrom(DamageSource.onFire, 1.0F);
+            player.attackEntityFrom(DamageSource.onFire, 1.0F);
             break;
 
         case DMG_HARDBLOCK:
-            ((EntityPlayerMP)player).attackEntityFrom(SpelunkerDamageSource.hardBlock, 1.0F);
+            player.attackEntityFrom(SpelunkerDamageSource.hardBlock, 1.0F);
             break;
 
         case DMG_BLOCKHITTING:
@@ -129,15 +137,23 @@ public class ServerPacketHandler
             Block block = Block.getBlockById(blockId);
             if (block != null)
             {
-                BlockAspectHC.applyDamage((EntityPlayerMP)player, block, BlockAspectHC.Aspect.Undiggable);
+                BlockAspectHC.applyDamage(player, block, BlockAspectHC.Aspect.Undiggable);
             }
             break;
 
         case CHOKED:
-            ((EntityPlayerMP)player).addPotionEffect(new PotionEffect(SpelunkerPotion.choked.id, 600, 0));
+            player.addPotionEffect(new PotionEffect(SpelunkerPotion.choked.id, 600, 0));
             break;
 
-        default:
+        case ROPE_JUMP:
+            spelunkerMp.isRopeJumping = data.readBoolean();
+            break;
+
+        case GAMEOVER:
+            spelunkerMp.banByGameover();
+            break;
+
+            default:
             break;
         }
     }

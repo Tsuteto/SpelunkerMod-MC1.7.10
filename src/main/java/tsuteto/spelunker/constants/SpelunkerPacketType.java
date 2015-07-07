@@ -13,6 +13,7 @@ public enum SpelunkerPacketType {
     INIT_SUCCEEDED(Side.CLIENT),
 	INIT_FAILED(Side.CLIENT),
     DIM_CHANGE(Side.CLIENT),
+    TOGGLE_HC(Side.CLIENT),
 
 	ENERGY(Side.CLIENT),
 	LIVES(Side.CLIENT),
@@ -37,21 +38,26 @@ public enum SpelunkerPacketType {
     GHOST_COMING(Side.CLIENT),
     GHOST_GONE(Side.CLIENT),
 
-    GAMEOVER(Side.CLIENT),
+    SET_HARDCORE(Side.CLIENT),
+    GAMEOVER(Side.SERVER),
+    ALL_CLEARED(Side.CLIENT),
+
+    SPE_START(Side.CLIENT),
     SPE_CHECKPOINT(Side.CLIENT),
     SPE_CLEARED(Side.CLIENT),
-    ALL_CLEARED(Side.CLIENT),
+    SPE_CHEATED(Side.CLIENT),
 
     CHOKED(Side.SERVER),
     HOP(Side.CLIENT),
+    ROPE_JUMP(Side.SERVER),
     CHECK_POTION_ID(Side.CLIENT),
     RESET_GS(Side.CLIENT),
+    GHOST_TARGETING(Side.CLIENT),
 
     DMG_FIREWORKS(Side.SERVER),
     DMG_HARDBLOCK(Side.SERVER),
     DMG_VILLAGER(Side.CLIENT),
-    DMG_BLOCKHITTING(Side.SERVER),
-    ;
+    DMG_BLOCKHITTING(Side.SERVER);
 
     public final Side messageTo;
 
