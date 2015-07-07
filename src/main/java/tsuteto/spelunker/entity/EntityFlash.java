@@ -3,6 +3,7 @@ package tsuteto.spelunker.entity;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -63,10 +64,10 @@ public class EntityFlash extends EntityThrowable
         }
 
         // Attack bats around
-        List<Entity> entityList = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.boundingBox.expand(15.0D, 10.0D, 15.0D));
+        List<Entity> entityList = this.worldObj.getEntitiesWithinAABBExcludingEntity(thrower, this.boundingBox.expand(15.0D, 10.0D, 15.0D));
         for (Entity entity : entityList)
         {
-            if (entity instanceof EntityLivingBase)
+            if (entity instanceof EntityBat)
             {
                 EntityLivingBase bat = (EntityLivingBase)entity;
                 if (bat.canEntityBeSeen(this))

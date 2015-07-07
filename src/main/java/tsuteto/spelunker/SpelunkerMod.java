@@ -56,7 +56,7 @@ import java.util.UUID;
  * @author Tsuteto
  *
  */
-@Mod(modid = SpelunkerMod.modId, useMetadata = true, version = "3.0.0b3-MC1.7.10",
+@Mod(modid = SpelunkerMod.modId, useMetadata = true, version = "3.0.0b4-MC1.7.10",
         //acceptedMinecraftVersions = "[1.7.2,1.8)",
         guiFactory = "tsuteto.spelunker.config.SpeConfigGuiFactory")
 public class SpelunkerMod
