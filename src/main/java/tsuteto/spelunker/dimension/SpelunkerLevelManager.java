@@ -134,6 +134,10 @@ public class SpelunkerLevelManager
         {
             if (DimensionManager.isDimensionRegistered(dimId))
             {
+                if (DimensionManager.getWorld(dimId) != null)
+                {
+                    DimensionManager.setWorld(dimId, null);
+                }
                 DimensionManager.unregisterDimension(dimId);
             }
         }

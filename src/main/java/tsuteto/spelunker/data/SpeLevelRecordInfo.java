@@ -68,6 +68,11 @@ public class SpeLevelRecordInfo
         records.put(player.getUniqueID(), record);
     }
 
+    public boolean clearRecord(EntityPlayer player)
+    {
+        return records.remove(player.getUniqueID()) != null;
+    }
+
     public NBTTagCompound getNBTTagCompound()
     {
         NBTTagCompound nbt = new NBTTagCompound();

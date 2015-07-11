@@ -3,6 +3,7 @@ package tsuteto.spelunker.data;
 import com.google.common.collect.Lists;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChunkCoordinates;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ public class SpeLevelPlayerInfo
     private long cpTime;
     private long finishTime;
     private boolean isCheated;
+    private ChunkCoordinates respawn;
 
     private List<Byte> passedCheckPoints = Lists.newArrayList();
     private boolean isCleared;
@@ -36,6 +38,11 @@ public class SpeLevelPlayerInfo
         this.cpTime = nbt.getLong("cptime");
         this.finishTime = nbt.getLong("finishtime");
         this.isCheated = nbt.getBoolean("cheated");
+        if (nbt.hasKey("respawn"))
+        {
+            NBTTagCompound respawn = nbt.getCompoundTag("respawn");
+            this.respawn = new ChunkCoordinates(respawn.getInteger("x"), respawn.getInteger("y"), respawn.getInteger("z"));
+        }
         this.isCleared = nbt.getBoolean("cleared");
 
         byte[] chkpts = nbt.getByteArray("chkpts");
@@ -52,6 +59,14 @@ public class SpeLevelPlayerInfo
         stat.setLong("cptime", cpTime);
         stat.setLong("finishtime", finishTime);
         stat.setBoolean("cheated", isCheated);
+        if (this.respawn != null)
+        {
+            NBTTagCompound respawn = new NBTTagCompound();
+            respawn.setInteger("x", this.respawn.posX);
+            respawn.setInteger("y", this.respawn.posY);
+            respawn.setInteger("z", this.respawn.posZ);
+            stat.setTag("respawn", respawn);
+        }
 
         stat.setBoolean("cleared", isCleared);
         byte[] chkpts = new byte[passedCheckPoints.size()];
@@ -140,5 +155,15 @@ public class SpeLevelPlayerInfo
     public boolean isStarted()
     {
         return this.startTime != -1;
+    }
+
+    public void setRespawnPoint(ChunkCoordinates coord)
+    {
+        this.respawn = coord;
+    }
+
+    public ChunkCoordinates getRespawnPoint()
+    {
+        return this.respawn;
     }
 }

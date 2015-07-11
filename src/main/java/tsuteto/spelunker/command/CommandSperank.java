@@ -6,6 +6,9 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntityCommandBlock;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
 import org.apache.commons.lang3.StringUtils;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.data.SpelunkerPlayerInfo;
@@ -25,7 +28,7 @@ public class CommandSperank extends CommandSpelunkerBase
 {
     enum Type
     {
-        hisc("High Score", new Comparator<RankingRow>()
+        hisc(new Comparator<RankingRow>()
         {
             @Override
             public int compare(RankingRow a, RankingRow b)
@@ -35,7 +38,7 @@ public class CommandSperank extends CommandSpelunkerBase
                 return val2.compareTo(val1);
             }
         }),
-        sc("Current Score", new Comparator<RankingRow>()
+        sc(new Comparator<RankingRow>()
         {
             @Override
             public int compare(RankingRow a, RankingRow b)
@@ -45,7 +48,7 @@ public class CommandSperank extends CommandSpelunkerBase
                 return val2.compareTo(val1);
             }
         }),
-        death("Number of Deaths", new Comparator<RankingRow>()
+        death(new Comparator<RankingRow>()
         {
             @Override
             public int compare(RankingRow a, RankingRow b)
@@ -56,13 +59,11 @@ public class CommandSperank extends CommandSpelunkerBase
             }
         });
 
-        public String title;
         public Comparator<RankingRow> comparator;
 
-        Type(String title, Comparator<RankingRow> comparator)
+        Type(Comparator<RankingRow> comparator)
         {
             this.comparator = comparator;
-            this.title = title;
         }
     }
 
@@ -160,27 +161,31 @@ public class CommandSperank extends CommandSpelunkerBase
                 if (player != null)
                 {
                     SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(player);
-                    if (spelunker == null) continue;
-                    rankingData.username = entryName;
-                    rankingData.deaths = spelunker.getDeaths();
-                    rankingData.sc = spelunker.getSpelunkerScore().scoreActual;
-                    rankingData.hisc = spelunker.getSpelunkerScore().hiscore;
+                    if (spelunker != null)
+                    {
+                        rankingData.username = entryName;
+                        rankingData.deaths = spelunker.getDeaths();
+                        rankingData.sc = spelunker.getSpelunkerScore().scoreActual;
+                        rankingData.hisc = spelunker.getSpelunkerScore().hiscore;
+                    }
                 }
                 else
                 {
                     SpelunkerPlayerInfo worldInfo = getWorldInfo(entryName);
-                    if (worldInfo == null) continue;
-                    if (StringUtils.isNotEmpty(worldInfo.getPlayerName()))
+                    if (worldInfo != null)
                     {
-                        rankingData.username = worldInfo.getPlayerName();
+                        if (StringUtils.isNotEmpty(worldInfo.getPlayerName()))
+                        {
+                            rankingData.username = worldInfo.getPlayerName();
+                        }
+                        else
+                        {
+                            rankingData.username = entryName;
+                        }
+                        rankingData.deaths = worldInfo.getDeaths();
+                        rankingData.sc = worldInfo.getScore();
+                        rankingData.hisc = worldInfo.getHiscore();
                     }
-                    else
-                    {
-                        rankingData.username = entryName;
-                    }
-                    rankingData.deaths = worldInfo.getDeaths();
-                    rankingData.sc = worldInfo.getScore();
-                    rankingData.hisc = worldInfo.getHiscore();
                 }
                 rankingRows.add(rankingData);
             }
@@ -190,26 +195,18 @@ public class CommandSperank extends CommandSpelunkerBase
         }
 
         // Display
-        String pageGuide;
+        ChatComponentTranslation pageGuide;
         if (page == -1)
         {
-            pageGuide = "ALL";
+            pageGuide = new ChatComponentTranslation("commands.sperank.all");
         }
         else
         {
-            pageGuide = String.format("%d/%d", page + 1, (entryList.length - 1) / 10 + 1);
+            pageGuide = new ChatComponentTranslation("commands.sperank.pageGuide", page + 1, (entryList.length - 1) / 10 + 1);
         }
 
-        if (commandSender instanceof EntityPlayer || commandSender instanceof TileEntityCommandBlock)
-        {
-            commandSender.addChatMessage(new ChatComponentText(
-                    String.format("=== <Spelunker §6%s§r Ranking> %s ===", type.title, pageGuide)));
-        }
-        else
-        {
-            commandSender.addChatMessage(new ChatComponentText(
-                    String.format("=== <Spelunker %s Ranking> %s ===", type.title, pageGuide)));
-        }
+        commandSender.addChatMessage(new ChatComponentTranslation("commands.sperank.header",
+                new ChatComponentTranslation("commands.sperank." + type.name()).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GOLD)), pageGuide));
 
         if (rankingRows.size() > 0)
         {
@@ -253,9 +250,23 @@ public class CommandSperank extends CommandSpelunkerBase
         }
         else
         {
-            commandSender.addChatMessage(new ChatComponentText("No records"));
+            commandSender.addChatMessage(new ChatComponentTranslation("commands.sperank.noRecords"));
         }
     }
+
+    @Override
+    public List addTabCompletionOptions(ICommandSender p_71516_1_, String[] p_71516_2_)
+    {
+        switch (p_71516_2_.length)
+        {
+            case 1:
+                return getListOfStringsMatchingLastWord(p_71516_2_,
+                        Type.death.toString(), Type.sc.toString(), Type.hisc.toString());
+            default:
+                return null;
+        }
+    }
+
 
     private class RankingRow
     {

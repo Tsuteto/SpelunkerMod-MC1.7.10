@@ -56,8 +56,8 @@ import java.util.UUID;
  * @author Tsuteto
  *
  */
-@Mod(modid = SpelunkerMod.modId, useMetadata = true, version = "3.0.0b4-MC1.7.10",
-        //acceptedMinecraftVersions = "[1.7.2,1.8)",
+@Mod(modid = SpelunkerMod.modId, useMetadata = true, version = "3.0.0-MC1.7.10",
+        acceptedMinecraftVersions = "[1.7.2,1.8)",
         guiFactory = "tsuteto.spelunker.config.SpeConfigGuiFactory")
 public class SpelunkerMod
 {
@@ -234,6 +234,7 @@ public class SpelunkerMod
         event.registerServerCommand(new CommandSperank());
         event.registerServerCommand(new CommandResetGhost());
         event.registerServerCommand(new CommandSpeHardcore());
+        event.registerServerCommand(new CommandSpeLevelRecord());
 
         // Set up SaveHandler for players
         SaveHandler saveHandler = (SaveHandler)event.getServer().worldServerForDimension(0).getSaveHandler();
@@ -296,11 +297,6 @@ public class SpelunkerMod
     public static void setSaveHandler(SpelunkerSaveHandler saveHandler)
     {
         instance.saveHandler = saveHandler;
-    }
-
-    public static SpelunkerSaveHandlerWorld getWorldSaveHandler()
-    {
-        return instance.saveHandlerWorld;
     }
 
     public static SpelunkerGeneralInfo getWorldInfo()

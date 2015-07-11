@@ -216,8 +216,10 @@ public class SpeAchievementList
         SpeAchievement.create(Key.mcSpelunker, 4, 2, SpelunkerItems.itemGunSpelunker, null)
                 .registerStat();
         SpeAchievement.create(Key.defeatDragon, 6, 2, Blocks.dragon_egg, null)
+                .setSpecial()
                 .registerStat();
         SpeAchievement.create(Key.defeatWither, 6, 4, Items.nether_star, null)
+                .setSpecial()
                 .registerStat();
 
 

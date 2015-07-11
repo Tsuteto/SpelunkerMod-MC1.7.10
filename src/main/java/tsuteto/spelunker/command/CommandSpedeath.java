@@ -3,9 +3,15 @@ package tsuteto.spelunker.command;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
+
+import java.util.List;
 
 /**
  * Command /spedeath
@@ -21,9 +27,6 @@ public class CommandSpedeath extends CommandSpelunkerBase
         return "spedeath";
     }
 
-    /**
-     * Returns true if the given command sender is allowed to use this command.
-     */
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender par1ICommandSender)
     {
@@ -35,17 +38,17 @@ public class CommandSpedeath extends CommandSpelunkerBase
     {
         if (SpelunkerMod.settings().playerStatusInPublic)
         {
-            return "/spedeath [player]";
+            return super.getCommandUsage(par1ICommandSender);
         }
         else
         {
             if (super.canCommandSenderUseCommand(par1ICommandSender))
             {
-                return "/spedeath [player]";
+                return super.getCommandUsage(par1ICommandSender);
             }
             else
             {
-                return "/spedeath";
+                return super.getCommandUsage(par1ICommandSender) + ".private";
             }
         }
     }
@@ -61,7 +64,9 @@ public class CommandSpedeath extends CommandSpelunkerBase
             SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(entityPlayer);
             if (spelunker != null)
             {
-                res = String.format("Number of %1$s's deaths: %2$d", entityPlayer.getCommandSenderName(), spelunker.deaths);
+                par1ICommandSender.addChatMessage(new ChatComponentTranslation("commands.spedeath.other",
+                        entityPlayer.getCommandSenderName(),
+                        new ChatComponentText(String.valueOf(spelunker.deaths)).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW))));
             }
             else
             {
@@ -74,13 +79,31 @@ public class CommandSpedeath extends CommandSpelunkerBase
             SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(entityPlayer);
             if (spelunker != null)
             {
-                res = String.format("Number of your deaths: %2$d", entityPlayer.getCommandSenderName(), spelunker.deaths);
+                par1ICommandSender.addChatMessage(new ChatComponentTranslation("commands.spedeath.player",
+                        new ChatComponentText(String.valueOf(spelunker.deaths)).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW))));
             }
             else
             {
                 throw new PlayerNotFoundException();
             }
         }
-        par1ICommandSender.addChatMessage(new ChatComponentText(res));
+    }
+
+    @Override
+    public List addTabCompletionOptions(ICommandSender p_71516_1_, String[] p_71516_2_)
+    {
+        switch (p_71516_2_.length)
+        {
+            case 1:
+                return getListOfStringsMatchingLastWord(p_71516_2_, MinecraftServer.getServer().getAllUsernames());
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public boolean isUsernameIndex(String[] p_82358_1_, int p_82358_2_)
+    {
+        return p_82358_2_ == 0;
     }
 }

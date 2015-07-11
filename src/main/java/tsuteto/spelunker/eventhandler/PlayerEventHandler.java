@@ -4,12 +4,10 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldProvider;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.event.CommandEvent;
@@ -18,12 +16,7 @@ import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.achievement.AchievementMgr;
 import tsuteto.spelunker.constants.SpelunkerPacketType;
 import tsuteto.spelunker.damage.SpelunkerDamageSource;
-import tsuteto.spelunker.data.SpeLevelRecordInfo;
-import tsuteto.spelunker.data.SpelunkerPlayerInfo;
 import tsuteto.spelunker.dimension.SpelunkerLevelManagerClient;
-import tsuteto.spelunker.init.SpeAchievementList;
-import tsuteto.spelunker.init.SpelunkerItems;
-import tsuteto.spelunker.item.SpelunkerWorldItem;
 import tsuteto.spelunker.network.SpelunkerPacketDispatcher;
 import tsuteto.spelunker.player.ISpelunkerPlayer;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
@@ -108,53 +101,7 @@ public class PlayerEventHandler
         {
             EntityPlayer player = event.player;
             SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(player);
-
-            if (!event.player.capabilities.isCreativeMode)
-            {
-                // Remove spelunker world items from player's inventory
-                InventoryPlayer inventory = event.player.inventory;
-                for (int i = 0; i < inventory.mainInventory.length; i++)
-                {
-                    if (inventory.mainInventory[i] != null && inventory.mainInventory[i].getItem() instanceof SpelunkerWorldItem)
-                    {
-                        inventory.mainInventory[i] = null;
-                    }
-                }
-
-                // Entering Spelunker World
-                if (worldProviderTo instanceof WorldProviderSpelunker)
-                {
-                    // Give a blaster
-                    inventory.addItemStackToInventory(new ItemStack(SpelunkerItems.itemGunSpeWorld));
-                    AchievementMgr.achieve(event.player, SpeAchievementList.Key.speWorld);
-                }
-
-                MinecraftServer.getServer().getConfigurationManager().syncPlayerInventory((EntityPlayerMP)player);
-            }
-
-            SpelunkerPlayerInfo worldInfo = spelunker.getWorldInfo();
-            if (worldProviderTo instanceof WorldProviderSpelunker)
-            {
-                // Set info
-                SpeLevelRecordInfo.Record bestRecord = spelunker.getSpeLevelRecord(event.toDim);
-                int bestTime = bestRecord != null ? bestRecord.time : -1;
-                worldInfo.createSpeLevelInfo();
-                SpelunkerPacketDispatcher.of(SpelunkerPacketType.DIM_CHANGE)
-                        .addInt(bestTime)
-                        .sendPacketPlayer(player);
-            }
-            else
-            {
-                // Discard info
-                worldInfo.discardSpeLevelInfo();
-                SpelunkerPacketDispatcher.of(SpelunkerPacketType.DIM_CHANGE)
-                        .addLong(-1)
-                        .addInt(-1)
-                        .sendPacketPlayer(player);
-            }
-
-            // GhostSpawnHandler
-            spelunker.initGhostSpawnHandler();
+            spelunker.onTravelingDimensionToSpelunkerLevel(event.fromDim, event.toDim, worldProviderFrom, worldProviderTo);
         }
     }
 

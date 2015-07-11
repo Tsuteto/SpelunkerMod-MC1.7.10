@@ -35,6 +35,9 @@ public class RenderSpeBoat extends RenderBoat
      */
     public void doRender(EntitySpeBoat p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_)
     {
+        int ticksAbandoned = p_76986_1_.getTicksAbandoned();
+        if (ticksAbandoned > EntitySpeBoat.TICKS_GONE - 60 && ticksAbandoned % 2 == 0) return;
+
         GL11.glPushMatrix();
         GL11.glTranslatef((float)p_76986_2_, (float)p_76986_4_, (float)p_76986_6_);
         GL11.glRotatef(180.0F - p_76986_8_, 0.0F, 1.0F, 0.0F);

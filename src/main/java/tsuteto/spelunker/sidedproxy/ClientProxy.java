@@ -12,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.eventhandler.ClientTickHandler;
+import tsuteto.spelunker.eventhandler.RenderEvent;
 import tsuteto.spelunker.gui.ScreenRenderer;
 import tsuteto.spelunker.init.SpelunkerBlocks;
 import tsuteto.spelunker.init.SpelunkerEntity;
@@ -51,6 +52,7 @@ public class ClientProxy implements ISidedProxy
     public void registerComponent(SpelunkerMod mod)
     {
         MinecraftForge.EVENT_BUS.register(new ScreenRenderer());
+        MinecraftForge.EVENT_BUS.register(new RenderEvent());
         FMLCommonHandler.instance().bus().register(new ClientTickHandler(mod));
 
         ClientPlayerAPI.register(SpelunkerMod.modId, SpelunkerPlayerSP.class);

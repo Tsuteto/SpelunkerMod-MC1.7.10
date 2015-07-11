@@ -14,13 +14,7 @@ public class CommandResetGhost extends CommandSpelunkerBase
 
     public int getRequiredPermissionLevel()
     {
-        return 2;
-    }
-
-    @Override
-    public String getCommandUsage(ICommandSender p_71518_1_)
-    {
-        return "/resetghost";
+        return 0;
     }
 
     @Override

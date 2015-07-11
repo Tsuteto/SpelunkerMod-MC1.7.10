@@ -43,7 +43,7 @@ public class EntityBatDroppings extends EntityThrowable
         if (!this.worldObj.isRemote)
         {
             Entity var4 = null;
-            List<Entity> var5 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
+            List<Entity> var5 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.addCoord(this.motionX, this.motionY, this.motionZ));
             EntityLivingBase var8 = this.getThrower();
             for (Entity entity : var5)
             {

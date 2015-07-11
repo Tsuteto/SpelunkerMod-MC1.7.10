@@ -12,7 +12,7 @@ public enum SpelunkerPacketType {
 	INIT(Side.SERVER),
     INIT_SUCCEEDED(Side.CLIENT),
 	INIT_FAILED(Side.CLIENT),
-    DIM_CHANGE(Side.CLIENT),
+    INIT_SPE_LEVEL(Side.CLIENT),
     TOGGLE_HC(Side.CLIENT),
 
 	ENERGY(Side.CLIENT),
@@ -53,6 +53,7 @@ public enum SpelunkerPacketType {
     CHECK_POTION_ID(Side.CLIENT),
     RESET_GS(Side.CLIENT),
     GHOST_TARGETING(Side.CLIENT),
+    DEL_LEVEL_BEST(Side.CLIENT),
 
     DMG_FIREWORKS(Side.SERVER),
     DMG_HARDBLOCK(Side.SERVER),

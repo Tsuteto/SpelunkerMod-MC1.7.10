@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import tsuteto.spelunker.SpelunkerMod;
@@ -29,7 +30,7 @@ public class PlayerUtils
         if (!coord.equals(player.getBedLocation(dimId)))
         {
             player.setSpawnChunk(coord, true, dimId);
-            ModLog.debug("Player's respawn location is updated to (%d, %d, %d)", x, y, z);
+            ModLog.debug("Respawn point in dimId %d is updated to (%d, %d, %d)", dimId, x, y, z);
         }
     }
 
@@ -85,5 +86,17 @@ public class PlayerUtils
         }
 
         return entityplayer;
+    }
+
+    public static NBTTagCompound getPlayerNBTPersisted(EntityPlayer player)
+    {
+        NBTTagCompound nbt = player.getEntityData();
+
+        if (!nbt.hasKey(EntityPlayer.PERSISTED_NBT_TAG))
+        {
+            nbt.setTag(EntityPlayer.PERSISTED_NBT_TAG, new NBTTagCompound());
+        }
+
+        return nbt.getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
     }
 }

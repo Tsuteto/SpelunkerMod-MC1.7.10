@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
+import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -20,7 +21,7 @@ import static tsuteto.spelunker.entity.EntityWaterLift.Stat.UP;
 
 public class EntityWaterLift extends Entity implements IEntityAdditionalSpawnData, IEntityPlatform
 {
-    public static final double moveSpeed = 0.08D;
+    public static final double moveSpeed = 0.12D;
 
     enum Stat
     {
@@ -224,20 +225,38 @@ public class EntityWaterLift extends Entity implements IEntityAdditionalSpawnDat
             this.motionZ = 0.0D;
         }
 
-        if (speed != 0.0D)
+        List list1 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this,
+                this.boundingBox.expand(-0.1D, 0.0D, -0.1D).offset(0.0D, 0.25D, 0.0D),
+                new IEntitySelector()
+                {
+                    @Override
+                    public boolean isEntityApplicable(Entity entity)
+                    {
+                        return !entity.noClip;
+                    }
+                });
+        //ModLog.debug("list: " + list1.size());
+        for (Object obj : list1)
         {
-            List list1 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(-0.1D, 0.25D, -0.1D));
-            //ModLog.debug("list: " + list1.size());
-            for (Object obj : list1)
+            Entity entity = (Entity) obj;
+            AxisAlignedBB motionControlArea = this.boundingBox;
+            if (this.motionY != 0.0D) motionControlArea = motionControlArea.addCoord(0.0D, 0.25D, 0.0D);
+            if (motionControlArea.intersectsWith(entity.boundingBox))
             {
-                Entity entity = (Entity) obj;
-                entity.motionY = Math.max(this.motionY, entity.motionY);
-                entity.fallDistance = 0.0f;
-                entity.onGround = true;
+                if (this.motionY >= 0.0D)
+                {
+                    entity.motionY = Math.max(moveSpeed, entity.motionY);
+                }
+                else
+                {
+                    entity.motionY = entity.motionY <= 0.0D ? this.motionY - (entity.posY - this.posY) : entity.motionY;
+                }
             }
-
-            this.moveEntity(this.motionX, this.motionY, this.motionZ);
+            entity.fallDistance = 0.0f;
+            entity.onGround = true;
         }
+
+        this.moveEntity(this.motionX, this.motionY, this.motionZ);
 
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;
@@ -325,7 +344,7 @@ public class EntityWaterLift extends Entity implements IEntityAdditionalSpawnDat
         buffer.writeInt(this.initPosY);
         buffer.writeInt(this.initPosZ);
         buffer.writeByte(this.distance);
-        buffer.writeByte(this.currStatCl.ordinal());
+        buffer.writeByte(this.getStat().ordinal());
         buffer.writeByte(this.stillTime);
     }
 

@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -25,7 +26,7 @@ import tsuteto.spelunker.gui.SpelunkerGuiHandler;
 import tsuteto.spelunker.init.SpelunkerItems;
 import tsuteto.spelunker.levelmap.SpelunkerMapInfo;
 import tsuteto.spelunker.levelmap.SpelunkerMapManager;
-import tsuteto.spelunker.util.PlayerUtils;
+import tsuteto.spelunker.player.SpelunkerPlayerMP;
 import tsuteto.spelunker.world.WorldProviderSpelunker;
 
 import java.util.ArrayList;
@@ -54,7 +55,11 @@ public class BlockSpelunkerPortal extends BlockContainer4Directions
         if (player instanceof EntityPlayerMP)
         {
             TileEntitySpelunkerPortalStage te = this.getTileEntity(world, x, y, z);
-            if (player.dimension == 0)
+            if (world.provider instanceof WorldProviderSpelunker)
+            {
+                this.openLeaveSpeWorldGui(world, te.xCoord, te.yCoord, te.zCoord, player, te);
+            }
+            else
             {
                 if (this.type == Type.CUSTOM)
                 {
@@ -91,11 +96,6 @@ public class BlockSpelunkerPortal extends BlockContainer4Directions
                     }
                     teleportPlayerToLevel(world, te.xCoord, te.yCoord, te.zCoord, player, te);
                 }
-                return true;
-            }
-            else
-            {
-                this.openLeaveSpeWorldGui(world, te.xCoord, te.yCoord, te.zCoord, player, te);
             }
             return true;
         }
@@ -168,7 +168,12 @@ public class BlockSpelunkerPortal extends BlockContainer4Directions
         }
 
         SpelunkerMod.levelManager().syncLevel(te.levelInfo.dimId, player);
-        PlayerUtils.updatePlayerSpawnPoint(world, x, y, z, player);
+        SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(player);
+        if (spelunker != null)
+        {
+            spelunker.setReturnPointFromSpelunkerWorld(world.provider.dimensionId,
+                    new ChunkCoordinates((int)player.posX, (int)player.posY, (int)player.posZ));
+        }
         SpelunkerDimensionTeleportation.transferPlayerToDimension((EntityPlayerMP) player, te.levelInfo.dimId);
     }
 

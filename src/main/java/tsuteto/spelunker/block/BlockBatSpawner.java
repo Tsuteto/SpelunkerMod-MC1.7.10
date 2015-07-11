@@ -20,7 +20,7 @@ import java.util.Random;
 
 public class BlockBatSpawner extends BlockInvisible
 {
-    public static final int MAX_BAT_SPAWN = 2;
+    public static final int MAX_BAT_SPAWN = 1;
 
     public BlockBatSpawner(Material p_i45394_1_)
     {

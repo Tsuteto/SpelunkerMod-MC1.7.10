@@ -23,12 +23,6 @@ public class CommandSpeHardcore extends CommandSpelunkerBase
     }
 
     @Override
-    public String getCommandUsage(ICommandSender p_71518_1_)
-    {
-        return "commands.spehardcore.usage";
-    }
-
-    @Override
     public void processCommand(ICommandSender sender, String[] args)
     {
         if (args.length < 1)

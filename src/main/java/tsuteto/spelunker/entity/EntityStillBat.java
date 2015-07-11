@@ -120,7 +120,7 @@ public class EntityStillBat extends EntityAmbientCreature
     public void setDead()
     {
         super.setDead();
-        if (!this.worldObj.isRemote)
+        if (!this.worldObj.isRemote && this.homePos != null)
         {
             this.worldObj.scheduleBlockUpdate(homePos.posX, homePos.posY, homePos.posZ, SpelunkerBlocks.blockBatSpawner, 100);
         }

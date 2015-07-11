@@ -3,9 +3,15 @@ package tsuteto.spelunker.command;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.player.SpelunkerPlayerMP;
+
+import java.util.List;
 
 /**
  * Command /spehisc
@@ -35,17 +41,17 @@ public class CommandSpehisc extends CommandSpelunkerBase
     {
         if (SpelunkerMod.settings().playerStatusInPublic)
         {
-            return "/spehisc [player]";
+            return super.getCommandUsage(par1ICommandSender);
         }
         else
         {
             if (super.canCommandSenderUseCommand(par1ICommandSender))
             {
-                return "/spehisc [player]";
+                return super.getCommandUsage(par1ICommandSender);
             }
             else
             {
-                return "/spehisc";
+                return super.getCommandUsage(par1ICommandSender) + ".private";
             }
         }
     }
@@ -53,7 +59,6 @@ public class CommandSpehisc extends CommandSpelunkerBase
     @Override
     public void processCommand(ICommandSender par1ICommandSender, String[] par2ArrayOfStr)
     {
-        String res;
         if (par2ArrayOfStr.length >= 1
                 && (SpelunkerMod.settings().playerStatusInPublic || super.canCommandSenderUseCommand(par1ICommandSender)))
         {
@@ -61,7 +66,9 @@ public class CommandSpehisc extends CommandSpelunkerBase
             SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(entityPlayer);
             if (spelunker != null)
             {
-                res = String.format("%1$s's high score: %2$d", entityPlayer.getDisplayName(), spelunker.spelunkerScore.hiscore);
+                par1ICommandSender.addChatMessage(new ChatComponentTranslation("commands.spehisc.other",
+                        entityPlayer.getCommandSenderName(),
+                        new ChatComponentText(String.valueOf(spelunker.spelunkerScore.hiscore)).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW))));
             }
             else
             {
@@ -74,13 +81,31 @@ public class CommandSpehisc extends CommandSpelunkerBase
             SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(entityPlayer);
             if (spelunker != null)
             {
-                res = String.format("Your high score: %2$d", entityPlayer.getDisplayName(), spelunker.spelunkerScore.hiscore);
+                par1ICommandSender.addChatMessage(new ChatComponentTranslation("commands.spehisc.player",
+                        new ChatComponentText(String.valueOf(spelunker.spelunkerScore.hiscore)).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW))));
             }
             else
             {
                 throw new PlayerNotFoundException();
             }
         }
-        par1ICommandSender.addChatMessage(new ChatComponentText(res));
+    }
+
+    @Override
+    public List addTabCompletionOptions(ICommandSender p_71516_1_, String[] p_71516_2_)
+    {
+        switch (p_71516_2_.length)
+        {
+            case 1:
+                return getListOfStringsMatchingLastWord(p_71516_2_, MinecraftServer.getServer().getAllUsernames());
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public boolean isUsernameIndex(String[] p_82358_1_, int p_82358_2_)
+    {
+        return p_82358_2_ == 0;
     }
 }

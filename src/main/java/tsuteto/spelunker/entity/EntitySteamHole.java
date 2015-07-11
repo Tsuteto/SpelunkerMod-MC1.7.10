@@ -39,6 +39,15 @@ public class EntitySteamHole extends Entity implements IEntityAdditionalSpawnDat
         this.noClip = true;
     }
 
+    public EntitySteamHole(World p_i1705_1_, double p_i1705_2_, double p_i1705_4_, double p_i1705_6_)
+    {
+        this(p_i1705_1_);
+        this.setPosition(p_i1705_2_, p_i1705_4_ + (double)this.yOffset, p_i1705_6_);
+        this.prevPosX = p_i1705_2_;
+        this.prevPosY = p_i1705_4_;
+        this.prevPosZ = p_i1705_6_;
+    }
+
     public void setTilePosition(double x, double y, double z)
     {
         this.tileX = MathHelper.floor_double(x);
@@ -137,14 +146,8 @@ public class EntitySteamHole extends Entity implements IEntityAdditionalSpawnDat
         return false;
     }
 
-    public EntitySteamHole(World p_i1705_1_, double p_i1705_2_, double p_i1705_4_, double p_i1705_6_)
-    {
-        this(p_i1705_1_);
-        this.setPosition(p_i1705_2_, p_i1705_4_ + (double)this.yOffset, p_i1705_6_);
-        this.prevPosX = p_i1705_2_;
-        this.prevPosY = p_i1705_4_;
-        this.prevPosZ = p_i1705_6_;
-    }
+    @Override
+    public void applyEntityCollision(Entity p_70108_1_) {}
 
     /**
      * Called when the entity is attacked.

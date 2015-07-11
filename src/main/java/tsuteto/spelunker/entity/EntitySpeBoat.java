@@ -18,12 +18,15 @@ import tsuteto.spelunker.init.SpelunkerItems;
 
 import java.util.List;
 
-public class EntitySpeBoat extends Entity
+public class EntitySpeBoat extends EntityBoat
 {
+    public static final int TICKS_GONE = 200;
+
     /** true if no player in boat */
     private boolean isBoatEmpty;
     private double speedMultiplier;
     private int boatPosRotationIncrements;
+    private int ticksAbandoned = 0;
     private double boatX;
     private double boatY;
     private double boatZ;
@@ -35,57 +38,12 @@ public class EntitySpeBoat extends Entity
     private double velocityY;
     @SideOnly(Side.CLIENT)
     private double velocityZ;
-    private static final String __OBFID = "CL_00001667";
 
     public EntitySpeBoat(World p_i1704_1_)
     {
         super(p_i1704_1_);
         this.isBoatEmpty = true;
         this.speedMultiplier = 0.07D;
-        this.preventEntitySpawning = true;
-        this.setSize(1.5F, 0.6F);
-        this.yOffset = this.height / 2.0F;
-    }
-
-    /**
-     * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to
-     * prevent them from trampling crops
-     */
-    protected boolean canTriggerWalking()
-    {
-        return false;
-    }
-
-    protected void entityInit()
-    {
-        this.dataWatcher.addObject(17, new Integer(0));
-        this.dataWatcher.addObject(18, new Integer(1));
-        this.dataWatcher.addObject(19, new Float(0.0F));
-    }
-
-    /**
-     * Returns a boundingBox used to collide the entity with other entities and blocks. This enables the entity to be
-     * pushable on contact, like boats or minecarts.
-     */
-    public AxisAlignedBB getCollisionBox(Entity p_70114_1_)
-    {
-        return p_70114_1_.boundingBox;
-    }
-
-    /**
-     * returns the bounding box for this entity
-     */
-    public AxisAlignedBB getBoundingBox()
-    {
-        return this.boundingBox;
-    }
-
-    /**
-     * Returns true if this entity should push and be pushed by other entities when colliding.
-     */
-    public boolean canBePushed()
-    {
-        return true;
     }
 
     public EntitySpeBoat(World p_i1705_1_, double p_i1705_2_, double p_i1705_4_, double p_i1705_6_)
@@ -99,15 +57,6 @@ public class EntitySpeBoat extends Entity
         this.prevPosY = p_i1705_4_;
         this.prevPosZ = p_i1705_6_;
     }
-
-    /**
-     * Returns the Y offset from the entity's position for any entity riding this one.
-     */
-    public double getMountedYOffset()
-    {
-        return (double)this.height * 0.0D - 0.30000001192092896D;
-    }
-
 
     public boolean attackEntityFrom(DamageSource p_70097_1_, float p_70097_2_)
     {
@@ -144,25 +93,6 @@ public class EntitySpeBoat extends Entity
         {
             return true;
         }
-    }
-
-    /**
-     * Setups the entity to do the hurt animation. Only used by packets in multiplayer.
-     */
-    @SideOnly(Side.CLIENT)
-    public void performHurtAnimation()
-    {
-        this.setForwardDirection(-this.getForwardDirection());
-        this.setTimeSinceHit(10);
-        this.setDamageTaken(this.getDamageTaken() * 11.0F);
-    }
-
-    /**
-     * Returns true if other Entities should be prevented from moving through this Entity.
-     */
-    public boolean canBeCollidedWith()
-    {
-        return !this.isDead;
     }
 
     /**
@@ -214,7 +144,7 @@ public class EntitySpeBoat extends Entity
 
     public void onUpdate()
     {
-        super.onUpdate();
+        super.onEntityUpdate();
 
         if (this.getTimeSinceHit() > 0)
         {
@@ -224,6 +154,15 @@ public class EntitySpeBoat extends Entity
         if (this.getDamageTaken() > 0.0F)
         {
             this.setDamageTaken(this.getDamageTaken() - 1.0F);
+        }
+
+        if (this.riddenByEntity != null)
+        {
+            ticksAbandoned = 0;
+        }
+        else if (ticksAbandoned++ > TICKS_GONE)
+        {
+            this.setDead();
         }
 
         this.prevPosX = this.posX;
@@ -454,50 +393,20 @@ public class EntitySpeBoat extends Entity
         }
     }
 
-    public void updateRiderPosition()
-    {
-        if (this.riddenByEntity != null)
-        {
-            double d0 = Math.cos((double)this.rotationYaw * Math.PI / 180.0D) * 0.4D;
-            double d1 = Math.sin((double)this.rotationYaw * Math.PI / 180.0D) * 0.4D;
-            this.riddenByEntity.setPosition(this.posX + d0, this.posY + this.getMountedYOffset() + this.riddenByEntity.getYOffset(), this.posZ + d1);
-        }
-    }
-
     /**
      * (abstract) Protected helper method to write subclass entity data to NBT.
      */
-    protected void writeEntityToNBT(NBTTagCompound p_70014_1_) {}
+    protected void writeEntityToNBT(NBTTagCompound p_70014_1_)
+    {
+        p_70014_1_.setShort("Abandoned", (short)this.ticksAbandoned);
+    }
 
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
-    protected void readEntityFromNBT(NBTTagCompound p_70037_1_) {}
-
-    @SideOnly(Side.CLIENT)
-    public float getShadowSize()
+    protected void readEntityFromNBT(NBTTagCompound p_70037_1_)
     {
-        return 0.0F;
-    }
-
-    /**
-     * First layer of player interaction
-     */
-    public boolean interactFirst(EntityPlayer p_130002_1_)
-    {
-        if (this.riddenByEntity != null && this.riddenByEntity instanceof EntityPlayer && this.riddenByEntity != p_130002_1_)
-        {
-            return true;
-        }
-        else
-        {
-            if (!this.worldObj.isRemote)
-            {
-                p_130002_1_.mountEntity(this);
-            }
-
-            return true;
-        }
+        this.ticksAbandoned = p_70037_1_.getShort("Abandoned");
     }
 
     protected void updateFallState(double p_70064_1_, boolean p_70064_3_)
@@ -521,59 +430,17 @@ public class EntitySpeBoat extends Entity
     }
 
     /**
-     * Sets the damage taken from the last hit.
-     */
-    public void setDamageTaken(float p_70266_1_)
-    {
-        this.dataWatcher.updateObject(19, Float.valueOf(p_70266_1_));
-    }
-
-    /**
-     * Gets the damage taken from the last hit.
-     */
-    public float getDamageTaken()
-    {
-        return this.dataWatcher.getWatchableObjectFloat(19);
-    }
-
-    /**
-     * Sets the time to count down from since the last time entity was hit.
-     */
-    public void setTimeSinceHit(int p_70265_1_)
-    {
-        this.dataWatcher.updateObject(17, Integer.valueOf(p_70265_1_));
-    }
-
-    /**
-     * Gets the time since the last hit.
-     */
-    public int getTimeSinceHit()
-    {
-        return this.dataWatcher.getWatchableObjectInt(17);
-    }
-
-    /**
-     * Sets the forward direction of the entity.
-     */
-    public void setForwardDirection(int p_70269_1_)
-    {
-        this.dataWatcher.updateObject(18, Integer.valueOf(p_70269_1_));
-    }
-
-    /**
-     * Gets the forward direction of the entity.
-     */
-    public int getForwardDirection()
-    {
-        return this.dataWatcher.getWatchableObjectInt(18);
-    }
-
-    /**
      * true if no player in boat
      */
     @SideOnly(Side.CLIENT)
     public void setIsBoatEmpty(boolean p_70270_1_)
     {
         this.isBoatEmpty = p_70270_1_;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public int getTicksAbandoned()
+    {
+        return this.ticksAbandoned;
     }
 }

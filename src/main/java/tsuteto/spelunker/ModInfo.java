@@ -8,10 +8,10 @@ public class ModInfo
     public static void load(ModMetadata meta)
     {
         meta.modId = SpelunkerMod.modId;
-        meta.name = "スペランカーMOD (SPELUNKER MOD)";
+        meta.name = "SPELUNKER MOD";
         meta.description = "かつてファミコンで大活躍し、今に復活してなおその名を馳せる洞窟探検の偉大なる先人「スペランカー」の類い希なる能力を与えるMODです。\n\n" +
                 "Gives you the unique skills of the great forerunner Spelunker, who once made a splendid action on NES and is still gaining popularity after his revival.";
-        meta.version = "3.0 Beta Release";
+        meta.version = "3.0";
         meta.credits = "Feature support by MMMさん, 綾繁さん. " +
                 "PlayerAPI support by Divisor. Spelunker model by 超田中さん. " +
                 "Playing video and bug report by ミヤビさん, Silent7さん, ぶりすさん. Thanks to them all!";

@@ -142,7 +142,7 @@ public class EntityLift extends Entity implements IEntityAdditionalSpawnData, IE
                         @Override
                         public boolean isEntityApplicable(Entity entity)
                         {
-                            return !(entity instanceof EntityLift) && !(entity instanceof EntityGhost);
+                            return !entity.noClip;
                         }
                     });
 

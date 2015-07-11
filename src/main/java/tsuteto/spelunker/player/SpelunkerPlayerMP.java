@@ -4,7 +4,6 @@ import api.player.server.IServerPlayer;
 import api.player.server.ServerPlayerAPI;
 import api.player.server.ServerPlayerBase;
 import com.mojang.authlib.GameProfile;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -32,13 +31,13 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.BanEntry;
 import net.minecraft.server.management.ItemInWorldManager;
 import net.minecraft.server.management.UserListBansEntry;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
+import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.storage.WorldInfo;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.achievement.AchievementMgr;
 import tsuteto.spelunker.constants.SpelunkerDifficulty;
@@ -54,8 +53,10 @@ import tsuteto.spelunker.eventhandler.GhostSpawnHandler;
 import tsuteto.spelunker.eventhandler.ItemSpawnHandler;
 import tsuteto.spelunker.init.SpeAchievementList;
 import tsuteto.spelunker.init.SpelunkerItems;
+import tsuteto.spelunker.item.SpelunkerWorldItem;
 import tsuteto.spelunker.network.SpelunkerPacketDispatcher;
 import tsuteto.spelunker.util.ModLog;
+import tsuteto.spelunker.util.PlayerUtils;
 import tsuteto.spelunker.util.WatchBool;
 import tsuteto.spelunker.world.WorldProviderSpelunker;
 
@@ -114,6 +115,7 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
     private ItemStack[] armorInventoryToCarryover;
 
     private ISpelunkerExtraMP spelunkerExtra = new SpelunkerExtraBlankMP();
+    private boolean shouldTeleportToRespawnPoint = false;
 
     public SpelunkerPlayerMP(ServerPlayerAPI api)
     {
@@ -209,6 +211,17 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
     @Override
     public void onLivingUpdate()
     {
+        // Locate the respawn point in Spelunker World
+        if (this.shouldTeleportToRespawnPoint && this.getWorldInfo().hasSpeLevelInfo())
+        {
+            ChunkCoordinates coord = this.getWorldInfo().getSpeLevelInfo().getRespawnPoint();
+            if (coord != null)
+            {
+                player.setPositionAndUpdate(coord.posX + 0.5D, coord.posY + 0.5D, coord.posZ + 0.5D);
+            }
+            this.shouldTeleportToRespawnPoint = false;
+        }
+
         this.spelunkerExtra.beforeOnLivingUpdate();
 
         this.checkSpelunkerLevelStarting();
@@ -689,6 +702,104 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
     }
 
     /**
+     * Called when traveling dimensions between Spelunker World and other
+     *
+     * @param fromDim
+     * @param toDim
+     * @param worldProviderFrom
+     * @param worldProviderTo
+     */
+    public void onTravelingDimensionToSpelunkerLevel(int fromDim, int toDim, WorldProvider worldProviderFrom, WorldProvider worldProviderTo)
+    {
+        if (!player.capabilities.isCreativeMode)
+        {
+            // Remove spelunker world items from player's inventory
+            InventoryPlayer inventory = player.inventory;
+            for (int i = 0; i < inventory.mainInventory.length; i++)
+            {
+                if (inventory.mainInventory[i] != null && inventory.mainInventory[i].getItem() instanceof SpelunkerWorldItem)
+                {
+                    inventory.mainInventory[i] = null;
+                }
+            }
+
+            // Entering Spelunker World
+            if (worldProviderTo instanceof WorldProviderSpelunker)
+            {
+                // Give a blaster
+                inventory.addItemStackToInventory(new ItemStack(SpelunkerItems.itemGunSpeWorld));
+                AchievementMgr.achieve(player, SpeAchievementList.Key.speWorld);
+            }
+
+            MinecraftServer.getServer().getConfigurationManager().syncPlayerInventory(player);
+        }
+
+        SpelunkerPlayerInfo worldInfo = this.getWorldInfo();
+        if (worldProviderTo instanceof WorldProviderSpelunker)
+        {
+            // Set info
+            SpeLevelRecordInfo.Record bestRecord = this.getSpeLevelRecord(toDim);
+            int bestTime = bestRecord != null ? bestRecord.time : -1;
+            worldInfo.createSpeLevelInfo();
+
+            SpelunkerPacketDispatcher.of(SpelunkerPacketType.INIT_SPE_LEVEL)
+                    .addInt(bestTime)
+                    .sendPacketPlayer(player);
+        }
+        else
+        {
+            // Discard info
+            worldInfo.discardSpeLevelInfo();
+            SpelunkerPacketDispatcher.of(SpelunkerPacketType.INIT_SPE_LEVEL)
+                    .addLong(-1)
+                    .addInt(-1)
+                    .sendPacketPlayer(player);
+        }
+
+        // GhostSpawnHandler
+        this.initGhostSpawnHandler();
+    }
+
+    public int getDimIdFromSpelunkerWorld()
+    {
+        NBTTagCompound nbt = PlayerUtils.getPlayerNBTPersisted(player);
+        if (nbt.hasKey("Spelunker_Return"))
+        {
+            NBTTagCompound respawn = nbt.getCompoundTag("Spelunker_Return");
+            return respawn.getInteger("dim");
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    public ChunkCoordinates getReturnPointFromSpelunkerWorld()
+    {
+        NBTTagCompound nbt = PlayerUtils.getPlayerNBTPersisted(player);
+        if (nbt.hasKey("Spelunker_Return"))
+        {
+            NBTTagCompound respawn = nbt.getCompoundTag("Spelunker_Return");
+            return new ChunkCoordinates(respawn.getInteger("x"), respawn.getInteger("y"), respawn.getInteger("z"));
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public void setReturnPointFromSpelunkerWorld(int dimId, ChunkCoordinates coord)
+    {
+        NBTTagCompound nbt = PlayerUtils.getPlayerNBTPersisted(player);
+        NBTTagCompound origin = new NBTTagCompound();
+        origin.setInteger("dim", dimId);
+        origin.setInteger("x", coord.posX);
+        origin.setInteger("y", coord.posY);
+        origin.setInteger("z", coord.posZ);
+        nbt.setTag("Spelunker_Return", origin);
+    }
+
+    /**
      * Kills the Spelunker instantly
      *
      * @param dmgsrc
@@ -826,7 +937,7 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
         }
 
         // Play sound
-        if (this.gameMode == SpelunkerGameMode.Arcade && livesLeft < 0)
+        if (this.gameMode == SpelunkerGameMode.Arcade && livesLeft < 0 || player.worldObj.getWorldInfo().isHardcoreModeEnabled())
         {
             this.playSound("spelunker:gameover", 1.0F, 1.0F);
         }
@@ -849,19 +960,6 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
             BanEntry banentry = new UserListBansEntry(player.getGameProfile(), null, SpelunkerMod.modId, null, "Out of lives of spelunker");
             MinecraftServer.getServer().getConfigurationManager().func_152608_h().func_152687_a(banentry);
             player.playerNetServerHandler.kickPlayerFromServer("You missed too much. Game over, man, it\'s game over!");
-        }
-    }
-
-    public void setDifficultyHardcore()
-    {
-        WorldInfo worldinfo = player.worldObj.getWorldInfo();
-        try
-        {
-            ObfuscationReflectionHelper.setPrivateValue(WorldInfo.class, worldinfo, true, 20);
-        }
-        catch (Exception e2)
-        {
-            player.addChatMessage(new ChatComponentTranslation("Spelunker.failedToKillWorld"));
         }
     }
 
@@ -1107,6 +1205,11 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
 
         // Additional
         this.spelunkerExtra.onRespawn(deadPlayer);
+
+        if (this.isInSpelunkerWorld())
+        {
+            this.shouldTeleportToRespawnPoint = true;
+        }
     }
 
     @Override

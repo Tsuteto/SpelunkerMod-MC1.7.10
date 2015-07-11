@@ -17,10 +17,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.block.tileentity.TileEntityRespawnPoint;
+import tsuteto.spelunker.data.SpeLevelPlayerInfo;
 import tsuteto.spelunker.init.SpelunkerBlocks;
+import tsuteto.spelunker.player.SpelunkerPlayerMP;
 import tsuteto.spelunker.util.BlockUtils;
 import tsuteto.spelunker.util.ModLog;
-import tsuteto.spelunker.util.PlayerUtils;
 
 public class BlockRespawnPoint extends BlockContainer
 {
@@ -37,7 +38,7 @@ public class BlockRespawnPoint extends BlockContainer
         {
             if (this.shouldSetRespawnPoint(world, x, y, z, entity))
             {
-                this.setPlayerRespawnPoint(world, x, y, z, (EntityPlayer) entity);
+                this.setRespawnPoint(world, x, y, z, (EntityPlayer) entity);
             }
         }
     }
@@ -47,19 +48,32 @@ public class BlockRespawnPoint extends BlockContainer
         return entity instanceof EntityPlayer;
     }
 
-    public void setPlayerRespawnPoint(World world, int x, int y, int z, EntityPlayer player)
+    public void setRespawnPoint(World world, int x, int y, int z, EntityPlayer player)
     {
         Block block = world.getBlock(x, y, z);
         if (this.isRespawnPoint(block))
         {
-            PlayerUtils.updatePlayerSpawnPoint(world, x, y, z, player);
+            this.updatePlayerRespawnPoint(player, x, y, z);
         }
         else if (block == SpelunkerBlocks.blockRespawnGate)
         {
             TileEntityRespawnPoint gate = (TileEntityRespawnPoint) world.getTileEntity(x, y, z);
             if (gate.respawnPoint != null)
             {
-                PlayerUtils.updatePlayerSpawnPoint(world, gate.respawnPoint.posX, gate.respawnPoint.posY, gate.respawnPoint.posZ, player);
+                this.updatePlayerRespawnPoint(player, gate.respawnPoint.posX, gate.respawnPoint.posY, gate.respawnPoint.posZ);
+            }
+        }
+    }
+
+    public void updatePlayerRespawnPoint(EntityPlayer player, int x, int y, int z)
+    {
+        SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(player);
+        if (spelunker != null)
+        {
+            if (spelunker.getWorldInfo().hasSpeLevelInfo())
+            {
+                SpeLevelPlayerInfo levelInfo = spelunker.getWorldInfo().getSpeLevelInfo();
+                levelInfo.setRespawnPoint(new ChunkCoordinates(x, y, z));
             }
         }
     }

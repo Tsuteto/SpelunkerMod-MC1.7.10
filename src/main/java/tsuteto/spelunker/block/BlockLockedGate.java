@@ -19,6 +19,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.block.tileentity.TileEntityLockedGate;
 import tsuteto.spelunker.init.SpelunkerBlocks;
 
@@ -171,8 +172,10 @@ public class BlockLockedGate extends BlockContainer
     public void unlockGate(World world, int x, int y, int z)
     {
         this.updateStatus(world, x, y, z, true);
-        // Locked in 10 minutes
-        world.scheduleBlockUpdate(x, y, z, this, 12000);
+        if (!SpelunkerMod.isSinglePlayer())
+        {
+            world.scheduleBlockUpdate(x, y, z, this, SpelunkerMod.restorationTime);
+        }
     }
 
     public void updateStatus(World world, int x, int y, int z, boolean unlocking)

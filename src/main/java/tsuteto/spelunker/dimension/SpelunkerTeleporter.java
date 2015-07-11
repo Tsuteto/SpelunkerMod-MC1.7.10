@@ -12,7 +12,10 @@ import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import tsuteto.spelunker.SpelunkerMod;
 import tsuteto.spelunker.init.SpelunkerBlocks;
+import tsuteto.spelunker.player.SpelunkerPlayerMP;
+import tsuteto.spelunker.world.WorldProviderSpelunker;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -47,17 +50,17 @@ public class SpelunkerTeleporter extends Teleporter
     @Override
     public void placeInPortal(Entity par1Entity, double par2, double par4, double par6, float par8)
     {
-        if (this.worldServerInstance.provider.dimensionId != 0)
+        if (this.worldServerInstance.provider instanceof WorldProviderSpelunker)
         {
             this.isSucceeded = this.placeInExistingPortal(par1Entity, par2, par4, par6, par8);
         }
         else
         {
-            this.locateOverworldSpawnPoint(par1Entity);
+            this.locateReturnPoint(par1Entity);
         }
     }
 
-    public void locateOverworldSpawnPoint(Entity entity)
+    public void locateReturnPoint(Entity entity)
     {
         World world = this.worldServerInstance;
         byte byte0 = 16;
@@ -67,8 +70,18 @@ public class SpelunkerTeleporter extends Teleporter
         int k;
         if (entity instanceof EntityPlayer)
         {
-            ChunkCoordinates coord = ((EntityPlayer) entity).getBedLocation(0);
-            if (coord == null) coord = world.getSpawnPoint();
+            // Obtain the return point
+            ChunkCoordinates coord = null;
+            SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer((EntityPlayer)entity);
+            if (spelunker != null)
+            {
+                coord = spelunker.getReturnPointFromSpelunkerWorld();
+            }
+            if (coord == null)
+            {
+                coord = ((EntityPlayer) entity).getBedLocation(0);
+                if (coord == null) coord = world.getSpawnPoint();
+            }
             i = coord.posX;
             j = coord.posY;
             k = coord.posZ;

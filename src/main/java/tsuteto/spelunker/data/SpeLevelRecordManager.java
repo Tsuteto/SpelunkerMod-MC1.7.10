@@ -39,7 +39,12 @@ public class SpeLevelRecordManager
 
     public SpeLevelRecordInfo.Record getRecord(EntityPlayer player, SpelunkerLevelInfo level)
     {
-        SpeLevelRecordInfo mapRecord = this.mapRecords.get(level.mapFileName);
+        return this.getRecord(player, level.mapFileName);
+    }
+
+    public SpeLevelRecordInfo.Record getRecord(EntityPlayer player, String mapFileName)
+    {
+        SpeLevelRecordInfo mapRecord = this.mapRecords.get(mapFileName);
         if (mapRecord != null)
         {
             return mapRecord.getRecord(player);
@@ -61,6 +66,27 @@ public class SpeLevelRecordManager
         mapRecord.registerRecord(player, time);
 
         this.save();
+    }
+
+    public boolean clearRecord(EntityPlayer player, String mapFileName)
+    {
+        SpeLevelRecordInfo mapRecord = this.mapRecords.get(mapFileName);
+        if (mapRecord != null)
+        {
+            boolean cleared = mapRecord.clearRecord(player);
+
+            if (mapRecord.records.size() == 0)
+            {
+                this.mapRecords.remove(mapFileName);
+            }
+
+            this.save();
+            return cleared;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public NBTTagCompound getNBTTagCompound()

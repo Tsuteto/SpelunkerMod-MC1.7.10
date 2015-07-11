@@ -89,11 +89,10 @@ public class EntityFlash extends EntityThrowable
                     Block block = this.worldObj.getBlock(x, y, z);
                     if (block == SpelunkerBlocks.blockBatSpawner)
                     {
-                        MovingObjectPosition mop = worldObj.rayTraceBlocks(Vec3.createVectorHelper(this.posX, this.posY, this.posZ), Vec3.createVectorHelper(x, y, z));
-                        if (mop == null)
+                        MovingObjectPosition mop = worldObj.rayTraceBlocks(Vec3.createVectorHelper(this.posX, this.posY, this.posZ), Vec3.createVectorHelper(x + 0.5D, y + 0.5D, z + 0.5D));
+                        if (mop == null || worldObj.getBlock(mop.blockX, mop.blockY, mop.blockZ) == SpelunkerBlocks.blockBatSpawner)
                         {
-                            DamageSource dmgSrc;
-                            dmgSrc = SpelunkerDamageSource.causeFlashDamage(this, thrower);
+                            DamageSource dmgSrc = SpelunkerDamageSource.causeFlashDamage(this, thrower);
                             ((BlockBatSpawner) block).eliminateBats(this.worldObj, x, y, z, dmgSrc);
                         }
                     }

@@ -142,6 +142,9 @@ public class EntityFlameHole extends Entity
         return true;
     }
 
+    @Override
+    public void applyEntityCollision(Entity p_70108_1_) {}
+
     /**
      * Called to update the entity's position/logic.
      */

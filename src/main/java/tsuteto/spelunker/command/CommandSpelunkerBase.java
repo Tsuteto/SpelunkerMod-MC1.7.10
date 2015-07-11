@@ -1,6 +1,7 @@
 package tsuteto.spelunker.command;
 
 import net.minecraft.command.CommandBase;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -20,6 +21,12 @@ import java.util.List;
  */
 public abstract class CommandSpelunkerBase extends CommandBase
 {
+    @Override
+    public String getCommandUsage(ICommandSender p_71518_1_)
+    {
+        return "commands." + this.getCommandName() + ".usage";
+    }
+
     protected EntityPlayer getOnlinePlayerRequired(String par1Str)
     {
         EntityPlayerMP var2 = MinecraftServer.getServer().getConfigurationManager().func_152612_a(par1Str); //getPlayerForUsername

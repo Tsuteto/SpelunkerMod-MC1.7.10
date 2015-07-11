@@ -71,10 +71,29 @@ entity.flash.name=フラッシュ
 entity.ghost.name=ゴースト
 
 commands.sperank.usage=/sperank <sc|hisc|death> [ページ番号|all]
+commands.sperank.header==== <スペランカー %1$sランキング> %2$s ===
+commands.sperank.death=死んだ回数
+commands.sperank.sc=現在のスコア
+commands.sperank.hisc=ハイスコア
+commands.sperank.all=すべて
+commands.sperank.pageGuide=ページ %s / %s
+commands.sperank.noRecords=No records
 commands.spehisc.usage=/spehisc [プレイヤー]
+commands.spehisc.usage.private=/spehisc
+commands.spehisc.other=%1$のハイスコア: %2$d
+commands.spehisc.player=あなたのハイスコア: %1$d
 commands.spedeath.usage=/spedeath [プレイヤー]
+commands.spedeath.usage.private=/spedeath
+commands.spedeath.other=%1$sの死んだ回数: %2$d
+commands.spedeath.player=あなたの死んだ回数: %1$d
 commands.resetghost.usage=/resetghost
 commands.spehardcore.usage=/spehardcore <true|false>
+commands.spelevelrecord.usage=/spelevelrecord <show|clear> <プレイヤー> <マップ名(スペースを含む)>
+commands.spelevelrecord.show=%1$sの%2$sでのベストタイム: %3$s
+commands.spelevelrecord.delete=%1$sの%2$sでのベストタイムが削除されました!
+commands.spelevelrecord.mapNotFound=指定のマップ名が見つかりません。
+commands.spelevelrecord.recordNotFound=%1$sの%2$sでのベストタイムは記録されていません。
+commands.spelevelrecord.noRecords=記録なし
 
 # achievements
 achievement.spelunker:death=はじめてのミス
@@ -530,6 +549,7 @@ Spelunker.options.score.tooltip=ゲーム画面にスコアを表示するかど
 Spelunker.options.helmetLightIntervalCl=ヘルメットライト更新間隔
 Spelunker.options.helmetLightIntervalCl.tooltip=スペランカーヘルメットのライトの更新間隔(tick)。クライアント側
 Spelunker.options.playerStatusInPublic=プレイヤー情報公開
+Spelunker.options.playerStatusInPublic.tooltip=/sperankや/spehiscなどのコマンドで他人の情報を見られるようにするかどうか
 Spelunker.options.helmetLightIntervalSv=ヘルメットライト更新間隔
 Spelunker.options.helmetLightIntervalSv.tooltip=スペランカーヘルメットのライトの更新間隔(tick)。サーバ側だがシングルプレイにも効果あり
 Spelunker.options.dimensionTypeId=ディメンションタイプID

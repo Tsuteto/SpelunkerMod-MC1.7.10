@@ -12,6 +12,7 @@ import tsuteto.spelunker.block.BlockSpelunkerPortal;
 import tsuteto.spelunker.dimension.DimensionRegenerator;
 import tsuteto.spelunker.dimension.SpelunkerDimensionTeleportation;
 import tsuteto.spelunker.levelmap.SpelunkerMapInfo;
+import tsuteto.spelunker.player.SpelunkerPlayerMP;
 
 public class ContainerSpelunkerPortal extends ContainerMapSelectorBase
 {
@@ -88,7 +89,8 @@ public class ContainerSpelunkerPortal extends ContainerMapSelectorBase
 
     private void onLeaveSpeWorld(EntityPlayer player, ByteBuf buffer)
     {
-        // Teleport back to the Overworld
-        SpelunkerDimensionTeleportation.transferPlayerToDimension((EntityPlayerMP) player, 0);
+        // Teleport back to the return point and dimension
+        SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(player);
+        SpelunkerDimensionTeleportation.transferPlayerToDimension((EntityPlayerMP) player, spelunker.getDimIdFromSpelunkerWorld());
     }
 }

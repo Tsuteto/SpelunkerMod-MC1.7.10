@@ -59,7 +59,7 @@ public class ClientPacketHandler extends CommonClientPacketHandler
                 spelunker.isInitializing = false;
                  break;
 
-            case DIM_CHANGE:
+            case INIT_SPE_LEVEL:
                 spelunker.speLevelBestTime = data.readInt();
                 spelunker.isBestTime = false;
                 spelunker.isSpeLevelCleared = false;
@@ -260,6 +260,11 @@ public class ClientPacketHandler extends CommonClientPacketHandler
             case RESET_GS:
                 int numGs = data.readInt();
                 PlayerUtils.giveGoldenSpelunker(entityPlayer, numGs);
+                break;
+
+            case DEL_LEVEL_BEST:
+                spelunker.speLevelBestTime = -1;
+                spelunker.isBestTime = false;
                 break;
 
             case CHECK_POTION_ID:

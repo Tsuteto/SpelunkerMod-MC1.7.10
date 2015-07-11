@@ -72,10 +72,29 @@ entity.flash.name=Flash
 entity.ghost.name=Ghost
 
 commands.sperank.usage=/sperank <sc|hisc|death> [page|all]
+commands.sperank.header==== <Spelunker %s Ranking> %s ===
+commands.sperank.death=Number of Deaths
+commands.sperank.sc=Current Score
+commands.sperank.hisc=Highest Score
+commands.sperank.all=ALL
+commands.sperank.pageGuide=Page %s of %s
+commands.sperank.noRecords=No records
 commands.spehisc.usage=/spehisc [player]
+commands.spehisc.usage.private=/spehisc
+commands.spehisc.other=%1$s's highest score: %2$d
+commands.spehisc.player=Your highest score: %1$d
 commands.spedeath.usage=/spedeath [player]
+commands.spedeath.usage.private=/spedeath
+commands.spedeath.other=Number of %1$s's deaths: %2$d
+commands.spedeath.player=Number of your deaths: %1$d
 commands.resetghost.usage=/resetghost
 commands.spehardcore.usage=/spehardcore <player> <true|false>
+commands.spelevelrecord.usage=/spelevelrecord <show|clear> <player> <map name including spaces>
+commands.spelevelrecord.show=%1$s's best time in %2$s: %3$s
+commands.spelevelrecord.delete=%1$s's best time in %2$s has been deleted!
+commands.spelevelrecord.mapNotFound=Specified map name cannot be found.
+commands.spelevelrecord.recordNotFound=%1$s's best time in %2$s: Not recorded
+commands.spelevelrecord.noRecords=No records
 
 # achievements
 achievement.spelunker:death=My first mistake
