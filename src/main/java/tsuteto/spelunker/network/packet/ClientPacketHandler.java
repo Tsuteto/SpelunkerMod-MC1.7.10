@@ -98,12 +98,20 @@ public class ClientPacketHandler extends CommonClientPacketHandler
                 spelunker.timeSpawnInv = data.readInt();
                 break;
 
-            case IN_CAVE_TRUE:
+            case USING_ENERGY:
                 spelunker.setUsingEnergy(true);
                 break;
 
-            case IN_CAVE_FALSE:
+            case NOT_USING_ENERGY:
                 spelunker.setUsingEnergy(false);
+                break;
+
+            case GOT_IN_CAVE:
+                spelunker.setInCave(true);
+                break;
+
+            case OUT_OF_CAVE:
+                spelunker.setInCave(false);
                 break;
 
             case GOT_2x:

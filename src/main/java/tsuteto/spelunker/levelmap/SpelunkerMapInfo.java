@@ -20,13 +20,14 @@ public class SpelunkerMapInfo
     @Override
     public int hashCode()
     {
-        return fileName.hashCode();
+        return fileName.hashCode() + this.source.ordinal();
     }
 
     @Override
     public boolean equals(Object obj)
     {
         if (!(obj instanceof SpelunkerMapInfo)) return false;
-        return fileName != null && fileName.equals(((SpelunkerMapInfo) obj).fileName);
+        SpelunkerMapInfo another = (SpelunkerMapInfo) obj;
+        return fileName != null && fileName.equals(another.fileName) && source == another.source;
     }
 }

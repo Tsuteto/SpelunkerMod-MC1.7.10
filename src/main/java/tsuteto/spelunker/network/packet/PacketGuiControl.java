@@ -33,7 +33,7 @@ public class PacketGuiControl extends AbstractPacket implements MessageToServer
     }
 
     @Override
-    public void decodeInto(ByteBuf buffer)
+    public void decodeFrom(ByteBuf buffer)
     {
         this.windowId = buffer.readByte();
         this.eventId = buffer.readShort();

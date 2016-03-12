@@ -26,7 +26,7 @@ public class PacketDimRegistration extends AbstractPacket implements MessageToCl
     }
 
     @Override
-    public void decodeInto(ByteBuf buffer)
+    public void decodeFrom(ByteBuf buffer)
     {
         dimIds = new int[buffer.readShort()];
         for (int i = 0; i < dimIds.length; i++)

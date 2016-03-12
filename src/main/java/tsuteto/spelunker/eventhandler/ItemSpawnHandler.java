@@ -78,15 +78,15 @@ public class ItemSpawnHandler
 
         boolean onGround = world.isAirBlock(tileX, tileY, tileZ)
                 && (!world.isAirBlock(tileX, tileY - 1, tileZ) || !world.isAirBlock(tileX, tileY - 2, tileZ));
-        boolean isOutOfSight = !difficulty.spawnInSight || difficulty.spawnInSight && !player.canEntityBeSeen(spawnItem);
-        // System.out.println(String.format("Light: %2d, onGround: %5s, Seen: %5s, Sky: %5s, Dim: %2d, Near: %5s",
-        // world.getBlockLightValue(blockX, blockY, blockZ),
-        // onGround,
-        // spelunker.canEntityBeSeen(spawnItem),
-        // world.canBlockSeeTheSky(blockX, blockY, blockZ),
-        // spelunker.dimension,
-        // isItemExistsNearby));
-        if (onGround && (player.dimension == -1 || !world.canBlockSeeTheSky(tileX, tileY, tileZ))
+        boolean isOutOfSight = !difficulty.spawnInSight || !player.canEntityBeSeen(spawnItem);
+//        ModLog.debug("Light: %2d, onGround: %5s, Seen: %5s, Sky: %5s, Dim: %2d, Near: %5s",
+//                world.getBlockLightValue(tileX, tileY, tileZ),
+//                onGround,
+//                player.canEntityBeSeen(spawnItem),
+//                world.canBlockSeeTheSky(tileX, tileY, tileZ),
+//                player.dimension,
+//                itemExistsNearby(spawnItem, world, difficulty.spawnDensity));
+        if (onGround && (world.provider.hasNoSky || !world.canBlockSeeTheSky(tileX, tileY, tileZ))
                 && isOutOfSight && !itemExistsNearby(spawnItem, world, difficulty.spawnDensity))
         {
             int lightLvl = difficulty.lightLevel;

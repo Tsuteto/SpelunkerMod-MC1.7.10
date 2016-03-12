@@ -23,8 +23,11 @@ public enum SpelunkerPacketType {
 	ENERGY_UP(Side.CLIENT),
     SPAWN_INV(Side.CLIENT),
 
-	IN_CAVE_FALSE(Side.CLIENT),
-	IN_CAVE_TRUE(Side.CLIENT),
+	NOT_USING_ENERGY(Side.CLIENT),
+	USING_ENERGY(Side.CLIENT),
+
+    GOT_IN_CAVE(Side.CLIENT),
+    OUT_OF_CAVE(Side.CLIENT),
 
 	OUT_OF_2x(Side.CLIENT),
 	GOT_2x(Side.CLIENT),

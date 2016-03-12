@@ -20,7 +20,7 @@ public class GhostSpawnControllerSpelunkerLevel extends GhostSpawnController
         return this.rand.nextInt(20 * 60 * 3) + 400;
     }
 
-    public boolean isSpawnValid()
+    public boolean canSpawn()
     {
         return !this.isCleared();
     }

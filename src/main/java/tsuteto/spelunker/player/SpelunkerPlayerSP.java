@@ -8,6 +8,7 @@ import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.GuiWinGame;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.particle.EntityFireworkSparkFX;
@@ -49,9 +50,6 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
     public int deaths;
     public int livesLeft;
 
-    public int gunInUseCount = 0;
-    public int gunDamageCount = 0;
-    public int energyAlertTime;
     public int particlesChecked = 0;
     public int timeSpawnInv = 0;
 
@@ -71,8 +69,11 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
     public boolean isSpeLevelCheated = false;
     public boolean isSpeLevelCleared = false;
 
-    private boolean isUsingEnergy = false;
+    private boolean isInCave = false;
     private WatchBool statInCave = new WatchBool(false);
+
+    private boolean isUsingEnergy = false;
+    private WatchBool statUsingEnergy = new WatchBool(false);
 
     public boolean is2xScore = false;
     private WatchBool stat2xScore = new WatchBool(false);
@@ -287,16 +288,23 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
                 }
             }
 
-            if (SpelunkerBgm.isBgmMainAvailable)
+            if (ModSound.getBgmNowPlaying() != null  && mc.currentScreen instanceof GuiWinGame)
             {
-                if (statInCave.checkVal(isUsingEnergy()) && !isUsingEnergy())
+                ModSound.stopCurrentBgm();
+            }
+            else
+            {
+                if (SpelunkerBgm.isBgmMainAvailable)
                 {
-                    ModSound.stopBgm(SpelunkerBgm.resLocMain);
-                }
-                if (this.isUsingEnergy && ModSound.getBgmNowPlaying() == null)
-                {
-                    ModSound bgm = SpelunkerBgm.getMain();
-                    ModSound.playBgm(bgm);
+                    if (statInCave.checkVal(isInCave()) && !isInCave())
+                    {
+                        ModSound.stopBgm(SpelunkerBgm.resLocMain);
+                    }
+                    if (this.isInCave && ModSound.getBgmNowPlaying() == null)
+                    {
+                        ModSound bgm = SpelunkerBgm.getMain();
+                        ModSound.playBgm(bgm);
+                    }
                 }
             }
         }
@@ -526,6 +534,16 @@ public class SpelunkerPlayerSP extends ClientPlayerBase implements ISpelunkerPla
     public void setUsingEnergy(boolean isUsingEnergy)
     {
         this.isUsingEnergy = isUsingEnergy;
+    }
+
+    public boolean isInCave()
+    {
+        return isInCave;
+    }
+
+    public void setInCave(boolean isInCave)
+    {
+        this.isInCave = isInCave;
     }
 
     @Override

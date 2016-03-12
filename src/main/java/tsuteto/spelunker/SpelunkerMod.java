@@ -56,7 +56,7 @@ import java.util.UUID;
  * @author Tsuteto
  *
  */
-@Mod(modid = SpelunkerMod.modId, useMetadata = true, version = "3.0.0-MC1.7.10",
+@Mod(modid = SpelunkerMod.modId, useMetadata = true, version = "3.0.1-MC1.7.10",
         acceptedMinecraftVersions = "[1.7.2,1.8)",
         guiFactory = "tsuteto.spelunker.config.SpeConfigGuiFactory")
 public class SpelunkerMod
@@ -120,7 +120,7 @@ public class SpelunkerMod
         // Create Spelunker data directory
         if (!getSpelunkerDir().exists() && !getSpelunkerDir().mkdir())
         {
-            throw new RuntimeException("Failed to create Spelunker Mod's data directory at: " + getSpelunkerDir().getAbsolutePath());
+            throw new IllegalStateException("Failed to create Spelunker Mod's data directory in: " + getSpelunkerDir().getAbsolutePath());
         }
 
         this.migrate(event.getSuggestedConfigurationFile());

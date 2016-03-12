@@ -19,7 +19,7 @@ abstract public class SpelunkerCommonPacketHandler extends AbstractPacket
     }
 
     @Override
-    public void decodeInto(ByteBuf buffer)
+    public void decodeFrom(ByteBuf buffer)
     {
         this.receivedData = buffer;
     }

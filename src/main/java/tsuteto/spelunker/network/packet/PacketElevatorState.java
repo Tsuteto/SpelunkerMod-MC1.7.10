@@ -38,7 +38,7 @@ public class PacketElevatorState extends AbstractPacket implements MessageToClie
     }
 
     @Override
-    public void decodeInto(ByteBuf buffer)
+    public void decodeFrom(ByteBuf buffer)
     {
         this.elevatorEntityId = buffer.readInt();
         this.mode = buffer.readInt();

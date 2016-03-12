@@ -38,7 +38,7 @@ public class PacketContainerData extends AbstractPacket implements MessageToClie
     }
 
     @Override
-    public void decodeInto(ByteBuf buffer)
+    public void decodeFrom(ByteBuf buffer)
     {
         this.windowId = buffer.readByte();
         this.dataId = buffer.readShort();

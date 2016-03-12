@@ -78,12 +78,23 @@ public class ServerPacketHandler
                 }
                 response.sendPacketPlayer(player);
 
-                if (spelunkerMp.isUsingEnergy()) {
-                    response = new SpelunkerPacketDispatcher(SpelunkerPacketType.IN_CAVE_TRUE);
+                if (spelunkerMp.isUsingEnergy())
+                {
+                    response = new SpelunkerPacketDispatcher(SpelunkerPacketType.USING_ENERGY);
                 }
                 else
                 {
-                    response = new SpelunkerPacketDispatcher(SpelunkerPacketType.IN_CAVE_FALSE);
+                    response = new SpelunkerPacketDispatcher(SpelunkerPacketType.NOT_USING_ENERGY);
+                }
+                response.sendPacketPlayer(player);
+
+                if (spelunkerMp.isInCave())
+                {
+                    response = new SpelunkerPacketDispatcher(SpelunkerPacketType.GOT_IN_CAVE);
+                }
+                else
+                {
+                    response = new SpelunkerPacketDispatcher(SpelunkerPacketType.OUT_OF_CAVE);
                 }
                 response.sendPacketPlayer(player);
 

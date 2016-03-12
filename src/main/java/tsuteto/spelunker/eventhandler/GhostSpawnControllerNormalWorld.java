@@ -65,8 +65,8 @@ public class GhostSpawnControllerNormalWorld extends GhostSpawnController
     }
 
     @Override
-    public boolean isSpawnValid()
+    public boolean canSpawn()
     {
-        return true;
+        return !(player.dimension == 1 && spelunker.getWorldInfo().isOvercome());
     }
 }

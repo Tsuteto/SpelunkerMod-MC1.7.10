@@ -20,6 +20,7 @@ public class SpelunkerPlayerInfo
     private int hiscore;
     private int lives;
     private boolean isDragonDefeated;
+    private boolean isOvercome;
     private int goldenSpelunkers;
     private SpeLevelPlayerInfo speLevel;
     private String playerName;
@@ -33,6 +34,7 @@ public class SpelunkerPlayerInfo
         hiscore = 0;
         lives = SpelunkerMod.settings().initialLives - 1;
         isDragonDefeated = false;
+        isOvercome = false;
         goldenSpelunkers = SpelunkerMod.settings().goldenSpelunkers;
         speLevel = null;
 
@@ -50,6 +52,7 @@ public class SpelunkerPlayerInfo
         hiscore = root.getInteger("hiscore");
         goldenSpelunkers = root.getByte("gs");
         isDragonDefeated = root.getBoolean("dragon");
+        isOvercome = root.getBoolean("overcome");
 
         if (root.hasKey("spelvl"))
         {
@@ -80,6 +83,7 @@ public class SpelunkerPlayerInfo
         root.setInteger("hiscore", hiscore);
         root.setByte("gs", (byte) goldenSpelunkers);
         root.setBoolean("dragon", isDragonDefeated);
+        root.setBoolean("overcome", isOvercome);
 
         if (speLevel != null)
         {
@@ -200,5 +204,15 @@ public class SpelunkerPlayerInfo
     public void setPlayerName(String playerName)
     {
         this.playerName = playerName;
+    }
+
+    public boolean isOvercome()
+    {
+        return isOvercome;
+    }
+
+    public void setOvercome(boolean overcome)
+    {
+        isOvercome = overcome;
     }
 }

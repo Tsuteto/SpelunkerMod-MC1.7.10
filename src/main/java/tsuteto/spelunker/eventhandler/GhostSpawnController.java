@@ -26,5 +26,5 @@ public abstract class GhostSpawnController
 
     protected abstract boolean spawnGhost();
 
-    public abstract boolean isSpawnValid();
+    public abstract boolean canSpawn();
 }

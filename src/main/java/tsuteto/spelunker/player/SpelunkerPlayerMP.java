@@ -242,23 +242,29 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
 
         if (!isInCave())
         {
-            chkStatUndergroundTrue();
+            if (chkStatUndergroundTrue())
+            {
+                new SpelunkerPacketDispatcher(SpelunkerPacketType.GOT_IN_CAVE).sendPacketPlayer(player);
+            }
         }
         else
         {
-            chkStatUndergroundFalse();
+            if (chkStatUndergroundFalse())
+            {
+                this.onPlayerOutOfCave();
+                new SpelunkerPacketDispatcher(SpelunkerPacketType.OUT_OF_CAVE).sendPacketPlayer(player);
+            }
         }
 
         if (statUsingEnergy.checkVal(isUsingEnergy()))
         {
             if (statUsingEnergy.getVal())
             {
-                new SpelunkerPacketDispatcher(SpelunkerPacketType.IN_CAVE_TRUE).sendPacketPlayer(player);
+                new SpelunkerPacketDispatcher(SpelunkerPacketType.USING_ENERGY).sendPacketPlayer(player);
             }
             else
             {
-                this.onPlayerOutOfCave();
-                new SpelunkerPacketDispatcher(SpelunkerPacketType.IN_CAVE_FALSE).sendPacketPlayer(player);
+                new SpelunkerPacketDispatcher(SpelunkerPacketType.NOT_USING_ENERGY).sendPacketPlayer(player);
             }
         }
         //ModLog.debug("aroundSurface=%s, isInCave=%s, statDrainEnergy=%s%n", aroundSurface, isInCave(), statDrainEnergy.getVal());
@@ -569,8 +575,9 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
                         {
                             spelunker.addSpelunkerScore(SpelunkerMod.bonusAllCleared, true);
                             winfo.setDragonDefeated();
-                            spelunker.saveSpelunker();
                         }
+                        winfo.setOvercome(true);
+                        spelunker.saveSpelunker();
                     }
                     AchievementMgr.achieve(player, SpeAchievementList.Key.defeatDragon);
                 }
@@ -717,9 +724,19 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
             InventoryPlayer inventory = player.inventory;
             for (int i = 0; i < inventory.mainInventory.length; i++)
             {
-                if (inventory.mainInventory[i] != null && inventory.mainInventory[i].getItem() instanceof SpelunkerWorldItem)
+                if (inventory.mainInventory[i] != null)
                 {
-                    inventory.mainInventory[i] = null;
+                    if (this.getWorldInfo().getSpeLevelInfo().isCleared())
+                    {
+                        if (inventory.mainInventory[i].getItem() instanceof SpelunkerWorldItem)
+                        {
+                            inventory.mainInventory[i] = null;
+                        }
+                    }
+                    else
+                    {
+                        inventory.mainInventory[i] = null;
+                    }
                 }
             }
 
@@ -1005,7 +1022,7 @@ public class SpelunkerPlayerMP extends ServerPlayerBase implements ISpelunkerPla
     {
         return spelunkerExtra.isUsingEnergy();
     }
-
+    
     public void addEnergy(int i)
     {
         setEnergy(getEnergy() + i);

@@ -50,7 +50,7 @@ public class ConnectionEventHandler
     {
         ByteBuf data = packet.payload();
         PacketDimRegistration handler = new PacketDimRegistration();
-        handler.decodeInto(data);
+        handler.decodeFrom(data);
         handler.handleClientSide(player);
     }
 

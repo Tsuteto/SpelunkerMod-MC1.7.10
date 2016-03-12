@@ -45,7 +45,7 @@ public class PacketElevatorControlCl extends AbstractPacket implements MessageTo
     }
 
     @Override
-    public void decodeInto(ByteBuf buffer)
+    public void decodeFrom(ByteBuf buffer)
     {
         this.elevatorEntityId = buffer.readInt();
         this.controllerEntityId = buffer.readInt();

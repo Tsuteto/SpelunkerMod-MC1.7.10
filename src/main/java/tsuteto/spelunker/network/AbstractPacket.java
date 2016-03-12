@@ -16,7 +16,7 @@ public abstract class AbstractPacket implements IMessage, IMessageHandler<Abstra
 {
     public void fromBytes(ByteBuf buf)
     {
-        this.decodeInto(buf);
+        this.decodeFrom(buf);
     }
 
     public void toBytes(ByteBuf buf)
@@ -61,5 +61,5 @@ public abstract class AbstractPacket implements IMessage, IMessageHandler<Abstra
 
     public abstract void encodeInto(ByteBuf buffer);
 
-    public abstract void decodeInto(ByteBuf buffer);
+    public abstract void decodeFrom(ByteBuf buffer);
 }

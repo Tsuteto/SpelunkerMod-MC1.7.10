@@ -102,7 +102,7 @@ public class GhostSpawnHandler
 
     public void spawnCheck()
     {
-        if (!controller.isSpawnValid()) return;
+        if (!controller.canSpawn()) return;
 
         double ghostSpawnRate = SpelunkerDifficulty.getSettings(player.worldObj).ghostSpawnRate;
         if (!player.capabilities.isCreativeMode && player.isEntityAlive() && spelunker.isInCave() && ghostSpawnRate > 0 && !isGhostComing)

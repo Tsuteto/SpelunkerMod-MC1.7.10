@@ -97,10 +97,16 @@ public class PlayerEventHandler
         WorldProvider worldProviderFrom = DimensionManager.getProvider(event.fromDim);
         WorldProvider worldProviderTo = DimensionManager.getProvider(event.toDim);
 
+        EntityPlayer player = event.player;
+        SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(player);
+
+        if (spelunker.getWorldInfo().isOvercome() && event.toDim == 0)
+        {
+            spelunker.getWorldInfo().setOvercome(false);
+        }
+
         if (worldProviderFrom instanceof WorldProviderSpelunker || worldProviderTo instanceof WorldProviderSpelunker)
         {
-            EntityPlayer player = event.player;
-            SpelunkerPlayerMP spelunker = SpelunkerMod.getSpelunkerPlayer(player);
             spelunker.onTravelingDimensionToSpelunkerLevel(event.fromDim, event.toDim, worldProviderFrom, worldProviderTo);
         }
     }
